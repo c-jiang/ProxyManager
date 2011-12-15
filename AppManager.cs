@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 using System.IO;
 
 
@@ -13,7 +14,11 @@ namespace ProxyManager
             path = Path.GetDirectoryName(path);
             m_profile = Profile.Load(path);
 
-            // TODO: create network monitor
+            m_detector = new NetworkDetector();
+            // Add network address change listener
+            NetworkChange.NetworkAddressChanged +=
+                new NetworkAddressChangedEventHandler(
+                    m_detector.NetworkAddressChangedCallback);
         }
 
         public Profile AppProfile
@@ -23,5 +28,6 @@ namespace ProxyManager
         }
 
         private Profile m_profile;
+        private NetworkDetector m_detector;
     }
 }
