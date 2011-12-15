@@ -13,9 +13,11 @@ namespace ProxyManager
         [STAThread]
         static void Main()
         {
+            AppManager appManager = new AppManager();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormMain());
+            Application.Run(new FormMain(appManager));
         }
     }
 }

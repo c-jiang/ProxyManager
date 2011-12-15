@@ -11,7 +11,7 @@ namespace ProxyManager
 {
     public partial class FormMain : Form
     {
-        public FormMain()
+        public FormMain(AppManager appManager)
         {
             InitializeComponent();
         }
