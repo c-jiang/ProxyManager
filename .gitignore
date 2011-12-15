@@ -1,0 +1,10 @@
+
+*.ncb
+*.suo
+*.user
+
+
+obj
+Debug
+Release
+
