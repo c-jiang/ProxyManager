@@ -13,7 +13,24 @@ namespace ProxyManager
     {
         public FormMain(AppManager appManager)
         {
+            appManager.NetworkChanged +=
+                new AppManager.NotifyGuiNetworkChanged(NotificationNetworkChanged);
             InitializeComponent();
+        }
+
+        public void NotificationNetworkChanged(object sender, EventArgs e)
+        {
+            //NetworkDetector nd = ((AppManager)sender).Detector;
+            //if (nd.IsNetworkActive()) {
+            //    string ui = "NetworkActive\n";
+            //    ui += "Ip: " + nd.ActiveNetworkIPAddress() + "\n";
+            //    ui += "Mask: " + nd.ActiveNetworkSubMask() + "\n";
+            //    ui += "Gateway: " + nd.ActiveNetworkGateway() + "\n";
+            //    ui += "Dns: " + nd.ActiveNetworkDnsAddress() + "\n";
+            //    MessageBox.Show(ui);
+            //} else {
+            //    MessageBox.Show("Network Inactive");
+            //}
         }
     }
 }

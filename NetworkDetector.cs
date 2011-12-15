@@ -12,6 +12,9 @@ namespace ProxyManager
             DetectActiveNetwork();
         }
 
+        public delegate void NotifyAppManagerNetworkChanged(object sender, EventArgs e);
+        public event NotifyAppManagerNetworkChanged NetworkChanged;
+
         #region Active Network Properties
 
         public bool IsNetworkActive()
@@ -99,19 +102,7 @@ namespace ProxyManager
         public void NetworkAddressChangedCallback(object sender, EventArgs e)
         {
             DetectActiveNetwork();
-
-            //////////////////////////////////////////////////////////////////////////
-            //if (IsNetworkActive()) {
-            //    string ui = "NetworkActive\n";
-            //    ui += "Ip: " + ActiveNetworkIPAddress() + "\n";
-            //    ui += "Mask: " + ActiveNetworkSubMask() + "\n";
-            //    ui += "Gateway: " + ActiveNetworkGateway() + "\n";
-            //    ui += "Dns: " + ActiveNetworkDnsAddress() + "\n";
-            //    System.Windows.Forms.MessageBox.Show(ui);
-            //} else {
-            //    System.Windows.Forms.MessageBox.Show("Network Inactive");
-            //}
-            //////////////////////////////////////////////////////////////////////////
+            NetworkChanged(this, new EventArgs());
         }
 
         public void DetectActiveNetwork()
