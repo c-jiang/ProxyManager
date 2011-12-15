@@ -6,12 +6,6 @@ using System.Xml.Serialization;
 
 namespace ProxyManager
 {
-    //////////////////////////////////////////////////////////////////////////
-    //string path = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-    //path = System.IO.Path.GetDirectoryName(path);
-    //Profile profile = Profile.Load(path);
-    //////////////////////////////////////////////////////////////////////////
-
     [XmlInclude(typeof(ProxyGroup))]
     [XmlInclude(typeof(ProxyItem))]
     [XmlInclude(typeof(ApplyRule))]
@@ -46,6 +40,7 @@ namespace ProxyManager
                 XmlSerializer xs = new XmlSerializer(typeof(Profile));
                 StreamReader reader = new StreamReader(PROFILE_FILE_NAME);
                 Profile profile = (Profile)xs.Deserialize(reader.BaseStream);
+                // TODO: deserialization may cause exception
                 profile.m_szProfilePath = profilePath;
                 reader.Close();
                 return profile;

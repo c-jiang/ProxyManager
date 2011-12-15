@@ -16,21 +16,28 @@ namespace ProxyManager
             appManager.NetworkChanged +=
                 new AppManager.NotifyGuiNetworkChanged(NotificationNetworkChanged);
             InitializeComponent();
+
+            string ui = "[" + Utils.GetDateTime() + "]" + "\r\n";
+            tbStatus.Text = ui;
         }
 
         public void NotificationNetworkChanged(object sender, EventArgs e)
         {
-            //NetworkDetector nd = ((AppManager)sender).Detector;
-            //if (nd.IsNetworkActive()) {
-            //    string ui = "NetworkActive\n";
-            //    ui += "Ip: " + nd.ActiveNetworkIPAddress() + "\n";
-            //    ui += "Mask: " + nd.ActiveNetworkSubMask() + "\n";
-            //    ui += "Gateway: " + nd.ActiveNetworkGateway() + "\n";
-            //    ui += "Dns: " + nd.ActiveNetworkDnsAddress() + "\n";
-            //    MessageBox.Show(ui);
-            //} else {
-            //    MessageBox.Show("Network Inactive");
-            //}
+            NetworkDetector nd = ((AppManager)sender).Detector;
+            string ui = "[" + Utils.GetDateTime() + "]" + "\r\n";
+            if (nd.IsNetworkActive()) {
+                ui += "Network Active" + "\r\n";
+                ui += "IP . . . . . . . : " + nd.ActiveNetworkIPAddress() + "\r\n";
+                ui += "Mask . . . . . . : " + nd.ActiveNetworkSubMask() + "\r\n";
+                ui += "Gateway. . . . . : " + nd.ActiveNetworkGateway() + "\r\n";
+                ui += "DNS. . . . . . . : " + nd.ActiveNetworkDnsAddress() + "\r\n";
+                ui += "DNS Suffix . . . : " + nd.ActiveNetworkDnsAddress() + "\r\n";
+                ui += "\r\n";
+            } else {
+                ui += "Network Inactive" + "\r\n";
+                ui += "\r\n";
+            }
+            tbStatus.Text = ui;
         }
     }
 }
