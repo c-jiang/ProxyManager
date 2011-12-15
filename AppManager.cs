@@ -27,11 +27,20 @@ namespace ProxyManager
         }
 
         public delegate void NotifyGuiNetworkChanged(object sender, EventArgs e);
+        public delegate void NotifyGuiNetworkAndProxyChanged(object sender, EventArgs e);
         public event NotifyGuiNetworkChanged NetworkChanged;
+        public event NotifyGuiNetworkAndProxyChanged NetworkAndProxyChanged;
 
         public void NotificationNetworkChanged(object sender, EventArgs e)
         {
+            // TODO: determines whether the proxy settings should be changed
+            // Handle m_profile here.
+
+            // case - no proxy settings changed
             NetworkChanged(this, new EventArgs());
+
+            // case - proxy settings need to be changed
+            NetworkAndProxyChanged(this, new EventArgs());
         }
 
         public Profile AppProfile

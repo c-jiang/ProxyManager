@@ -55,6 +55,7 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="IeProxyOptions.cs" />
     <Compile Include="NetworkDetector.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Program.cs" />

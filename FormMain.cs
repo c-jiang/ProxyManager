@@ -13,8 +13,14 @@ namespace ProxyManager
     {
         public FormMain(AppManager appManager)
         {
+            // TODO: move to a seperate method for callback registration
             appManager.NetworkChanged +=
-                new AppManager.NotifyGuiNetworkChanged(NotificationNetworkChanged);
+                new AppManager.NotifyGuiNetworkChanged(
+                    NotificationNetworkChanged);
+            appManager.NetworkAndProxyChanged +=
+                new AppManager.NotifyGuiNetworkAndProxyChanged(
+                    NotificationNetworkAndProxyChanged);
+
             InitializeComponent();
 
             string ui = "[" + Utils.GetDateTime() + "]" + "\r\n";
@@ -31,7 +37,7 @@ namespace ProxyManager
                 ui += "Mask . . . . . . : " + nd.ActiveNetworkSubMask() + "\r\n";
                 ui += "Gateway. . . . . : " + nd.ActiveNetworkGateway() + "\r\n";
                 ui += "DNS. . . . . . . : " + nd.ActiveNetworkDnsAddress() + "\r\n";
-                ui += "DNS Suffix . . . : " + nd.ActiveNetworkDnsAddress() + "\r\n";
+                ui += "DNS Suffix . . . : " + nd.ActiveNetworkDnsSuffix() + "\r\n";
                 ui += "\r\n";
             } else {
                 ui += "Network Inactive" + "\r\n";
@@ -39,5 +45,11 @@ namespace ProxyManager
             }
             tbStatus.Text = ui;
         }
+
+        public void NotificationNetworkAndProxyChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
