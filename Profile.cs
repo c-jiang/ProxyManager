@@ -6,12 +6,22 @@ using System.Xml.Serialization;
 
 namespace ProxyManager
 {
+    public enum WorkMode
+    {
+        Direct = 0,
+        Proxy,
+        Auto
+    }
+
+
     [XmlInclude(typeof(ProxyGroup))]
     [XmlInclude(typeof(ProxyItem))]
     [XmlInclude(typeof(ApplyRule))]
     public class Profile
     {
         // settings - options
+        [XmlElement("WorkMode")]
+        public WorkMode m_workMode;
         [XmlElement("StartAuto")]
         public bool m_isStartAuto;
         [XmlElement("StartMinimized")]
@@ -26,6 +36,7 @@ namespace ProxyManager
         // Contructor Method
         public Profile()
         {
+            m_workMode = WorkMode.Auto;
             m_isStartAuto = true;
             m_isStartMinimized = true;
             m_isLogToFile = false;
@@ -43,6 +54,7 @@ namespace ProxyManager
                 // TODO: deserialization may cause exception
                 profile.m_szProfilePath = profilePath;
                 reader.Close();
+                Save(profile);
                 return profile;
             } else {
                 Profile profile = new Profile();
@@ -63,6 +75,12 @@ namespace ProxyManager
                 System.Diagnostics.Debug.WriteLine(x.Message);
             }
             writer.Close();
+        }
+
+        public WorkMode CurrentWorkMode
+        {
+            get { return m_workMode;  }
+            set { m_workMode = value; }
         }
 
         private string m_szProfilePath;

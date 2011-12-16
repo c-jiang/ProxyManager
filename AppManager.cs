@@ -15,15 +15,9 @@ namespace ProxyManager
             m_profile = Profile.Load(path);
 
             m_detector = new NetworkDetector();
-            // Add listener for NetworkDetector's event 'NetworkChanged'
-            m_detector.NetworkChanged +=
-                new NetworkDetector.NotifyAppManagerNetworkChanged(
-                    NotificationNetworkChanged);
-
-            // Add listener for NetworkChange's event 'NetworkAddressChanged'
-            NetworkChange.NetworkAddressChanged +=
-                new NetworkAddressChangedEventHandler(
-                    m_detector.NetworkAddressChangedCallback);
+            if (m_profile.CurrentWorkMode.Equals(WorkMode.Auto)) {
+                RegisterCallbacks();
+            }
         }
 
         public delegate void NotifyGuiNetworkChanged(object sender, EventArgs e);
@@ -52,6 +46,33 @@ namespace ProxyManager
         public NetworkDetector Detector
         {
             get { return m_detector; }
+        }
+
+
+        private void RegisterCallbacks()
+        {
+            // Link NetworkDetector.NetworkChanged to AppManager
+            m_detector.NetworkChanged +=
+                new NetworkDetector.NotifyAppManagerNetworkChanged(
+                    NotificationNetworkChanged);
+
+            // Link system NetworkChange.NetworkAddressChanged to NetworkDetector
+            NetworkChange.NetworkAddressChanged +=
+                new NetworkAddressChangedEventHandler(
+                    m_detector.NetworkAddressChangedCallback);
+        }
+
+        private void DeregisterCallbacks()
+        {
+            // Remove link between NetworkDetector.NetworkChanged and AppManager
+            m_detector.NetworkChanged -=
+                new NetworkDetector.NotifyAppManagerNetworkChanged(
+                    NotificationNetworkChanged);
+
+            // Remove link between system NetworkChange.NetworkAddressChanged and NetworkDetector
+            NetworkChange.NetworkAddressChanged -=
+                new NetworkAddressChangedEventHandler(
+                    m_detector.NetworkAddressChangedCallback);
         }
 
         private Profile m_profile;
