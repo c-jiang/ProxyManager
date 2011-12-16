@@ -11,8 +11,8 @@ namespace ProxyManager
         public AppManager()
         {
             string path = Process.GetCurrentProcess().MainModule.FileName;
-            path = Path.GetDirectoryName(path);
-            m_profile = Profile.Load(path);
+            m_szAppDir = Path.GetDirectoryName(path);
+            m_profile = Profile.Load(m_szAppDir);
 
             m_detector = new NetworkDetector();
             if (m_profile.m_workMode.Equals(WorkMode.Auto)) {
@@ -65,31 +65,21 @@ namespace ProxyManager
 
         private void EnableProxy(ProxyItem pi)
         {
-            // TODO: tricky temp countermeasure
-            if (pi.m_isAutoConfDisabled) {
-                IeProxyOptions.DisableAutoConf();
-            }
-            IeProxyOptions.ProxyEnable = true;
-            IeProxyOptions.ProxyAddr = pi.m_szProxyAddr;
-            IeProxyOptions.Bypass = pi.m_szBypass;
-            IeProxyOptions.CommitChange();
-
-            //if (IeProxyOptions.ProxyEnable == false) {
-            //    IeProxyOptions.ProxyEnable = true;
-            //    IeProxyOptions.ProxyAddr = pi.m_szProxyAddr;
-            //    IeProxyOptions.Bypass = pi.m_szBypass;
-            //}
+            string args = true.ToString() + " "
+                + "\"" + pi.m_szProxyAddr + "\" "
+                + "\"" + pi.m_szBypass + "\" "
+                + pi.m_isAutoConfDisabled.ToString();
+            Process process = PrepareProxyAgentProcess();
+            SetArgsProxyAgentProcess(process, args);
+            ExecuteProxyAgentProcess(process);
         }
 
         private void DisableProxy()
         {
-            // TODO: tricky temp countermeasure
-            IeProxyOptions.ProxyEnable = false;
-            IeProxyOptions.CommitChange();
-
-            //if (IeProxyOptions.ProxyEnable == true) {
-            //    IeProxyOptions.ProxyEnable = false;
-            //}
+            string args = false.ToString();
+            Process process = PrepareProxyAgentProcess();
+            SetArgsProxyAgentProcess(process, args);
+            ExecuteProxyAgentProcess(process);
         }
 
         private ProxyItem FindMatchedProxyItem()
@@ -142,7 +132,34 @@ namespace ProxyManager
                     m_detector.NetworkAddressChangedCallback);
         }
 
+        private Process PrepareProxyAgentProcess()
+        {
+            Process process = new Process();
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.WorkingDirectory = m_szAppDir;
+            process.StartInfo.FileName = PROXY_AGENT_FILE_NAME;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            return process;
+        }
+
+        private void SetArgsProxyAgentProcess(Process process, string args)
+        {
+            process.StartInfo.Arguments = args;
+        }
+
+        private void ExecuteProxyAgentProcess(Process process)
+        {
+            process.Start();
+            process.WaitForExit();
+            process.Close();
+        }
+
+        private string m_szAppDir;
         private Profile m_profile;
         private NetworkDetector m_detector;
+
+        private const string PROXY_AGENT_FILE_NAME = "ProxyAgent.exe";
     }
 }
