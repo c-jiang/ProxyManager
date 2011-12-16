@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
+
 
 namespace ProxyManager
 {
@@ -13,11 +13,26 @@ namespace ProxyManager
         [STAThread]
         static void Main()
         {
-            AppManager appManager = new AppManager();
+            bool createdNew;
+            Mutex instance = new Mutex(true,
+                System.Diagnostics.Process.GetCurrentProcess().ProcessName,
+                out createdNew);
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormMain(appManager));
+            if (createdNew) {
+                AppManager appManager = new AppManager();
+
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new FormMain(appManager));
+                
+                instance.ReleaseMutex();
+            } else {
+                MessageBox.Show(
+                    "Error: ProxyManager has been running in another instance.",
+                    "Proxy Manager",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 }
