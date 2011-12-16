@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.IO;
+using System.Text.RegularExpressions;
 
 
 namespace ProxyManager
@@ -119,10 +120,9 @@ namespace ProxyManager
                 if (!pg.m_isEnabled) {
                     continue;
                 }
-
-                // handle pg.m_applyRule ...
-                // suppose it is matched based on applyRule
-
+                if (!IsRuleMatched(pg.m_applyRule)) {
+                    continue;
+                }
                 foreach (ProxyItem pi in pg.m_listProxyItems) {
                     if (pi.m_isEnabled) {
                         ret = pi;
@@ -134,6 +134,28 @@ namespace ProxyManager
                 }
             }
             return ret;
+        }
+
+        private bool IsRuleMatched(ApplyRule rule)
+        {
+            bool ret = true;
+            if (ret && rule.m_bIpAddrFilter) {
+                ret &= IsExpressionMatched(rule.m_szIpAddrFilter,
+                    m_detector.ActiveNetworkIPAddress());
+            }
+            if (ret && rule.m_bDnsSuffixFilter) {
+                ret &= IsExpressionMatched(rule.m_szDnsSuffixFilter,
+                    m_detector.ActiveNetworkDnsSuffix());
+            }
+            return ret;
+        }
+
+        private bool IsExpressionMatched(string exp, string target)
+        {
+            string pattern = exp.Replace(".", @"\.");
+            pattern = pattern.Replace("*", ".*");
+            Regex regex = new Regex(pattern);
+            return regex.Match(target).Success;
         }
 
         private void RegisterCallbacks()
