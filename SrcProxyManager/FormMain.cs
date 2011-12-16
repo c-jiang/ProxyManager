@@ -27,6 +27,7 @@ namespace ProxyManager
 
             InitializeComponent();
             UpdateTextBoxContent();
+            UpdateGroupBoxTitle();
         }
 
         public void NotificationNetworkChanged(object sender, EventArgs e)
@@ -71,20 +72,43 @@ namespace ProxyManager
             tbStatus.Text = ui;
         }
 
+        private void UpdateGroupBoxTitle()
+        {
+            gbWorkMode.Text = "Current Work Mode: "
+                + m_appManagerRef.AppProfile.m_workMode
+                + " Mode";
+        }
+
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             m_appManagerRef.Detector.DetectActiveNetwork();
             UpdateTextBoxContent();
         }
 
-        private void btnEnableProxy_Click(object sender, EventArgs e)
+        private void btnAutoMode_Click(object sender, EventArgs e)
         {
-            m_appManagerRef.EnableProxy();
+            m_appManagerRef.AutoSwitchProxy();
+            m_appManagerRef.UserChangeWorkMode(WorkMode.Auto);
+            UpdateGroupBoxTitle();
         }
 
-        private void btnDisableProxy_Click(object sender, EventArgs e)
+        private void btnDirectMode_Click(object sender, EventArgs e)
         {
             m_appManagerRef.DisableProxy();
+            m_appManagerRef.UserChangeWorkMode(WorkMode.Direct);
+            UpdateGroupBoxTitle();
+        }
+
+        private void btnProxyMode_Click(object sender, EventArgs e)
+        {
+            m_appManagerRef.EnableProxy();
+            m_appManagerRef.UserChangeWorkMode(WorkMode.Proxy);
+            UpdateGroupBoxTitle();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
 

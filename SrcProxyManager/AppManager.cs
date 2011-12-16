@@ -92,8 +92,7 @@ namespace ProxyManager
             ProxyChanged(this, new EventArgs());
         }
 
-
-        private bool AutoSwitchProxy()
+        public bool AutoSwitchProxy()
         {
             // TODO: determines whether the proxy settings should be changed, based on lastProxy
             if (m_detector.IsNetworkActive()) {
@@ -111,6 +110,21 @@ namespace ProxyManager
                 DisableProxy();
             }
             return true;
+        }
+
+        public void UserChangeWorkMode(WorkMode newMode)
+        {
+            WorkMode oldMode = m_profile.m_workMode;
+            if (oldMode != newMode) {
+                m_profile.m_workMode = newMode;
+                Profile.Save(m_profile);
+
+                if (oldMode == WorkMode.Auto) {
+                    DeregisterCallbacks();
+                } else if (newMode == WorkMode.Auto) {
+                    RegisterCallbacks();
+                }
+            }
         }
 
         private ProxyItem FindMatchedProxyItem()
