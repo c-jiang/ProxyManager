@@ -77,12 +77,6 @@ namespace ProxyManager
             writer.Close();
         }
 
-        public WorkMode CurrentWorkMode
-        {
-            get { return m_workMode;  }
-            set { m_workMode = value; }
-        }
-
         private string m_szProfilePath;
         private const string PROFILE_FILE_NAME = "ProxyManagerProfile.xml";
     }

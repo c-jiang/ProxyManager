@@ -22,17 +22,26 @@ namespace ProxyManager
                     NotificationNetworkAndProxyChanged);
 
             InitializeComponent();
-
-            string ui = "[" + Utils.GetDateTime() + "]" + "\r\n";
-            tbStatus.Text = ui;
+            UpdateTextBoxContent(appManager);
         }
 
         public void NotificationNetworkChanged(object sender, EventArgs e)
         {
-            NetworkDetector nd = ((AppManager)sender).Detector;
-            string ui = "[" + Utils.GetDateTime() + "]" + "\r\n";
+            UpdateTextBoxContent((AppManager)sender);
+        }
+
+        public void NotificationNetworkAndProxyChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void UpdateTextBoxContent(AppManager appManager)
+        {
+            NetworkDetector nd = appManager.Detector;
+            string ui = "[" + Utils.GetDateTime() + "] ";
             if (nd.IsNetworkActive()) {
                 ui += "Network Active" + "\r\n";
+                ui += "\r\n";
                 ui += "IP . . . . . . . : " + nd.ActiveNetworkIPAddress() + "\r\n";
                 ui += "Mask . . . . . . : " + nd.ActiveNetworkSubMask() + "\r\n";
                 ui += "Gateway. . . . . : " + nd.ActiveNetworkGateway() + "\r\n";
@@ -43,13 +52,13 @@ namespace ProxyManager
                 ui += "Network Inactive" + "\r\n";
                 ui += "\r\n";
             }
+            ui += (IeProxyOptions.ProxyEnable ? "Proxy Enabled" : "Proxy Disabled");
+            ui += "\r\n";
+            ui += "Proxy Addr: " + IeProxyOptions.ProxyAddr;
+            ui += "\r\n";
+            ui += "Bypass: " + IeProxyOptions.Bypass;
+            ui += "\r\n";
             tbStatus.Text = ui;
         }
-
-        public void NotificationNetworkAndProxyChanged(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }
