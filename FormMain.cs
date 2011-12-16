@@ -13,21 +13,22 @@ namespace ProxyManager
     {
         public FormMain(AppManager appManager)
         {
+            m_appManagerRef = appManager;
             // TODO: move to a seperate method for callback registration
-            appManager.NetworkChanged +=
+            m_appManagerRef.NetworkChanged +=
                 new AppManager.NotifyGuiNetworkChanged(
                     NotificationNetworkChanged);
-            appManager.NetworkAndProxyChanged +=
+            m_appManagerRef.NetworkAndProxyChanged +=
                 new AppManager.NotifyGuiNetworkAndProxyChanged(
                     NotificationNetworkAndProxyChanged);
 
             InitializeComponent();
-            UpdateTextBoxContent(appManager);
+            UpdateTextBoxContent();
         }
 
         public void NotificationNetworkChanged(object sender, EventArgs e)
         {
-            UpdateTextBoxContent((AppManager)sender);
+            UpdateTextBoxContent();
         }
 
         public void NotificationNetworkAndProxyChanged(object sender, EventArgs e)
@@ -35,9 +36,9 @@ namespace ProxyManager
 
         }
 
-        private void UpdateTextBoxContent(AppManager appManager)
+        private void UpdateTextBoxContent()
         {
-            NetworkDetector nd = appManager.Detector;
+            NetworkDetector nd = m_appManagerRef.Detector;
             string ui = "[" + Utils.GetDateTime() + "] ";
             if (nd.IsNetworkActive()) {
                 ui += "Network Active" + "\r\n";
@@ -60,5 +61,13 @@ namespace ProxyManager
             ui += "\r\n";
             tbStatus.Text = ui;
         }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            m_appManagerRef.Detector.DetectActiveNetwork();
+            UpdateTextBoxContent();
+        }
+
+        private AppManager m_appManagerRef;
     }
 }

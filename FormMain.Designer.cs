@@ -28,6 +28,7 @@
         private void InitializeComponent()
         {
             this.tbStatus = new System.Windows.Forms.TextBox();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbStatus
@@ -37,18 +38,30 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbStatus.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.tbStatus.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbStatus.Location = new System.Drawing.Point(12, 79);
+            this.tbStatus.Location = new System.Drawing.Point(12, 50);
             this.tbStatus.Multiline = true;
             this.tbStatus.Name = "tbStatus";
             this.tbStatus.ReadOnly = true;
             this.tbStatus.Size = new System.Drawing.Size(268, 182);
             this.tbStatus.TabIndex = 0;
             // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRefresh.Location = new System.Drawing.Point(205, 238);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(75, 23);
+            this.btnRefresh.TabIndex = 1;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 273);
+            this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.tbStatus);
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -61,6 +74,7 @@
         #endregion
 
         private System.Windows.Forms.TextBox tbStatus;
+        private System.Windows.Forms.Button btnRefresh;
     }
 }
 
