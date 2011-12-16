@@ -169,7 +169,8 @@ namespace ProxyManager
             string pattern = exp.Replace(".", @"\.");
             pattern = pattern.Replace("*", ".*");
             Regex regex = new Regex(pattern);
-            return regex.Match(target).Success;
+            Match match = regex.Match(target);
+            return (match.Success && match.Value.Length > 0);
         }
 
         private void RegisterCallbacks()
