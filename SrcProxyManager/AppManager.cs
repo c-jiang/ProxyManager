@@ -21,11 +21,78 @@ namespace ProxyManager
         }
 
         public delegate void NotifyGuiNetworkChanged(object sender, EventArgs e);
+        public delegate void NotifyGuiProxyChanged(object sender, EventArgs e);
         public delegate void NotifyGuiNetworkAndProxyChanged(object sender, EventArgs e);
         public event NotifyGuiNetworkChanged NetworkChanged;
+        public event NotifyGuiProxyChanged ProxyChanged;
         public event NotifyGuiNetworkAndProxyChanged NetworkAndProxyChanged;
 
         public void NotificationNetworkChanged(object sender, EventArgs e)
+        {
+            bool bChanged = AutoSwitchProxy();
+
+            // GUI notifications
+            if (bChanged) {
+                // case - proxy settings need to be changed
+                NetworkAndProxyChanged(this, new EventArgs());
+            } else {
+                // case - no proxy settings changed
+                NetworkChanged(this, new EventArgs());
+            }
+        }
+
+        public Profile AppProfile
+        {
+            get { return m_profile; }
+            //set { m_profile = value; }
+        }
+
+        public NetworkDetector Detector
+        {
+            get { return m_detector; }
+        }
+
+        public void EnableProxy()
+        {
+            string szProxyAddr = IeProxyOptions.ProxyAddr;
+            string szBypass = IeProxyOptions.Bypass;
+            string args = true.ToString() + " "
+                + "\"" + szProxyAddr + "\" "
+                + "\"" + szBypass + "\" "
+                + true.ToString();
+
+            Process process = PrepareProxyAgentProcess();
+            SetArgsProxyAgentProcess(process, args);
+            ExecuteProxyAgentProcess(process);
+
+            ProxyChanged(this, new EventArgs());
+        }
+
+        public void EnableProxy(ProxyItem pi)
+        {
+            string args = true.ToString() + " "
+                + "\"" + pi.m_szProxyAddr + "\" "
+                + "\"" + pi.m_szBypass + "\" "
+                + pi.m_isAutoConfDisabled.ToString();
+            
+            Process process = PrepareProxyAgentProcess();
+            SetArgsProxyAgentProcess(process, args);
+            ExecuteProxyAgentProcess(process);
+
+            ProxyChanged(this, new EventArgs());
+        }
+
+        public void DisableProxy()
+        {
+            Process process = PrepareProxyAgentProcess();
+            SetArgsProxyAgentProcess(process, false.ToString());
+            ExecuteProxyAgentProcess(process);
+
+            ProxyChanged(this, new EventArgs());
+        }
+
+
+        private bool AutoSwitchProxy()
         {
             // TODO: determines whether the proxy settings should be changed, based on lastProxy
             if (m_detector.IsNetworkActive()) {
@@ -40,46 +107,9 @@ namespace ProxyManager
                 }
             } else {
                 // Disable proxy if no active network
-                // TODO: it seems proxy cannot be changed if network is unavailable
                 DisableProxy();
             }
-
-            // GUI notifications
-            // case - no proxy settings changed
-            NetworkChanged(this, new EventArgs());
-            // case - proxy settings need to be changed
-            NetworkAndProxyChanged(this, new EventArgs());
-        }
-
-        public Profile AppProfile
-        {
-            get { return m_profile; }
-            //set { m_profile = value; }
-        }
-
-        public NetworkDetector Detector
-        {
-            get { return m_detector; }
-        }
-
-
-        private void EnableProxy(ProxyItem pi)
-        {
-            string args = true.ToString() + " "
-                + "\"" + pi.m_szProxyAddr + "\" "
-                + "\"" + pi.m_szBypass + "\" "
-                + pi.m_isAutoConfDisabled.ToString();
-            Process process = PrepareProxyAgentProcess();
-            SetArgsProxyAgentProcess(process, args);
-            ExecuteProxyAgentProcess(process);
-        }
-
-        private void DisableProxy()
-        {
-            string args = false.ToString();
-            Process process = PrepareProxyAgentProcess();
-            SetArgsProxyAgentProcess(process, args);
-            ExecuteProxyAgentProcess(process);
+            return true;
         }
 
         private ProxyItem FindMatchedProxyItem()

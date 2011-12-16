@@ -29,6 +29,8 @@
         {
             this.tbStatus = new System.Windows.Forms.TextBox();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.btnEnableProxy = new System.Windows.Forms.Button();
+            this.btnDisableProxy = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbStatus
@@ -56,11 +58,35 @@
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
+            // btnEnableProxy
+            // 
+            this.btnEnableProxy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnEnableProxy.Location = new System.Drawing.Point(12, 238);
+            this.btnEnableProxy.Name = "btnEnableProxy";
+            this.btnEnableProxy.Size = new System.Drawing.Size(75, 23);
+            this.btnEnableProxy.TabIndex = 2;
+            this.btnEnableProxy.Text = "Enable";
+            this.btnEnableProxy.UseVisualStyleBackColor = true;
+            this.btnEnableProxy.Click += new System.EventHandler(this.btnEnableProxy_Click);
+            // 
+            // btnDisableProxy
+            // 
+            this.btnDisableProxy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnDisableProxy.Location = new System.Drawing.Point(94, 238);
+            this.btnDisableProxy.Name = "btnDisableProxy";
+            this.btnDisableProxy.Size = new System.Drawing.Size(75, 23);
+            this.btnDisableProxy.TabIndex = 3;
+            this.btnDisableProxy.Text = "Disable";
+            this.btnDisableProxy.UseVisualStyleBackColor = true;
+            this.btnDisableProxy.Click += new System.EventHandler(this.btnDisableProxy_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 273);
+            this.Controls.Add(this.btnDisableProxy);
+            this.Controls.Add(this.btnEnableProxy);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.tbStatus);
             this.Name = "FormMain";
@@ -75,6 +101,8 @@
 
         private System.Windows.Forms.TextBox tbStatus;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Button btnEnableProxy;
+        private System.Windows.Forms.Button btnDisableProxy;
     }
 }
 

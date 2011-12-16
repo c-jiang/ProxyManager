@@ -18,6 +18,9 @@ namespace ProxyManager
             m_appManagerRef.NetworkChanged +=
                 new AppManager.NotifyGuiNetworkChanged(
                     NotificationNetworkChanged);
+            m_appManagerRef.ProxyChanged +=
+                new AppManager.NotifyGuiProxyChanged(
+                    NotificationProxyChanged);
             m_appManagerRef.NetworkAndProxyChanged +=
                 new AppManager.NotifyGuiNetworkAndProxyChanged(
                     NotificationNetworkAndProxyChanged);
@@ -31,9 +34,14 @@ namespace ProxyManager
             UpdateTextBoxContent();
         }
 
+        public void NotificationProxyChanged(object sender, EventArgs e)
+        {
+            UpdateTextBoxContent();
+        }
+
         public void NotificationNetworkAndProxyChanged(object sender, EventArgs e)
         {
-
+            UpdateTextBoxContent();
         }
 
         private void UpdateTextBoxContent()
@@ -53,7 +61,8 @@ namespace ProxyManager
                 ui += "Network Inactive" + "\r\n";
                 ui += "\r\n";
             }
-            ui += (IeProxyOptions.ProxyEnable ? "Proxy Enabled" : "Proxy Disabled");
+            ui += "Proxy Stat: ";
+            ui += (IeProxyOptions.ProxyEnable ? "Enable" : "Disable");
             ui += "\r\n";
             ui += "Proxy Addr: " + IeProxyOptions.ProxyAddr;
             ui += "\r\n";
@@ -67,6 +76,17 @@ namespace ProxyManager
             m_appManagerRef.Detector.DetectActiveNetwork();
             UpdateTextBoxContent();
         }
+
+        private void btnEnableProxy_Click(object sender, EventArgs e)
+        {
+            m_appManagerRef.EnableProxy();
+        }
+
+        private void btnDisableProxy_Click(object sender, EventArgs e)
+        {
+            m_appManagerRef.DisableProxy();
+        }
+
 
         private AppManager m_appManagerRef;
     }
