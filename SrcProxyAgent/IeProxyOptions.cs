@@ -20,13 +20,6 @@ namespace ProxyAgent
 
         public static bool ProxyEnable
         {
-            get
-            {
-                OpenInternetSettings(false);
-                int value = (int)m_rkIeOpt.GetValue("ProxyEnable", 0);
-                m_rkIeOpt.Close();
-                return (value > 0);
-            }
             set
             {
                 OpenInternetSettings(true);
@@ -38,14 +31,6 @@ namespace ProxyAgent
 
         public static string ProxyAddr
         {
-            get
-            {
-                OpenInternetSettings(false);
-                string value = (string)m_rkIeOpt.GetValue(
-                    "ProxyServer", String.Empty);
-                m_rkIeOpt.Close();
-                return value;
-            }
             set
             {
                 OpenInternetSettings(true);
@@ -56,20 +41,6 @@ namespace ProxyAgent
 
         public static string Bypass
         {
-            get
-            {
-                OpenInternetSettings(false);
-                string value = (string)m_rkIeOpt.GetValue(
-                    "ProxyOverride", string.Empty);
-                m_rkIeOpt.Close();
-
-                int idx = value.IndexOf(BYPASS_LOCAL);
-                if (idx >= 0) {
-                    value = value.Remove(idx);
-                    value = value.TrimEnd(';'); // TODO: test
-                }
-                return value;
-            }
             set
             {
                 OpenInternetSettings(true);
@@ -82,15 +53,6 @@ namespace ProxyAgent
                 m_rkIeOpt.SetValue("ProxyOverride", str);
                 m_rkIeOpt.Close();
             }
-        }
-
-        public static bool IsAutoConfEnabled()
-        {
-            OpenInternetSettings(false);
-            string value = (string)m_rkIeOpt.GetValue(
-                "AutoConfigURL", null);
-            m_rkIeOpt.Close();
-            return (value != null) ? true : false;
         }
 
         public static void DisableAutoConf()
