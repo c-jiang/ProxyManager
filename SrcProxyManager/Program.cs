@@ -28,7 +28,7 @@ namespace ProxyManager
                 instance.ReleaseMutex();
             } else {
                 MessageBox.Show(
-                    "Error: ProxyManager has been running in another instance.",
+                    "Error: ProxyManager is already running.",
                     "Proxy Manager",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);

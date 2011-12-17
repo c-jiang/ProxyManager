@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+
 
 namespace ProxyManager
 {
@@ -28,6 +29,7 @@ namespace ProxyManager
             InitializeComponent();
             UpdateTextBoxContent();
             UpdateGroupBoxTitle();
+            this.Text = AssemblyProduct;
         }
 
         public void NotificationNetworkChanged(object sender, EventArgs e)
@@ -110,6 +112,27 @@ namespace ProxyManager
         {
             Close();
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DlgAboutBox.Instance.ShowDialog(this);
+        }
+
+        #region Assembly Attribute Accessors
+
+        public string AssemblyProduct
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+                if (attributes.Length == 0) {
+                    return "Proxy Manager";
+                }
+                return ((AssemblyProductAttribute)attributes[0]).Product;
+            }
+        }
+
+        #endregion
 
 
         private AppManager m_appManagerRef;
