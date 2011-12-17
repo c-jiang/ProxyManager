@@ -15,6 +15,7 @@ namespace ProxyManager
         public FormMain(AppManager appManager)
         {
             m_appManagerRef = appManager;
+            m_prevState = FormWindowState.Normal;
 
             // TODO: move to a seperate method for callback registration
             m_appManagerRef.NetworkChanged +=
@@ -27,11 +28,16 @@ namespace ProxyManager
                 new AppManager.NotifyGuiNetworkAndProxyChanged(
                     this.NotificationNetworkAndProxyChanged);
 
+            // Init GUI components
             InitializeComponent();
-            UpdateTextBoxContent();
-            UpdateGroupBoxTitle();
             this.Text = AssemblyProduct;
             aboutToolStripMenuItem.Text = "&About " + AssemblyProduct;
+            InitNotifyIcon();
+
+            // Update GUI components
+            UpdateTextBoxContent();
+            UpdateGroupBoxTitle();
+            UpdateNotifyIcon();
         }
 
         public void NotificationNetworkChanged(object sender, EventArgs e)
@@ -47,6 +53,22 @@ namespace ProxyManager
         public void NotificationNetworkAndProxyChanged(object sender, EventArgs e)
         {
             UpdateTextBoxContent();
+        }
+
+        private void InitNotifyIcon()
+        {
+            notifyIcon.ContextMenu = new ContextMenu();
+            notifyIcon.Visible = true;
+        }
+
+        private void UpdateNotifyIcon()
+        {
+            string str = AssemblyProduct + " ("
+                + m_appManagerRef.AppProfile.m_workMode + " Mode)"
+                + Environment.NewLine;
+            str += "Network Status: "
+                + (m_appManagerRef.Detector.IsNetworkActive() ? "Active" : "Inactive");
+            notifyIcon.Text = str;
         }
 
         private void UpdateTextBoxContent()
@@ -136,7 +158,46 @@ namespace ProxyManager
 
         #endregion
 
+        private void notifyIcon_Click(object sender, EventArgs e)
+        {
+            var evt = e as MouseEventArgs;
+            switch (evt.Button) {
+            case MouseButtons.Left:
+                // trigger the show/hide
+                switch (this.WindowState) {
+                case FormWindowState.Minimized:
+                    this.Show();                    // step 1 - show
+                    this.ShowInTaskbar = true;      // step 2 - show
+                    this.WindowState = m_prevState; // step 3 - show
+                    break;
+                case FormWindowState.Maximized:
+                case FormWindowState.Normal:
+                    this.ShowInTaskbar = false;     // step 1 - hide
+                    this.WindowState = FormWindowState.Minimized;   // step 2 - hide
+                    break;
+                }
+                break;
+            case MouseButtons.Right:
+                // TODO: show the context menu
+                break;
+            }
+        }
+
+        private void FormMain_Resize(object sender, EventArgs e)
+        {
+            switch (this.WindowState) {
+            case FormWindowState.Minimized:
+                this.Hide();                        // step 3 - hide
+                break;
+            case FormWindowState.Maximized:
+            case FormWindowState.Normal:
+                m_prevState = this.WindowState;
+                break;
+            }
+        }
+
 
         private AppManager m_appManagerRef;
+        private FormWindowState m_prevState;
     }
 }

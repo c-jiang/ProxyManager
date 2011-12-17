@@ -27,6 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.tbStatus = new System.Windows.Forms.TextBox();
             this.btnRefresh = new System.Windows.Forms.Button();
@@ -41,6 +42,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.gbWorkMode.SuspendLayout();
             this.msMain.SuspendLayout();
             this.SuspendLayout();
@@ -56,13 +58,13 @@
             this.tbStatus.Multiline = true;
             this.tbStatus.Name = "tbStatus";
             this.tbStatus.ReadOnly = true;
-            this.tbStatus.Size = new System.Drawing.Size(268, 194);
+            this.tbStatus.Size = new System.Drawing.Size(276, 190);
             this.tbStatus.TabIndex = 0;
             // 
             // btnRefresh
             // 
             this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefresh.Location = new System.Drawing.Point(205, 227);
+            this.btnRefresh.Location = new System.Drawing.Point(213, 223);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(75, 23);
             this.btnRefresh.TabIndex = 1;
@@ -110,9 +112,9 @@
             this.gbWorkMode.Controls.Add(this.btnProxyMode);
             this.gbWorkMode.Controls.Add(this.btnDirectMode);
             this.gbWorkMode.Controls.Add(this.btnAutoMode);
-            this.gbWorkMode.Location = new System.Drawing.Point(13, 256);
+            this.gbWorkMode.Location = new System.Drawing.Point(13, 252);
             this.gbWorkMode.Name = "gbWorkMode";
-            this.gbWorkMode.Size = new System.Drawing.Size(267, 49);
+            this.gbWorkMode.Size = new System.Drawing.Size(275, 49);
             this.gbWorkMode.TabIndex = 5;
             this.gbWorkMode.TabStop = false;
             this.gbWorkMode.Text = "Work Mode:";
@@ -124,7 +126,7 @@
             this.helpToolStripMenuItem});
             this.msMain.Location = new System.Drawing.Point(0, 0);
             this.msMain.Name = "msMain";
-            this.msMain.Size = new System.Drawing.Size(292, 24);
+            this.msMain.Size = new System.Drawing.Size(300, 24);
             this.msMain.TabIndex = 6;
             this.msMain.Text = "Main Menu";
             // 
@@ -171,19 +173,28 @@
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "notifyIcon";
+            this.notifyIcon.Visible = true;
+            this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 317);
+            this.ClientSize = new System.Drawing.Size(300, 313);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.tbStatus);
             this.Controls.Add(this.gbWorkMode);
             this.Controls.Add(this.msMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.msMain;
+            this.MinimumSize = new System.Drawing.Size(308, 340);
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Resize += new System.EventHandler(this.FormMain_Resize);
             this.gbWorkMode.ResumeLayout(false);
             this.msMain.ResumeLayout(false);
             this.msMain.PerformLayout();
@@ -207,6 +218,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 
