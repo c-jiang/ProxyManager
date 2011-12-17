@@ -14,7 +14,7 @@ namespace ProxyManager
     {
         public FormMain(AppManager appManager)
         {
-            // Init member variables
+            // init member variables
             m_appManagerRef = appManager;
             m_prevState = FormWindowState.Normal;
             m_listModeMenuItems = new List<MenuItem>();
@@ -30,7 +30,7 @@ namespace ProxyManager
                 new AppManager.NotifyGuiNetworkAndProxyChanged(
                     this.AppMgrNotify_NetworkAndProxyChanged);
 
-            // Init GUI components
+            // init GUI components
             InitializeComponent();
             if (m_appManagerRef.AppProfile.m_isStartMinimized) {
                 // TODO: whether move to ApplyAppProfile()
@@ -39,14 +39,23 @@ namespace ProxyManager
             }
             this.Text = AssemblyProduct;
             aboutToolStripMenuItem.Text = "&About " + AssemblyProduct;
-            InitNotifyIcon();
+            InitGuiNotifyIcon();
 
-            // Update GUI components
-            UpdateGuiNetworkChanged();
-            UpdateGuiProxyChanged();
+            // start current work mode accordingly
+            switch (m_appManagerRef.AppProfile.m_workMode) {
+            case WorkMode.Auto:
+                m_appManagerRef.AutoSwitchProxy();
+                break;
+            case WorkMode.Direct:
+                m_appManagerRef.DisableProxy();
+                break;
+            case WorkMode.Proxy:
+                m_appManagerRef.EnableProxy();
+                break;
+            }
         }
 
-        private void InitNotifyIcon()
+        private void InitGuiNotifyIcon()
         {
             // Init NotifyIcon
             notifyIcon.ContextMenu = new ContextMenu();
@@ -70,6 +79,7 @@ namespace ProxyManager
             ++idx;
             mis[idx] = new MenuItem();
             mis[idx].Text = "Options";
+            // TODO: fix the entry handler from About to Options
             mis[idx].Click += new System.EventHandler(aboutToolStripMenuItem_Click);
             ++idx;
             mis[idx] = new MenuItem("-");
