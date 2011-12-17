@@ -31,6 +31,7 @@ namespace ProxyManager
             UpdateTextBoxContent();
             UpdateGroupBoxTitle();
             this.Text = AssemblyProduct;
+            aboutToolStripMenuItem.Text = "&About " + AssemblyProduct;
         }
 
         public void NotificationNetworkChanged(object sender, EventArgs e)
