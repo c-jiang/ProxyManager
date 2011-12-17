@@ -166,8 +166,9 @@ namespace ProxyManager
 
         private bool IsExpressionMatched(string exp, string target)
         {
-            string pattern = exp.Replace(".", @"\.");
-            pattern = pattern.Replace("*", ".*");
+            string pattern = exp.Replace(@".", @"\.");
+            pattern = pattern.Replace(@"*", @".*");
+            pattern = pattern.Replace(@"?", @".");
             Regex regex = new Regex(pattern);
             Match match = regex.Match(target);
             return (match.Success && match.Value.Length > 0);
