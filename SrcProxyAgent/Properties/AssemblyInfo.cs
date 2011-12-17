@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ProxyAgent")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription(@"Proxy Agent is owned and used by Proxy Manager.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Home")]
-[assembly: AssemblyProduct("ProxyAgent")]
-[assembly: AssemblyCopyright("Copyright © Home 2011")]
+[assembly: AssemblyCompany("Personal Contribution from Cheng Jiang")]
+[assembly: AssemblyProduct("Proxy Agent")]
+[assembly: AssemblyCopyright("Copyright © Cheng Jiang / 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
