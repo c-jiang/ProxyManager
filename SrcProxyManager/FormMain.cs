@@ -253,9 +253,16 @@ namespace ProxyManager
             UserNotify_WorkModeProxyEnabled(sender, e);
         }
 
+        private void minimizeToTrayToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ShowInTaskbar = false;                     // step 1 - hide
+            this.WindowState = FormWindowState.Minimized;   // step 2 - hide
+            this.Hide();                                    // step 3 - hide
+        }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

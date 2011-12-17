@@ -143,18 +143,19 @@
             // minTotrayToolStripMenuItem
             // 
             this.minTotrayToolStripMenuItem.Name = "minTotrayToolStripMenuItem";
-            this.minTotrayToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.minTotrayToolStripMenuItem.Text = "Min to &tray";
+            this.minTotrayToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.minTotrayToolStripMenuItem.Text = "Mi&nimize to Tray";
+            this.minTotrayToolStripMenuItem.Click += new System.EventHandler(this.minimizeToTrayToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(123, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
