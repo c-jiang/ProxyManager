@@ -17,26 +17,29 @@ namespace ProxyManager
             m_szAppDir = Path.GetDirectoryName(path);
             m_detector = new NetworkDetector();
             m_profile = null;
+
+            // link NetworkDetector to AppManager
+            m_detector.NetworkChanged +=
+                new NetworkDetector.NotifyAppManagerNetworkChanged(
+                    this.DetectorNotify_NetworkChanged);
+
+            // link OS to NetworkDetector
+            NetworkChange.NetworkAddressChanged +=
+                new NetworkAddressChangedEventHandler(
+                    m_detector.OsNotify_NetworkChanged);
         }
 
-        public bool InitAppEnvironment()
+        public bool LoadAppEnvironment()
         {
             string path = Path.Combine(m_szAppDir, PROXY_AGENT_FILE_NAME);
             return File.Exists(path);
         }
 
-        public bool InitAppProfile()
+        public bool LoadAppProfile()
         {
             bool createdNew;
             m_profile = Profile.Load(m_szAppDir, out createdNew);
-            if (createdNew) {
-                return false;
-            } else {
-                if (m_profile.m_workMode == WorkMode.Auto) {
-                    RegisterLowLevelCallbacks();
-                }
-                return true;
-            }
+            return (!createdNew);
         }
 
 
@@ -138,12 +141,6 @@ namespace ProxyManager
             if (oldMode != newMode) {
                 m_profile.m_workMode = newMode;
                 Profile.Save(m_profile);
-
-                if (oldMode == WorkMode.Auto) {
-                    DeregisterLowLevelCallbacks();
-                } else if (newMode == WorkMode.Auto) {
-                    RegisterLowLevelCallbacks();
-                }
             }
         }
 
@@ -192,32 +189,6 @@ namespace ProxyManager
             Regex regex = new Regex(pattern);
             Match match = regex.Match(target);
             return (match.Success && match.Value.Length > 0);
-        }
-
-        private void RegisterLowLevelCallbacks()
-        {
-            // Link NetworkDetector to AppManager
-            m_detector.NetworkChanged +=
-                new NetworkDetector.NotifyAppManagerNetworkChanged(
-                    this.DetectorNotify_NetworkChanged);
-
-            // Link OS to NetworkDetector
-            NetworkChange.NetworkAddressChanged +=
-                new NetworkAddressChangedEventHandler(
-                    m_detector.OsNotify_NetworkChanged);
-        }
-
-        private void DeregisterLowLevelCallbacks()
-        {
-            // Remove link between NetworkDetector and AppManager
-            m_detector.NetworkChanged -=
-                new NetworkDetector.NotifyAppManagerNetworkChanged(
-                    this.DetectorNotify_NetworkChanged);
-
-            // Remove link between OS and NetworkDetector
-            NetworkChange.NetworkAddressChanged -=
-                new NetworkAddressChangedEventHandler(
-                    m_detector.OsNotify_NetworkChanged);
         }
 
         private Process PrepareProxyAgentProcess()

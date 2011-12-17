@@ -53,6 +53,9 @@ namespace ProxyManager
                 m_appManagerRef.EnableProxy();
                 break;
             }
+
+            // initially dump network status to text box
+            UpdateGui_TextBoxMainContent();
         }
 
         private void InitGuiNotifyIcon()
@@ -62,7 +65,7 @@ namespace ProxyManager
             notifyIcon.Visible = true;
 
             // Init NotifyIconMenuContext
-            MenuItem[] mis = new MenuItem[11];
+            MenuItem[] mis = new MenuItem[14];
             int idx = 0;
 
             mis[idx] = new MenuItem();
@@ -81,6 +84,16 @@ namespace ProxyManager
             mis[idx].Text = "Options";
             // TODO: fix the entry handler from About to Options
             mis[idx].Click += new System.EventHandler(aboutToolStripMenuItem_Click);
+            ++idx;
+            mis[idx] = new MenuItem("-");
+            ++idx;
+            mis[idx] = new MenuItem();          // network status
+            mis[idx].Enabled = false;
+            m_miNiCtxNetworkStatus = mis[idx];
+            ++idx;
+            mis[idx] = new MenuItem();          // ip address
+            mis[idx].Enabled = false;
+            m_miNiCtxIPAddress = mis[idx];
             ++idx;
             mis[idx] = new MenuItem("-");
             ++idx;
@@ -113,11 +126,28 @@ namespace ProxyManager
             mis[idx].DefaultItem = true;
 
             notifyIcon.ContextMenu = new ContextMenu(mis);
+
+            UpdateGui_NotifyIconMenuNetwork();
+            UpdateGui_NotifyIconTextIndication();
         }
 
         private void UpdateGuiNetworkChanged()
         {
-            // update text box
+            UpdateGui_TextBoxMainContent();
+            UpdateGui_NotifyIconTextIndication();
+            UpdateGui_NotifyIconMenuNetwork();
+        }
+
+        private void UpdateGuiProxyChanged()
+        {
+            UpdateGui_GroupBoxTitle();
+            UpdateGui_NotifyIconTextIndication();
+            UpdateGui_NotifyIconMenuWorkMode();
+        }
+
+        private void UpdateGui_TextBoxMainContent()
+        {
+            // change reference: network
             NetworkDetector nd = m_appManagerRef.Detector;
             string ui = "[" + Utils.GetDateTime() + "] ";
             if (nd.IsNetworkActive()) {
@@ -142,25 +172,43 @@ namespace ProxyManager
             ui += "Bypass: " + IeProxyOptions.Bypass;
             ui += "\r\n";
             tbStatus.Text = ui;
+        }
 
-            // update notify icon
+        private void UpdateGui_GroupBoxTitle()
+        {
+            // change reference: proxy
+            gbWorkMode.Text = "Current Work Mode: "
+                + m_appManagerRef.AppProfile.m_workMode
+                + " Mode";
+        }
+
+        private void UpdateGui_NotifyIconTextIndication()
+        {
+            // change reference: network, proxy
             string str = AssemblyProduct + " ("
                 + m_appManagerRef.AppProfile.m_workMode + " Mode)"
                 + Environment.NewLine;
             str += "Network Status: "
                 + (m_appManagerRef.Detector.IsNetworkActive() ? "Active" : "Inactive");
             notifyIcon.Text = str;
-
         }
 
-        private void UpdateGuiProxyChanged()
+        private void UpdateGui_NotifyIconMenuNetwork()
         {
-            // update group box title
-            gbWorkMode.Text = "Current Work Mode: "
-                + m_appManagerRef.AppProfile.m_workMode
-                + " Mode";
+            // change reference: network
+            m_miNiCtxNetworkStatus.Text = "Network Status: "
+                + (m_appManagerRef.Detector.IsNetworkActive()
+                    ? "Active" : "Inactive");
 
-            // update notify icon
+            m_miNiCtxIPAddress.Text = "IP Address: "
+                + (m_appManagerRef.Detector.IsNetworkActive()
+                    ? m_appManagerRef.Detector.ActiveNetworkIPAddress()
+                    : "N/A");
+        }
+
+        private void UpdateGui_NotifyIconMenuWorkMode()
+        {
+            // change reference: proxy
             foreach (MenuItem iter in m_listModeMenuItems) {
                 iter.Checked = false;
             }
@@ -234,8 +282,7 @@ namespace ProxyManager
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            m_appManagerRef.Detector.DetectActiveNetwork();
-            UpdateGuiNetworkChanged();
+            UpdateGui_TextBoxMainContent();
         }
 
         private void btnAutoMode_Click(object sender, EventArgs e)
@@ -329,5 +376,7 @@ namespace ProxyManager
         private AppManager m_appManagerRef;
         private FormWindowState m_prevState;
         private List<MenuItem> m_listModeMenuItems;
+        private MenuItem m_miNiCtxNetworkStatus;
+        private MenuItem m_miNiCtxIPAddress;
     }
 }

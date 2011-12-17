@@ -21,7 +21,7 @@ namespace ProxyManager
             if (createdNew) {
                 AppManager appManager = new AppManager();
 
-                if (!appManager.InitAppEnvironment()) {
+                if (!appManager.LoadAppEnvironment()) {
                     MessageBox.Show(
                         @"'" + AppManager.PROXY_AGENT_FILE_NAME + "' is missing."
                         + Environment.NewLine
@@ -31,7 +31,7 @@ namespace ProxyManager
                 } else {
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    if (!appManager.InitAppProfile()) {
+                    if (!appManager.LoadAppProfile()) {
                         DialogResult dr = MessageBox.Show(
                             @"New profile '" + Profile.PROFILE_FILE_NAME
                             + @"' has been created since there was no profile."
