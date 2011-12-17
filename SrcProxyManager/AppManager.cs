@@ -47,7 +47,7 @@ namespace ProxyManager
         public event NotifyGuiProxyChanged ProxyChanged;
         public event NotifyGuiNetworkAndProxyChanged NetworkAndProxyChanged;
 
-        public void NotificationNetworkChanged(object sender, EventArgs e)
+        public void DetectorNotify_NetworkChanged(object sender, EventArgs e)
         {
             bool bChanged = AutoSwitchProxy();
 
@@ -131,8 +131,9 @@ namespace ProxyManager
             return true;
         }
 
-        public void UserChangeWorkMode(WorkMode newMode)
+        public void ProfileChangedWorkMode(WorkMode newMode)
         {
+            // TODO: change to profile changed all
             WorkMode oldMode = m_profile.m_workMode;
             if (oldMode != newMode) {
                 m_profile.m_workMode = newMode;
@@ -195,28 +196,28 @@ namespace ProxyManager
 
         private void RegisterLowLevelCallbacks()
         {
-            // Link NetworkDetector.NetworkChanged to AppManager
+            // Link NetworkDetector to AppManager
             m_detector.NetworkChanged +=
                 new NetworkDetector.NotifyAppManagerNetworkChanged(
-                    this.NotificationNetworkChanged);
+                    this.DetectorNotify_NetworkChanged);
 
-            // Link system NetworkChange.NetworkAddressChanged to NetworkDetector
+            // Link OS to NetworkDetector
             NetworkChange.NetworkAddressChanged +=
                 new NetworkAddressChangedEventHandler(
-                    m_detector.NetworkAddressChangedCallback);
+                    m_detector.OsNotify_NetworkChanged);
         }
 
         private void DeregisterLowLevelCallbacks()
         {
-            // Remove link between NetworkDetector.NetworkChanged and AppManager
+            // Remove link between NetworkDetector and AppManager
             m_detector.NetworkChanged -=
                 new NetworkDetector.NotifyAppManagerNetworkChanged(
-                    this.NotificationNetworkChanged);
+                    this.DetectorNotify_NetworkChanged);
 
-            // Remove link between system NetworkChange.NetworkAddressChanged and NetworkDetector
+            // Remove link between OS and NetworkDetector
             NetworkChange.NetworkAddressChanged -=
                 new NetworkAddressChangedEventHandler(
-                    m_detector.NetworkAddressChangedCallback);
+                    m_detector.OsNotify_NetworkChanged);
         }
 
         private Process PrepareProxyAgentProcess()

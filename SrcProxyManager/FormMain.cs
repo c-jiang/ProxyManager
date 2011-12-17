@@ -14,65 +14,100 @@ namespace ProxyManager
     {
         public FormMain(AppManager appManager)
         {
+            // Init member variables
             m_appManagerRef = appManager;
             m_prevState = FormWindowState.Normal;
+            m_listModeMenuItems = new List<MenuItem>();
 
             // TODO: move to a seperate method for callback registration
             m_appManagerRef.NetworkChanged +=
                 new AppManager.NotifyGuiNetworkChanged(
-                    this.NotificationNetworkChanged);
+                    this.AppMgrNotify_NetworkChanged);
             m_appManagerRef.ProxyChanged +=
                 new AppManager.NotifyGuiProxyChanged(
-                    this.NotificationProxyChanged);
+                    this.AppMgrNotify_ProxyChanged);
             m_appManagerRef.NetworkAndProxyChanged +=
                 new AppManager.NotifyGuiNetworkAndProxyChanged(
-                    this.NotificationNetworkAndProxyChanged);
+                    this.AppMgrNotify_NetworkAndProxyChanged);
 
             // Init GUI components
             InitializeComponent();
+            if (m_appManagerRef.AppProfile.m_isStartMinimized) {
+                // TODO: whether move to ApplyAppProfile()
+                this.ShowInTaskbar = false;
+                this.WindowState = FormWindowState.Minimized;
+            }
             this.Text = AssemblyProduct;
             aboutToolStripMenuItem.Text = "&About " + AssemblyProduct;
             InitNotifyIcon();
 
             // Update GUI components
-            UpdateTextBoxContent();
-            UpdateGroupBoxTitle();
-            UpdateNotifyIcon();
-        }
-
-        public void NotificationNetworkChanged(object sender, EventArgs e)
-        {
-            UpdateTextBoxContent();
-        }
-
-        public void NotificationProxyChanged(object sender, EventArgs e)
-        {
-            UpdateTextBoxContent();
-        }
-
-        public void NotificationNetworkAndProxyChanged(object sender, EventArgs e)
-        {
-            UpdateTextBoxContent();
+            UpdateGuiNetworkChanged();
+            UpdateGuiProxyChanged();
         }
 
         private void InitNotifyIcon()
         {
+            // Init NotifyIcon
             notifyIcon.ContextMenu = new ContextMenu();
             notifyIcon.Visible = true;
+
+            // Init NotifyIconMenuContext
+            MenuItem[] mis = new MenuItem[11];
+            int idx = 0;
+
+            mis[idx] = new MenuItem();
+            mis[idx].Text = "Exit " + AssemblyProduct;
+            mis[idx].Click += new System.EventHandler(exitToolStripMenuItem_Click);
+            ++idx;
+            mis[idx] = new MenuItem("-");
+            ++idx;
+            mis[idx] = new MenuItem();
+            mis[idx].Text = "About " + AssemblyProduct;
+            mis[idx].Click += new System.EventHandler(aboutToolStripMenuItem_Click);
+            ++idx;
+            mis[idx] = new MenuItem("-");
+            ++idx;
+            mis[idx] = new MenuItem();
+            mis[idx].Text = "Options";
+            mis[idx].Click += new System.EventHandler(aboutToolStripMenuItem_Click);
+            ++idx;
+            mis[idx] = new MenuItem("-");
+            ++idx;
+            mis[idx] = new MenuItem();
+            mis[idx].Text = "Auto Mode";
+            mis[idx].Click += new System.EventHandler(UserNotify_WorkModeAutoEnabled);
+            mis[idx].RadioCheck = true;
+            mis[idx].Checked = false;
+            m_listModeMenuItems.Add(mis[idx]);  // [0] Auto Mode
+            ++idx;
+            mis[idx] = new MenuItem();
+            mis[idx].Text = "Direct Mode";
+            mis[idx].Click += new System.EventHandler(UserNotify_WorkModeDirectEnabled);
+            mis[idx].RadioCheck = true;
+            mis[idx].Checked = false;
+            m_listModeMenuItems.Add(mis[idx]);  // [1] Direct Mode
+            ++idx;
+            mis[idx] = new MenuItem();
+            mis[idx].Text = "Proxy Mode";
+            mis[idx].Click += new System.EventHandler(UserNotify_WorkModeProxyEnabled);
+            mis[idx].RadioCheck = true;
+            mis[idx].Checked = false;
+            m_listModeMenuItems.Add(mis[idx]);  // [2] Proxy Mode
+            ++idx;
+            mis[idx] = new MenuItem("-");
+            ++idx;
+            mis[idx] = new MenuItem();
+            mis[idx].Text = "Open " + AssemblyProduct;
+            mis[idx].Click += new System.EventHandler(UserNotify_FormMainActived);
+            mis[idx].DefaultItem = true;
+
+            notifyIcon.ContextMenu = new ContextMenu(mis);
         }
 
-        private void UpdateNotifyIcon()
+        private void UpdateGuiNetworkChanged()
         {
-            string str = AssemblyProduct + " ("
-                + m_appManagerRef.AppProfile.m_workMode + " Mode)"
-                + Environment.NewLine;
-            str += "Network Status: "
-                + (m_appManagerRef.Detector.IsNetworkActive() ? "Active" : "Inactive");
-            notifyIcon.Text = str;
-        }
-
-        private void UpdateTextBoxContent()
-        {
+            // update text box
             NetworkDetector nd = m_appManagerRef.Detector;
             string ui = "[" + Utils.GetDateTime() + "] ";
             if (nd.IsNetworkActive()) {
@@ -88,6 +123,7 @@ namespace ProxyManager
                 ui += "Network Inactive" + "\r\n";
                 ui += "\r\n";
             }
+            // TODO: remove proxy info from this text box
             ui += "Proxy Stat: ";
             ui += (IeProxyOptions.ProxyEnable ? "Enable" : "Disable");
             ui += "\r\n";
@@ -96,40 +132,115 @@ namespace ProxyManager
             ui += "Bypass: " + IeProxyOptions.Bypass;
             ui += "\r\n";
             tbStatus.Text = ui;
+
+            // update notify icon
+            string str = AssemblyProduct + " ("
+                + m_appManagerRef.AppProfile.m_workMode + " Mode)"
+                + Environment.NewLine;
+            str += "Network Status: "
+                + (m_appManagerRef.Detector.IsNetworkActive() ? "Active" : "Inactive");
+            notifyIcon.Text = str;
+
         }
 
-        private void UpdateGroupBoxTitle()
+        private void UpdateGuiProxyChanged()
         {
+            // update group box title
             gbWorkMode.Text = "Current Work Mode: "
                 + m_appManagerRef.AppProfile.m_workMode
                 + " Mode";
+
+            // update notify icon
+            foreach (MenuItem iter in m_listModeMenuItems) {
+                iter.Checked = false;
+            }
+            switch (m_appManagerRef.AppProfile.m_workMode) {
+            case WorkMode.Auto:
+                m_listModeMenuItems[0].Checked = true;
+                break;
+            case WorkMode.Direct:
+                m_listModeMenuItems[1].Checked = true;
+                break;
+            case WorkMode.Proxy:
+                m_listModeMenuItems[2].Checked = true;
+                break;
+            }
         }
+
+        #region AppManager Notifications
+
+        public void AppMgrNotify_NetworkChanged(object sender, EventArgs e)
+        {
+            UpdateGuiNetworkChanged();
+        }
+
+        public void AppMgrNotify_ProxyChanged(object sender, EventArgs e)
+        {
+            UpdateGuiProxyChanged();
+        }
+
+        public void AppMgrNotify_NetworkAndProxyChanged(object sender, EventArgs e)
+        {
+            UpdateGuiProxyChanged();
+            UpdateGuiNetworkChanged();
+        }
+
+        #endregion
+
+        #region User Notifications
+
+        private void UserNotify_WorkModeAutoEnabled(object sender, EventArgs e)
+        {
+            m_appManagerRef.ProfileChangedWorkMode(WorkMode.Auto);
+            m_appManagerRef.AutoSwitchProxy();
+        }
+
+        private void UserNotify_WorkModeDirectEnabled(object sender, EventArgs e)
+        {
+            m_appManagerRef.ProfileChangedWorkMode(WorkMode.Direct);
+            m_appManagerRef.DisableProxy();
+        }
+
+        private void UserNotify_WorkModeProxyEnabled(object sender, EventArgs e)
+        {
+            m_appManagerRef.ProfileChangedWorkMode(WorkMode.Proxy);
+            m_appManagerRef.EnableProxy();
+        }
+
+        private void UserNotify_FormMainActived(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized) {
+                this.Show();                    // step 1 - show
+                this.ShowInTaskbar = true;      // step 2 - show
+                this.WindowState = m_prevState; // step 3 - show
+            } else {
+                this.Activate();
+            }
+        }
+
+        #endregion
+
+        #region Event Handlers to GUI Components
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             m_appManagerRef.Detector.DetectActiveNetwork();
-            UpdateTextBoxContent();
+            UpdateGuiNetworkChanged();
         }
 
         private void btnAutoMode_Click(object sender, EventArgs e)
         {
-            m_appManagerRef.AutoSwitchProxy();
-            m_appManagerRef.UserChangeWorkMode(WorkMode.Auto);
-            UpdateGroupBoxTitle();
+            UserNotify_WorkModeAutoEnabled(sender, e);
         }
 
         private void btnDirectMode_Click(object sender, EventArgs e)
         {
-            m_appManagerRef.DisableProxy();
-            m_appManagerRef.UserChangeWorkMode(WorkMode.Direct);
-            UpdateGroupBoxTitle();
+            UserNotify_WorkModeDirectEnabled(sender, e);
         }
 
         private void btnProxyMode_Click(object sender, EventArgs e)
         {
-            m_appManagerRef.EnableProxy();
-            m_appManagerRef.UserChangeWorkMode(WorkMode.Proxy);
-            UpdateGroupBoxTitle();
+            UserNotify_WorkModeProxyEnabled(sender, e);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -139,8 +250,47 @@ namespace ProxyManager
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            DlgAboutBox.Instance.StartPosition =
+                (this.WindowState == FormWindowState.Minimized)
+                ? FormStartPosition.CenterScreen
+                : FormStartPosition.CenterParent;
             DlgAboutBox.Instance.ShowDialog(this);
         }
+
+        private void notifyIcon_Click(object sender, EventArgs e)
+        {
+            var evt = e as MouseEventArgs;
+            if (evt.Button == MouseButtons.Left) {
+                // trigger the show/hide
+                switch (this.WindowState) {
+                case FormWindowState.Minimized:
+                    this.Show();                    // step 1 - show
+                    this.ShowInTaskbar = true;      // step 2 - show
+                    this.WindowState = m_prevState; // step 3 - show
+                    break;
+                case FormWindowState.Maximized:
+                case FormWindowState.Normal:
+                    this.ShowInTaskbar = false;     // step 1 - hide
+                    this.WindowState = FormWindowState.Minimized;   // step 2 - hide
+                    break;
+                }
+            }
+        }
+
+        private void FormMain_Resize(object sender, EventArgs e)
+        {
+            switch (this.WindowState) {
+            case FormWindowState.Minimized:
+                this.Hide();                        // step 3 - hide
+                break;
+            case FormWindowState.Maximized:
+            case FormWindowState.Normal:
+                m_prevState = this.WindowState;
+                break;
+            }
+        }
+
+        #endregion
 
         #region Assembly Attribute Accessors
 
@@ -158,46 +308,9 @@ namespace ProxyManager
 
         #endregion
 
-        private void notifyIcon_Click(object sender, EventArgs e)
-        {
-            var evt = e as MouseEventArgs;
-            switch (evt.Button) {
-            case MouseButtons.Left:
-                // trigger the show/hide
-                switch (this.WindowState) {
-                case FormWindowState.Minimized:
-                    this.Show();                    // step 1 - show
-                    this.ShowInTaskbar = true;      // step 2 - show
-                    this.WindowState = m_prevState; // step 3 - show
-                    break;
-                case FormWindowState.Maximized:
-                case FormWindowState.Normal:
-                    this.ShowInTaskbar = false;     // step 1 - hide
-                    this.WindowState = FormWindowState.Minimized;   // step 2 - hide
-                    break;
-                }
-                break;
-            case MouseButtons.Right:
-                // TODO: show the context menu
-                break;
-            }
-        }
-
-        private void FormMain_Resize(object sender, EventArgs e)
-        {
-            switch (this.WindowState) {
-            case FormWindowState.Minimized:
-                this.Hide();                        // step 3 - hide
-                break;
-            case FormWindowState.Maximized:
-            case FormWindowState.Normal:
-                m_prevState = this.WindowState;
-                break;
-            }
-        }
-
-
+        
         private AppManager m_appManagerRef;
         private FormWindowState m_prevState;
+        private List<MenuItem> m_listModeMenuItems;
     }
 }

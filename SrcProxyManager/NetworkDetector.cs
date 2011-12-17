@@ -99,7 +99,7 @@ namespace ProxyManager
         #endregion
 
 
-        public void NetworkAddressChangedCallback(object sender, EventArgs e)
+        public void OsNotify_NetworkChanged(object sender, EventArgs e)
         {
             DetectActiveNetwork();
             NetworkChanged(this, new EventArgs());
