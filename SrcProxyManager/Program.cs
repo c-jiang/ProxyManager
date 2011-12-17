@@ -21,18 +21,51 @@ namespace ProxyManager
             if (createdNew) {
                 AppManager appManager = new AppManager();
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new FormMain(appManager));
-                
+                if (!appManager.InitAppEnvironment()) {
+                    MessageBox.Show(
+                        @"'" + AppManager.PROXY_AGENT_FILE_NAME + "' is missing."
+                        + Environment.NewLine
+                        + @"Failed to launch " + ASSEMBLY_PRODUCT + @".",
+                        ASSEMBLY_PRODUCT,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                } else {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    if (!appManager.InitAppProfile()) {
+                        DialogResult dr = MessageBox.Show(
+                            @"New profile '" + Profile.PROFILE_FILE_NAME
+                            + @"' has been created since there was no profile."
+                            + Environment.NewLine
+                            + @"It is strongly recommended to set the options before using "
+                            + ASSEMBLY_PRODUCT + @"."
+                            + Environment.NewLine
+                            + @"Would you like to set the options right now?",
+                            ASSEMBLY_PRODUCT,
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question);
+
+                        if (dr == DialogResult.Yes) {
+                            // TODO: Add the entry to Options dialog.
+                            MessageBox.Show(
+                                @"The entry to Options is not implemented.",
+                                ASSEMBLY_PRODUCT,
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                    Application.Run(new FormMain(appManager));
+                }
+
                 instance.ReleaseMutex();
             } else {
                 MessageBox.Show(
-                    "Error: ProxyManager is already running.",
-                    "Proxy Manager",
+                    @"ProxyManager is already running.",
+                    ASSEMBLY_PRODUCT,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
+
+        // Refer to [assembly: AssemblyProduct]
+        private const string ASSEMBLY_PRODUCT = "Proxy Manager";
     }
 }

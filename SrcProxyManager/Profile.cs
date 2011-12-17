@@ -19,6 +19,8 @@ namespace ProxyManager
     [XmlInclude(typeof(ApplyRule))]
     public class Profile
     {
+        public const string PROFILE_FILE_NAME = "ProxyManagerProfile.xml";
+
         // settings - options
         [XmlElement("WorkMode")]
         public WorkMode m_workMode;
@@ -36,7 +38,7 @@ namespace ProxyManager
         // Contructor Method
         public Profile()
         {
-            m_workMode = WorkMode.Auto;
+            m_workMode = WorkMode.Direct;
             m_isStartAuto = true;
             m_isStartMinimized = true;
             m_isLogToFile = false;
@@ -44,24 +46,26 @@ namespace ProxyManager
         }
 
         // Method: Load from local profile
-        public static Profile Load(string appDir)
+        public static Profile Load(string appDir, out bool createdNew)
         {
+            Profile profile = null;
             string profilePath = Path.Combine(appDir, PROFILE_FILE_NAME);
             if (File.Exists(profilePath)) {
                 XmlSerializer xs = new XmlSerializer(typeof(Profile));
                 StreamReader reader = new StreamReader(PROFILE_FILE_NAME);
-                Profile profile = (Profile)xs.Deserialize(reader.BaseStream);
+                profile = (Profile)xs.Deserialize(reader.BaseStream);
                 // TODO: deserialization may cause exception
                 profile.m_szProfilePath = profilePath;
                 reader.Close();
                 Save(profile);
-                return profile;
+                createdNew = false;
             } else {
-                Profile profile = new Profile();
+                profile = new Profile();
                 profile.m_szProfilePath = profilePath;
                 Save(profile);
-                return profile;
+                createdNew = true;
             }
+            return profile;
         }
 
         // Method: Save to local profile
@@ -78,7 +82,6 @@ namespace ProxyManager
         }
 
         private string m_szProfilePath;
-        private const string PROFILE_FILE_NAME = "ProxyManagerProfile.xml";
     }
 
     public class ProxyGroup

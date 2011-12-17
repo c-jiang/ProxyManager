@@ -15,16 +15,17 @@ namespace ProxyManager
         public FormMain(AppManager appManager)
         {
             m_appManagerRef = appManager;
+
             // TODO: move to a seperate method for callback registration
             m_appManagerRef.NetworkChanged +=
                 new AppManager.NotifyGuiNetworkChanged(
-                    NotificationNetworkChanged);
+                    this.NotificationNetworkChanged);
             m_appManagerRef.ProxyChanged +=
                 new AppManager.NotifyGuiProxyChanged(
-                    NotificationProxyChanged);
+                    this.NotificationProxyChanged);
             m_appManagerRef.NetworkAndProxyChanged +=
                 new AppManager.NotifyGuiNetworkAndProxyChanged(
-                    NotificationNetworkAndProxyChanged);
+                    this.NotificationNetworkAndProxyChanged);
 
             InitializeComponent();
             UpdateTextBoxContent();

@@ -9,17 +9,36 @@ namespace ProxyManager
 {
     public class AppManager
     {
+        public const string PROXY_AGENT_FILE_NAME = "ProxyAgent.exe";
+
         public AppManager()
         {
             string path = Process.GetCurrentProcess().MainModule.FileName;
             m_szAppDir = Path.GetDirectoryName(path);
-            m_profile = Profile.Load(m_szAppDir);
-
             m_detector = new NetworkDetector();
-            if (m_profile.m_workMode.Equals(WorkMode.Auto)) {
-                RegisterCallbacks();
+            m_profile = null;
+        }
+
+        public bool InitAppEnvironment()
+        {
+            string path = Path.Combine(m_szAppDir, PROXY_AGENT_FILE_NAME);
+            return File.Exists(path);
+        }
+
+        public bool InitAppProfile()
+        {
+            bool createdNew;
+            m_profile = Profile.Load(m_szAppDir, out createdNew);
+            if (createdNew) {
+                return false;
+            } else {
+                if (m_profile.m_workMode == WorkMode.Auto) {
+                    RegisterLowLevelCallbacks();
+                }
+                return true;
             }
         }
+
 
         public delegate void NotifyGuiNetworkChanged(object sender, EventArgs e);
         public delegate void NotifyGuiProxyChanged(object sender, EventArgs e);
@@ -120,9 +139,9 @@ namespace ProxyManager
                 Profile.Save(m_profile);
 
                 if (oldMode == WorkMode.Auto) {
-                    DeregisterCallbacks();
+                    DeregisterLowLevelCallbacks();
                 } else if (newMode == WorkMode.Auto) {
-                    RegisterCallbacks();
+                    RegisterLowLevelCallbacks();
                 }
             }
         }
@@ -174,12 +193,12 @@ namespace ProxyManager
             return (match.Success && match.Value.Length > 0);
         }
 
-        private void RegisterCallbacks()
+        private void RegisterLowLevelCallbacks()
         {
             // Link NetworkDetector.NetworkChanged to AppManager
             m_detector.NetworkChanged +=
                 new NetworkDetector.NotifyAppManagerNetworkChanged(
-                    NotificationNetworkChanged);
+                    this.NotificationNetworkChanged);
 
             // Link system NetworkChange.NetworkAddressChanged to NetworkDetector
             NetworkChange.NetworkAddressChanged +=
@@ -187,12 +206,12 @@ namespace ProxyManager
                     m_detector.NetworkAddressChangedCallback);
         }
 
-        private void DeregisterCallbacks()
+        private void DeregisterLowLevelCallbacks()
         {
             // Remove link between NetworkDetector.NetworkChanged and AppManager
             m_detector.NetworkChanged -=
                 new NetworkDetector.NotifyAppManagerNetworkChanged(
-                    NotificationNetworkChanged);
+                    this.NotificationNetworkChanged);
 
             // Remove link between system NetworkChange.NetworkAddressChanged and NetworkDetector
             NetworkChange.NetworkAddressChanged -=
@@ -227,7 +246,5 @@ namespace ProxyManager
         private string m_szAppDir;
         private Profile m_profile;
         private NetworkDetector m_detector;
-
-        private const string PROXY_AGENT_FILE_NAME = "ProxyAgent.exe";
     }
 }
