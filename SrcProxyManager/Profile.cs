@@ -57,7 +57,6 @@ namespace ProxyManager
                 // TODO: deserialization may cause exception
                 profile.m_szProfilePath = profilePath;
                 reader.Close();
-                Save(profile);
                 createdNew = false;
             } else {
                 profile = new Profile();

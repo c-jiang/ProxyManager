@@ -29,6 +29,11 @@ namespace ProxyManager
                     m_detector.OsNotify_NetworkChanged);
         }
 
+        ~AppManager()
+        {
+            Profile.Save(m_profile);
+        }
+
         public bool LoadAppEnvironment()
         {
             string path = Path.Combine(m_szAppDir, PROXY_AGENT_FILE_NAME);
