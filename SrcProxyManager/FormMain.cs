@@ -64,6 +64,11 @@ namespace ProxyManager
             notifyIcon.ContextMenu = new ContextMenu();
             notifyIcon.Visible = true;
 
+            // Init NotifyIconBalloon
+            notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+            notifyIcon.BalloonTipTitle = AssemblyProduct;
+            notifyIcon.BalloonTipText = " ";
+
             // Init NotifyIconMenuContext
             MenuItem[] mis = new MenuItem[14];
             int idx = 0;
@@ -131,20 +136,6 @@ namespace ProxyManager
             UpdateGui_NotifyIconTextIndication();
         }
 
-        private void UpdateGuiNetworkChanged()
-        {
-            UpdateGui_TextBoxMainContent();
-            UpdateGui_NotifyIconTextIndication();
-            UpdateGui_NotifyIconMenuNetwork();
-        }
-
-        private void UpdateGuiProxyChanged()
-        {
-            UpdateGui_GroupBoxTitle();
-            UpdateGui_NotifyIconTextIndication();
-            UpdateGui_NotifyIconMenuWorkMode();
-        }
-
         private void UpdateGui_TextBoxMainContent()
         {
             // change reference: network
@@ -193,6 +184,27 @@ namespace ProxyManager
             notifyIcon.Text = str;
         }
 
+        private void UpdateGui_NotifyIconBalloonTip()
+        {
+            string tip = "Network Status: "
+                 + (m_appManagerRef.Detector.IsNetworkActive() ? "Active" : "Inactive");
+            tip += Environment.NewLine;
+            if (m_appManagerRef.Detector.IsNetworkActive()) {
+                tip += "IP Address: "
+                    + m_appManagerRef.Detector.ActiveNetworkIPAddress();
+                tip += Environment.NewLine;
+            }
+            tip += "Work Mode: "
+                + m_appManagerRef.AppProfile.m_workMode.ToString();
+            if (IeProxyOptions.ProxyEnable) {
+                tip += Environment.NewLine;
+                tip += "Proxy Address: " + IeProxyOptions.ProxyAddr;
+            }
+
+            notifyIcon.BalloonTipText = tip;
+            notifyIcon.ShowBalloonTip(3000);
+        }
+
         private void UpdateGui_NotifyIconMenuNetwork()
         {
             // change reference: network
@@ -229,18 +241,28 @@ namespace ProxyManager
 
         public void AppMgrNotify_NetworkChanged(object sender, EventArgs e)
         {
-            UpdateGuiNetworkChanged();
+            UpdateGui_TextBoxMainContent();
+            UpdateGui_NotifyIconTextIndication();
+            UpdateGui_NotifyIconMenuNetwork();
+            UpdateGui_NotifyIconBalloonTip();
         }
 
         public void AppMgrNotify_ProxyChanged(object sender, EventArgs e)
         {
-            UpdateGuiProxyChanged();
+            UpdateGui_GroupBoxTitle();
+            UpdateGui_NotifyIconTextIndication();
+            UpdateGui_NotifyIconMenuWorkMode();
+            UpdateGui_NotifyIconBalloonTip();
         }
 
         public void AppMgrNotify_NetworkAndProxyChanged(object sender, EventArgs e)
         {
-            UpdateGuiProxyChanged();
-            UpdateGuiNetworkChanged();
+            UpdateGui_TextBoxMainContent();
+            UpdateGui_GroupBoxTitle();
+            UpdateGui_NotifyIconTextIndication();
+            UpdateGui_NotifyIconMenuNetwork();
+            UpdateGui_NotifyIconMenuWorkMode();
+            UpdateGui_NotifyIconBalloonTip();
         }
 
         #endregion
