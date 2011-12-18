@@ -35,7 +35,7 @@ namespace ProxyManager
                         if (!appManager.LoadAppProfile()) {
                             DialogResult dr = MessageBox.Show(
                                 @"New profile '" + Profile.PROFILE_FILE_NAME
-                                + @"' has been created since there was no profile."
+                                + @"' has been created successfully."
                                 + Environment.NewLine
                                 + @"It is strongly recommended to set the options before using "
                                 + AppManager.ASSEMBLY_PRODUCT + @"."
@@ -53,7 +53,9 @@ namespace ProxyManager
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                         }
-                        Application.Run(new FormMain(appManager));
+                        if (!appManager.IsLoadAppProfileFailed()) {
+                            Application.Run(new FormMain(appManager));
+                        }
                     }
 
                     instance.ReleaseMutex();
@@ -66,8 +68,7 @@ namespace ProxyManager
                 }
             } catch (Exception x) {
                 MessageBox.Show(
-                        x.Message + Environment.NewLine
-                        + x.StackTrace,
+                        x.Message + Environment.NewLine + x.StackTrace,
                         AppManager.ASSEMBLY_PRODUCT,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);

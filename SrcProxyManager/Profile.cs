@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 
 
@@ -43,6 +44,9 @@ namespace ProxyManager
             m_isStartMinimized = true;
             m_isLogToFile = false;
             m_listProxyGroups = null;
+
+            m_szProfilePath = String.Empty;
+            s_bLoadFailed = false;
         }
 
         // Method: Load from local profile
@@ -53,11 +57,35 @@ namespace ProxyManager
             if (File.Exists(profilePath)) {
                 XmlSerializer xs = new XmlSerializer(typeof(Profile));
                 StreamReader reader = new StreamReader(profilePath);
-                profile = (Profile)xs.Deserialize(reader.BaseStream);
-                // TODO: deserialization may cause exception
-                profile.m_szProfilePath = profilePath;
-                reader.Close();
                 createdNew = false;
+                try {
+                    profile = (Profile)xs.Deserialize(reader.BaseStream);
+                    profile.m_szProfilePath = profilePath;
+                    reader.Close();
+                } catch (Exception) {
+                    reader.Close();
+                    DialogResult dr = MessageBox.Show(
+                        "Error occurs in loading the profile."
+                            + Environment.NewLine + Environment.NewLine
+                            + "- Press 'Yes' to load the default profile settings, "
+                            + "but user settings will be lost."
+                            + Environment.NewLine
+                            + "- Press 'No' to exit for manually fixing the error in the editor.",
+                        AppManager.ASSEMBLY_PRODUCT,
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Error);
+                    if (dr == DialogResult.Yes) {
+                        // create an initial profile
+                        profile = new Profile();
+                        profile.m_szProfilePath = profilePath;
+                        Save(profile);
+                        createdNew = true;
+                    } else {
+                        // exit application
+                        s_bLoadFailed = true;
+                        Application.Exit();
+                    }
+                }
             } else {
                 profile = new Profile();
                 profile.m_szProfilePath = profilePath;
@@ -80,7 +108,13 @@ namespace ProxyManager
             writer.Close();
         }
 
+        public static bool IsLoadFailed()
+        {
+            return s_bLoadFailed;
+        }
+
         private string m_szProfilePath;
+        private static bool s_bLoadFailed;
     }
 
     public class ProxyGroup

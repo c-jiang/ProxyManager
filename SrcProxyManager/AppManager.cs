@@ -35,7 +35,9 @@ namespace ProxyManager
 
         ~AppManager()
         {
-            Profile.Save(m_profile);
+            if (!IsLoadAppProfileFailed()) {
+                Profile.Save(m_profile);
+            }
         }
 
         public bool LoadAppEnvironment()
@@ -49,6 +51,11 @@ namespace ProxyManager
             bool createdNew;
             m_profile = Profile.Load(m_szAppDir, out createdNew);
             return (!createdNew);
+        }
+
+        public bool IsLoadAppProfileFailed()
+        {
+            return Profile.IsLoadFailed();
         }
 
 
