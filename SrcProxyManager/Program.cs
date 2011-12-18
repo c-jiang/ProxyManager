@@ -13,55 +13,64 @@ namespace ProxyManager
         [STAThread]
         static void Main()
         {
-            bool createdNew;
-            Mutex instance = new Mutex(true,
-                System.Diagnostics.Process.GetCurrentProcess().ProcessName,
-                out createdNew);
+            try {
+                bool createdNew;
+                Mutex instance = new Mutex(true,
+                    System.Diagnostics.Process.GetCurrentProcess().ProcessName,
+                    out createdNew);
 
-            if (createdNew) {
-                AppManager appManager = new AppManager();
+                if (createdNew) {
+                    AppManager appManager = new AppManager();
 
-                if (!appManager.LoadAppEnvironment()) {
-                    MessageBox.Show(
-                        @"'" + AppManager.PROXY_AGENT_FILE_NAME + "' is missing."
-                        + Environment.NewLine
-                        + @"Failed to launch " + AppManager.ASSEMBLY_PRODUCT + @".",
-                        AppManager.ASSEMBLY_PRODUCT,
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                } else {
-                    Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault(false);
-                    if (!appManager.LoadAppProfile()) {
-                        DialogResult dr = MessageBox.Show(
-                            @"New profile '" + Profile.PROFILE_FILE_NAME
-                            + @"' has been created since there was no profile."
+                    if (!appManager.LoadAppEnvironment()) {
+                        MessageBox.Show(
+                            @"'" + AppManager.PROXY_AGENT_FILE_NAME + "' is missing."
                             + Environment.NewLine
-                            + @"It is strongly recommended to set the options before using "
-                            + AppManager.ASSEMBLY_PRODUCT + @"."
-                            + Environment.NewLine
-                            + @"Would you like to set the options right now?",
+                            + @"Failed to launch " + AppManager.ASSEMBLY_PRODUCT + @".",
                             AppManager.ASSEMBLY_PRODUCT,
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question);
-
-                        if (dr == DialogResult.Yes) {
-                            // TODO: Add the entry to Options dialog.
-                            MessageBox.Show(
-                                @"The entry to Options is not implemented.",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    } else {
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(false);
+                        if (!appManager.LoadAppProfile()) {
+                            DialogResult dr = MessageBox.Show(
+                                @"New profile '" + Profile.PROFILE_FILE_NAME
+                                + @"' has been created since there was no profile."
+                                + Environment.NewLine
+                                + @"It is strongly recommended to set the options before using "
+                                + AppManager.ASSEMBLY_PRODUCT + @"."
+                                + Environment.NewLine
+                                + @"Would you like to set the options right now?",
                                 AppManager.ASSEMBLY_PRODUCT,
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                    }
-                    Application.Run(new FormMain(appManager));
-                }
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question);
 
-                instance.ReleaseMutex();
-            } else {
+                            if (dr == DialogResult.Yes) {
+                                // TODO: Add the entry to Options dialog.
+                                MessageBox.Show(
+                                    @"The entry to Options is not implemented.",
+                                    AppManager.ASSEMBLY_PRODUCT,
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                        }
+                        Application.Run(new FormMain(appManager));
+                    }
+
+                    instance.ReleaseMutex();
+                } else {
+                    MessageBox.Show(
+                        @"ProxyManager is already running.",
+                        AppManager.ASSEMBLY_PRODUCT,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            } catch (Exception x) {
                 MessageBox.Show(
-                    @"ProxyManager is already running.",
-                    AppManager.ASSEMBLY_PRODUCT,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                        x.Message + Environment.NewLine
+                        + x.StackTrace,
+                        AppManager.ASSEMBLY_PRODUCT,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
             }
         }
     }
