@@ -48,7 +48,8 @@ namespace ProxyManager
                 break;
             }
 
-            // TODO: set registry key according to profile
+            // set registry key according to profile
+            m_appManagerRef.ApplyProfileItemAutoStart();
         }
 
         private void InitGuiNotifyIcon()

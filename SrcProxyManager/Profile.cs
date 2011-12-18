@@ -52,7 +52,7 @@ namespace ProxyManager
             string profilePath = Path.Combine(appDir, PROFILE_FILE_NAME);
             if (File.Exists(profilePath)) {
                 XmlSerializer xs = new XmlSerializer(typeof(Profile));
-                StreamReader reader = new StreamReader(PROFILE_FILE_NAME);
+                StreamReader reader = new StreamReader(profilePath);
                 profile = (Profile)xs.Deserialize(reader.BaseStream);
                 // TODO: deserialization may cause exception
                 profile.m_szProfilePath = profilePath;

@@ -3,13 +3,17 @@ using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 
 namespace ProxyManager
 {
     public class AppManager
     {
+        public const string PROXY_MANAGER_FILE_NAME = "ProxyManager.exe";
         public const string PROXY_AGENT_FILE_NAME = "ProxyAgent.exe";
+        // Refer to [assembly: AssemblyProduct]
+        public const string ASSEMBLY_PRODUCT = "Proxy Manager";
 
         public AppManager()
         {
@@ -76,6 +80,24 @@ namespace ProxyManager
         public NetworkDetector Detector
         {
             get { return m_detector; }
+        }
+
+        public void ApplyProfileItemsAll()
+        {
+            // TODO:
+        }
+
+        public void ApplyProfileItemAutoStart()
+        {
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\CurrentVersion\Run", true);
+            if (m_profile.m_isStartAuto) {
+                rk.SetValue(ASSEMBLY_PRODUCT,
+                    Path.Combine(m_szAppDir, PROXY_MANAGER_FILE_NAME));
+            } else {
+                rk.DeleteValue(ASSEMBLY_PRODUCT);
+            }
+            rk.Close();
         }
 
         public void EnableProxy()
