@@ -19,27 +19,21 @@ namespace ProxyManager
             m_prevState = FormWindowState.Normal;
             m_listModeMenuItems = new List<MenuItem>();
 
-            // TODO: move to a seperate method for callback registration
-            m_appManagerRef.NetworkChanged +=
-                new AppManager.NotifyGuiNetworkChanged(
+            m_appManagerRef.NotifyGuiNetworkChanged +=
+                new AppManager.NotifyNetworkChanged(
                     this.AppMgrNotify_NetworkChanged);
-            m_appManagerRef.ProxyChanged +=
-                new AppManager.NotifyGuiProxyChanged(
-                    this.AppMgrNotify_ProxyChanged);
-            m_appManagerRef.NetworkAndProxyChanged +=
-                new AppManager.NotifyGuiNetworkAndProxyChanged(
-                    this.AppMgrNotify_NetworkAndProxyChanged);
 
             // init GUI components
             InitializeComponent();
-            if (m_appManagerRef.AppProfile.m_isStartMinimized) {
-                // TODO: whether move to ApplyAppProfile()
-                this.ShowInTaskbar = false;
-                this.WindowState = FormWindowState.Minimized;
-            }
             this.Text = AssemblyProduct;
             aboutToolStripMenuItem.Text = "&About " + AssemblyProduct;
             InitGuiNotifyIcon();
+
+            // set GUI properties according to profile
+            if (m_appManagerRef.AppProfile.m_isStartMinimized) {
+                this.ShowInTaskbar = false;
+                this.WindowState = FormWindowState.Minimized;
+            }
 
             // start current work mode accordingly
             switch (m_appManagerRef.AppProfile.m_workMode) {
@@ -54,8 +48,7 @@ namespace ProxyManager
                 break;
             }
 
-            // initially dump network status to text box
-            UpdateGui_TextBoxMainContent();
+            // TODO: set registry key according to profile
         }
 
         private void InitGuiNotifyIcon()
@@ -75,20 +68,19 @@ namespace ProxyManager
 
             mis[idx] = new MenuItem();
             mis[idx].Text = "Exit " + AssemblyProduct;
-            mis[idx].Click += new System.EventHandler(exitToolStripMenuItem_Click);
+            mis[idx].Click += new System.EventHandler(UserRequest_ExitApplication);
             ++idx;
             mis[idx] = new MenuItem("-");
             ++idx;
             mis[idx] = new MenuItem();
             mis[idx].Text = "About " + AssemblyProduct;
-            mis[idx].Click += new System.EventHandler(aboutToolStripMenuItem_Click);
+            mis[idx].Click += new System.EventHandler(UserRequest_ShowDlgAbout);
             ++idx;
             mis[idx] = new MenuItem("-");
             ++idx;
             mis[idx] = new MenuItem();
             mis[idx].Text = "Options";
-            // TODO: fix the entry handler from About to Options
-            mis[idx].Click += new System.EventHandler(aboutToolStripMenuItem_Click);
+            mis[idx].Click += new System.EventHandler(UserRequest_ShowDlgOptions);
             ++idx;
             mis[idx] = new MenuItem("-");
             ++idx;
@@ -104,21 +96,21 @@ namespace ProxyManager
             ++idx;
             mis[idx] = new MenuItem();
             mis[idx].Text = "Auto Mode";
-            mis[idx].Click += new System.EventHandler(UserNotify_WorkModeAutoEnabled);
+            mis[idx].Click += new System.EventHandler(UserRequest_SwitchToAutoMode);
             mis[idx].RadioCheck = true;
             mis[idx].Checked = false;
             m_listModeMenuItems.Add(mis[idx]);  // [0] Auto Mode
             ++idx;
             mis[idx] = new MenuItem();
             mis[idx].Text = "Direct Mode";
-            mis[idx].Click += new System.EventHandler(UserNotify_WorkModeDirectEnabled);
+            mis[idx].Click += new System.EventHandler(UserRequest_SwitchToDirectMode);
             mis[idx].RadioCheck = true;
             mis[idx].Checked = false;
             m_listModeMenuItems.Add(mis[idx]);  // [1] Direct Mode
             ++idx;
             mis[idx] = new MenuItem();
             mis[idx].Text = "Proxy Mode";
-            mis[idx].Click += new System.EventHandler(UserNotify_WorkModeProxyEnabled);
+            mis[idx].Click += new System.EventHandler(UserRequest_SwitchToProxyMode);
             mis[idx].RadioCheck = true;
             mis[idx].Checked = false;
             m_listModeMenuItems.Add(mis[idx]);  // [2] Proxy Mode
@@ -127,7 +119,7 @@ namespace ProxyManager
             ++idx;
             mis[idx] = new MenuItem();
             mis[idx].Text = "Open " + AssemblyProduct;
-            mis[idx].Click += new System.EventHandler(UserNotify_FormMainActived);
+            mis[idx].Click += new System.EventHandler(UserRequest_ShowFormMain);
             mis[idx].DefaultItem = true;
 
             notifyIcon.ContextMenu = new ContextMenu(mis);
@@ -242,52 +234,38 @@ namespace ProxyManager
         public void AppMgrNotify_NetworkChanged(object sender, EventArgs e)
         {
             UpdateGui_TextBoxMainContent();
-            UpdateGui_NotifyIconTextIndication();
-            UpdateGui_NotifyIconMenuNetwork();
-            UpdateGui_NotifyIconBalloonTip();
-        }
-
-        public void AppMgrNotify_ProxyChanged(object sender, EventArgs e)
-        {
-            UpdateGui_GroupBoxTitle();
-            UpdateGui_NotifyIconTextIndication();
-            UpdateGui_NotifyIconMenuWorkMode();
-            UpdateGui_NotifyIconBalloonTip();
-        }
-
-        public void AppMgrNotify_NetworkAndProxyChanged(object sender, EventArgs e)
-        {
-            UpdateGui_TextBoxMainContent();
             UpdateGui_GroupBoxTitle();
             UpdateGui_NotifyIconTextIndication();
             UpdateGui_NotifyIconMenuNetwork();
             UpdateGui_NotifyIconMenuWorkMode();
-            UpdateGui_NotifyIconBalloonTip();
+            if (WindowState == FormWindowState.Minimized) {
+                UpdateGui_NotifyIconBalloonTip();
+            }
         }
 
         #endregion
 
         #region User Notifications
 
-        private void UserNotify_WorkModeAutoEnabled(object sender, EventArgs e)
+        private void UserRequest_SwitchToAutoMode(object sender, EventArgs e)
         {
             m_appManagerRef.ProfileChangedWorkMode(WorkMode.Auto);
             m_appManagerRef.AutoSwitchProxy();
         }
 
-        private void UserNotify_WorkModeDirectEnabled(object sender, EventArgs e)
+        private void UserRequest_SwitchToDirectMode(object sender, EventArgs e)
         {
             m_appManagerRef.ProfileChangedWorkMode(WorkMode.Direct);
             m_appManagerRef.DisableProxy();
         }
 
-        private void UserNotify_WorkModeProxyEnabled(object sender, EventArgs e)
+        private void UserRequest_SwitchToProxyMode(object sender, EventArgs e)
         {
             m_appManagerRef.ProfileChangedWorkMode(WorkMode.Proxy);
             m_appManagerRef.EnableProxy();
         }
 
-        private void UserNotify_FormMainActived(object sender, EventArgs e)
+        private void UserRequest_ShowFormMain(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized) {
                 this.Show();                    // step 1 - show
@@ -296,6 +274,29 @@ namespace ProxyManager
             } else {
                 this.Activate();
             }
+        }
+
+        private void UserRequest_ExitApplication(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void UserRequest_ShowDlgAbout(object sender, EventArgs e)
+        {
+            DlgAboutBox.Instance.StartPosition =
+                (this.WindowState == FormWindowState.Minimized)
+                ? FormStartPosition.CenterScreen
+                : FormStartPosition.CenterParent;
+            DlgAboutBox.Instance.ShowDialog(this);
+        }
+
+        private void UserRequest_ShowDlgOptions(object sender, EventArgs e)
+        {
+            // TODO: Add the entry to Options dialog.
+            MessageBox.Show(
+                @"The entry to Options is not implemented.",
+                AssemblyProduct,
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         #endregion
@@ -309,17 +310,17 @@ namespace ProxyManager
 
         private void btnAutoMode_Click(object sender, EventArgs e)
         {
-            UserNotify_WorkModeAutoEnabled(sender, e);
+            UserRequest_SwitchToAutoMode(sender, e);
         }
 
         private void btnDirectMode_Click(object sender, EventArgs e)
         {
-            UserNotify_WorkModeDirectEnabled(sender, e);
+            UserRequest_SwitchToDirectMode(sender, e);
         }
 
         private void btnProxyMode_Click(object sender, EventArgs e)
         {
-            UserNotify_WorkModeProxyEnabled(sender, e);
+            UserRequest_SwitchToProxyMode(sender, e);
         }
 
         private void minimizeToTrayToolStripMenuItem_Click(object sender, EventArgs e)
@@ -331,16 +332,12 @@ namespace ProxyManager
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            UserRequest_ExitApplication(sender, e);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DlgAboutBox.Instance.StartPosition =
-                (this.WindowState == FormWindowState.Minimized)
-                ? FormStartPosition.CenterScreen
-                : FormStartPosition.CenterParent;
-            DlgAboutBox.Instance.ShowDialog(this);
+            UserRequest_ShowDlgAbout(sender, e);
         }
 
         private void notifyIcon_Click(object sender, EventArgs e)

@@ -48,25 +48,23 @@ namespace ProxyManager
         }
 
 
-        public delegate void NotifyGuiNetworkChanged(object sender, EventArgs e);
-        public delegate void NotifyGuiProxyChanged(object sender, EventArgs e);
-        public delegate void NotifyGuiNetworkAndProxyChanged(object sender, EventArgs e);
-        public event NotifyGuiNetworkChanged NetworkChanged;
-        public event NotifyGuiProxyChanged ProxyChanged;
-        public event NotifyGuiNetworkAndProxyChanged NetworkAndProxyChanged;
+        public delegate void NotifyNetworkChanged(object sender, EventArgs e);
+        public event NotifyNetworkChanged NotifyGuiNetworkChanged;
 
         public void DetectorNotify_NetworkChanged(object sender, EventArgs e)
         {
-            bool bChanged = AutoSwitchProxy();
-
-            // GUI notifications
-            if (bChanged) {
-                // case - proxy settings need to be changed
-                NetworkAndProxyChanged(this, new EventArgs());
-            } else {
-                // case - no proxy settings changed
-                NetworkChanged(this, new EventArgs());
+            switch (m_profile.m_workMode) {
+            case WorkMode.Auto:
+                AutoSwitchProxy();
+                break;
+            case WorkMode.Direct:
+                DisableProxy();
+                break;
+            case WorkMode.Proxy:
+                EnableProxy();
+                break;
             }
+            NotifyGuiNetworkChanged(sender, e);
         }
 
         public Profile AppProfile
@@ -93,7 +91,7 @@ namespace ProxyManager
             SetArgsProxyAgentProcess(process, args);
             ExecuteProxyAgentProcess(process);
 
-            ProxyChanged(this, new EventArgs());
+            NotifyGuiNetworkChanged(this, new EventArgs());
         }
 
         public void EnableProxy(ProxyItem pi)
@@ -107,7 +105,7 @@ namespace ProxyManager
             SetArgsProxyAgentProcess(process, args);
             ExecuteProxyAgentProcess(process);
 
-            ProxyChanged(this, new EventArgs());
+            NotifyGuiNetworkChanged(this, new EventArgs());
         }
 
         public void DisableProxy()
@@ -116,7 +114,7 @@ namespace ProxyManager
             SetArgsProxyAgentProcess(process, false.ToString());
             ExecuteProxyAgentProcess(process);
 
-            ProxyChanged(this, new EventArgs());
+            NotifyGuiNetworkChanged(this, new EventArgs());
         }
 
         public bool AutoSwitchProxy()

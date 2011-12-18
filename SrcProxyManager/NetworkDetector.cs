@@ -9,6 +9,9 @@ namespace ProxyManager
     {
         public NetworkDetector()
         {
+            m_activeNetwork = null;
+            m_activeIP = null;
+
             DetectActiveNetwork();
         }
 
