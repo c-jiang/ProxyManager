@@ -186,14 +186,30 @@ namespace ProxyManager
                 if (!IsRuleMatched(pg.m_applyRule)) {
                     continue;
                 }
-                foreach (ProxyItem pi in pg.m_listProxyItems) {
+
+                if (pg.m_iSelectedIndex <= 0 ||
+                    pg.m_iSelectedIndex > pg.m_listProxyItems.Count) {
+                    // reset the invalid SelectedIndex value
+                    pg.m_iSelectedIndex = 0;
+                } else if (pg.m_listProxyItems[pg.m_iSelectedIndex - 1].m_isEnabled) {
+                    // directly get the specified selected proxy item
+                    ret = pg.m_listProxyItems[pg.m_iSelectedIndex - 1];
+                    break;
+                }
+
+                // try to get the proxy item by default routine
+                for (int i = 0; i < pg.m_listProxyItems.Count; ++i) {
+                    ProxyItem pi = pg.m_listProxyItems[i];
                     if (pi.m_isEnabled) {
                         ret = pi;
+                        pg.m_iSelectedIndex = i + 1;
                         break;
                     }
                 }
                 if (ret != null) {
                     break;
+                } else {
+                    pg.m_iSelectedIndex = 0;
                 }
             }
             return ret;

@@ -123,7 +123,9 @@ namespace ProxyManager
         public string m_szName;
         [XmlAttribute("Enable")]
         public bool m_isEnabled;
-        [XmlElement("ProxyItemId")]
+        [XmlAttribute("SelectedIndex")]
+        public int m_iSelectedIndex;
+        [XmlElement("ProxyItem")]
         public List<ProxyItem> m_listProxyItems;
         [XmlElement("ApplyRule")]
         public ApplyRule m_applyRule;
@@ -132,6 +134,7 @@ namespace ProxyManager
         {
             m_szName = String.Empty;
             m_isEnabled = false;
+            m_iSelectedIndex = 0;
             m_listProxyItems = new List<ProxyItem>();
             m_applyRule = null;
         }
@@ -140,6 +143,7 @@ namespace ProxyManager
         {
             m_szName = name;
             m_isEnabled = isEnabled;
+            m_iSelectedIndex = 0;
             m_listProxyItems = new List<ProxyItem>(listProxyItems);
             m_applyRule = null;
         }
@@ -148,6 +152,7 @@ namespace ProxyManager
         {
             m_szName = name;
             m_isEnabled = isEnabled;
+            m_iSelectedIndex = 0;
             m_listProxyItems = new List<ProxyItem>(listProxyItems);
             m_applyRule = new ApplyRule(ruleCondition);
         }
@@ -155,8 +160,6 @@ namespace ProxyManager
 
     public class ProxyItem
     {
-        [XmlAttribute("Id")]
-        public int m_iId;
         [XmlAttribute("Enable")]
         public bool m_isEnabled;
 
@@ -169,25 +172,22 @@ namespace ProxyManager
 
         public ProxyItem()
         {
-            m_iId = 0;
             m_isEnabled = false;
             m_szProxyAddr = String.Empty;
             m_szBypass = String.Empty;
             m_isAutoConfDisabled = true;
         }
 
-        public ProxyItem(int id, bool isEnabled, string proxyAddr, string bypass)
+        public ProxyItem(bool isEnabled, string proxyAddr, string bypass)
         {
-            m_iId = id;
             m_isEnabled = isEnabled;
             m_szProxyAddr = proxyAddr;
             m_szBypass = bypass;
             m_isAutoConfDisabled = true;
         }
 
-        public ProxyItem(int id, bool isEnabled, string proxyAddr, string bypass, bool isAutoConfDisabled)
+        public ProxyItem(bool isEnabled, string proxyAddr, string bypass, bool isAutoConfDisabled)
         {
-            m_iId = id;
             m_isEnabled = isEnabled;
             m_szProxyAddr = proxyAddr;
             m_szBypass = bypass;
