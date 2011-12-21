@@ -265,7 +265,7 @@ namespace ProxyManager
             pattern = pattern.Replace(@"?", @".");
             Regex regex = new Regex(pattern);
             Match match = regex.Match(target);
-            return (match.Success && match.Value.Length > 0);
+            return (match.Success && match.Value.Length == target.Length);
         }
 
         private Process PrepareProxyAgentProcess()
