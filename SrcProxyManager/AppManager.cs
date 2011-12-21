@@ -227,9 +227,29 @@ namespace ProxyManager
         private bool IsRuleMatched(ApplyRule rule)
         {
             bool ret = true;
+            if (ret && rule.m_bIdFilter) {
+                ret &= IsExpressionMatched(rule.m_szIdFilter,
+                    m_detector.ActiveNetworkId());
+            }
+            if (ret && rule.m_bNameFilter) {
+                ret &= IsExpressionMatched(rule.m_szNameFilter,
+                    m_detector.ActiveNetworkName());
+            }
             if (ret && rule.m_bIpAddrFilter) {
                 ret &= IsExpressionMatched(rule.m_szIpAddrFilter,
                     m_detector.ActiveNetworkIPAddress());
+            }
+            if (ret && rule.m_bSubMaskFilter) {
+                ret &= IsExpressionMatched(rule.m_szSubMaskFilter,
+                    m_detector.ActiveNetworkSubMask());
+            }
+            if (ret && rule.m_bGatewayFilter) {
+                ret &= IsExpressionMatched(rule.m_szGatewayFilter,
+                    m_detector.ActiveNetworkGateway());
+            }
+            if (ret && rule.m_bDnsAddrFilter) {
+                ret &= IsExpressionMatched(rule.m_szDnsAddrFilter,
+                    m_detector.ActiveNetworkDnsAddress());
             }
             if (ret && rule.m_bDnsSuffixFilter) {
                 ret &= IsExpressionMatched(rule.m_szDnsSuffixFilter,

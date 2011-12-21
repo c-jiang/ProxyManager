@@ -197,10 +197,36 @@ namespace ProxyManager
 
     public class ApplyRule
     {
+        [XmlAttribute("IdFilter")]
+        public bool m_bIdFilter;
+        [XmlElement("IdFilterExpression")]
+        public string m_szIdFilter;
+
+        [XmlAttribute("NameFilter")]
+        public bool m_bNameFilter;
+        [XmlElement("NameFilterExpression")]
+        public string m_szNameFilter;
+
         [XmlAttribute("IpAddrFilter")]
         public bool m_bIpAddrFilter;
         [XmlElement("IpAddrFilterExpression")]
         public string m_szIpAddrFilter;
+
+        [XmlAttribute("SubMaskFilter")]
+        public bool m_bSubMaskFilter;
+        [XmlElement("SubMaskFilterExpression")]
+        public string m_szSubMaskFilter;
+
+        [XmlAttribute("GatewayFilter")]
+        public bool m_bGatewayFilter;
+        [XmlElement("GatewayFilterExpression")]
+        public string m_szGatewayFilter;
+
+        [XmlAttribute("DnsAddrFilter")]
+        public bool m_bDnsAddrFilter;
+        [XmlElement("DnsAddrFilterExpression")]
+        public string m_szDnsAddrFilter;
+
         [XmlAttribute("DnsSuffixFilter")]
         public bool m_bDnsSuffixFilter;
         [XmlElement("DnsSuffixFilterExpression")]
@@ -208,26 +234,38 @@ namespace ProxyManager
 
         public ApplyRule()
         {
+            m_bIdFilter = false;
+            m_szIdFilter = String.Empty;
+            m_bNameFilter = false;
+            m_szNameFilter = String.Empty;
             m_bIpAddrFilter = false;
             m_szIpAddrFilter = String.Empty;
+            m_bSubMaskFilter = false;
+            m_szSubMaskFilter = String.Empty;
+            m_bGatewayFilter = false;
+            m_szGatewayFilter = String.Empty;
+            m_bDnsAddrFilter = false;
+            m_szDnsAddrFilter = String.Empty;
             m_bDnsSuffixFilter = false;
             m_szDnsSuffixFilter = String.Empty;
         }
 
         public ApplyRule(ApplyRule rc)
         {
+            m_bIdFilter = rc.m_bIdFilter;
+            m_szIdFilter = rc.m_szIdFilter;
+            m_bNameFilter = rc.m_bNameFilter;
+            m_szNameFilter = rc.m_szNameFilter;
             m_bIpAddrFilter = rc.m_bIpAddrFilter;
             m_szIpAddrFilter = rc.m_szIpAddrFilter;
+            m_bSubMaskFilter = rc.m_bSubMaskFilter;
+            m_szSubMaskFilter = rc.m_szSubMaskFilter;
+            m_bGatewayFilter = rc.m_bGatewayFilter;
+            m_szGatewayFilter = rc.m_szGatewayFilter;
+            m_bDnsAddrFilter = rc.m_bDnsAddrFilter;
+            m_szDnsAddrFilter = rc.m_szDnsAddrFilter;
             m_bDnsSuffixFilter = rc.m_bDnsSuffixFilter;
             m_szDnsSuffixFilter = rc.m_szDnsSuffixFilter;
-        }
-
-        public ApplyRule(bool bIpAddrFilter, string szIpAddrFilter, bool bDnsSuffixFilter, string szDnsSuffixFilter)
-        {
-            m_bIpAddrFilter = bIpAddrFilter;
-            m_szIpAddrFilter = szIpAddrFilter;
-            m_bDnsSuffixFilter = bDnsSuffixFilter;
-            m_szDnsSuffixFilter = szDnsSuffixFilter;
         }
     }
 }
