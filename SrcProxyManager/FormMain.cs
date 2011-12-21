@@ -133,7 +133,6 @@ namespace ProxyManager
 
         private void UpdateGui_TextBoxMainContent()
         {
-            // change reference: network
             NetworkDetector nd = m_appManagerRef.Detector;
             string ui = "[" + Utils.GetDateTime() + "] ";
             if (nd.IsNetworkActive()) {
@@ -162,7 +161,6 @@ namespace ProxyManager
 
         private void UpdateGui_GroupBoxTitle()
         {
-            // change reference: proxy
             gbWorkMode.Text = "Current Work Mode: "
                 + m_appManagerRef.AppProfile.m_workMode
                 + " Mode";
@@ -170,7 +168,6 @@ namespace ProxyManager
 
         private void UpdateGui_NotifyIconTextIndication()
         {
-            // change reference: network, proxy
             string str = AssemblyProduct + " ("
                 + m_appManagerRef.AppProfile.m_workMode + " Mode)"
                 + Environment.NewLine;
@@ -182,19 +179,16 @@ namespace ProxyManager
         private void UpdateGui_NotifyIconBalloonTip()
         {
             string tip = "Network Status: "
-                 + (m_appManagerRef.Detector.IsNetworkActive() ? "Active" : "Inactive");
-            tip += Environment.NewLine;
-            if (m_appManagerRef.Detector.IsNetworkActive()) {
-                tip += "IP Address: "
-                    + m_appManagerRef.Detector.ActiveNetworkIPAddress();
-                tip += Environment.NewLine;
-            }
+                + (m_appManagerRef.Detector.IsNetworkActive() ? "Active" : "Inactive")
+                + Environment.NewLine;
+            tip += "IP Address: " + (m_appManagerRef.Detector.IsNetworkActive()
+                ? m_appManagerRef.Detector.ActiveNetworkIPAddress() : "N/A")
+                + Environment.NewLine;
             tip += "Work Mode: "
-                + m_appManagerRef.AppProfile.m_workMode.ToString();
-            if (IeProxyOptions.ProxyEnable) {
-                tip += Environment.NewLine;
-                tip += "Proxy Address: " + IeProxyOptions.ProxyAddr;
-            }
+                + m_appManagerRef.AppProfile.m_workMode.ToString() + " Mode"
+                + Environment.NewLine;
+            tip += "Proxy: " + (IeProxyOptions.ProxyEnable
+                ? IeProxyOptions.ProxyAddr : "Disabled");
 
             notifyIcon.BalloonTipText = tip;
             notifyIcon.ShowBalloonTip(3000);
