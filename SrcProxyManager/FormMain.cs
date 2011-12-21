@@ -393,11 +393,15 @@ namespace ProxyManager
 
         private void UserRequest_ShowDlgAbout(object sender, EventArgs e)
         {
-            DlgAboutBox.Instance.StartPosition =
-                (this.WindowState == FormWindowState.Minimized)
-                ? FormStartPosition.CenterScreen
-                : FormStartPosition.CenterParent;
-            DlgAboutBox.Instance.ShowDialog(this);
+            if (!DlgAboutBox.Instance.Visible) {
+                DlgAboutBox.Instance.StartPosition =
+                    (this.WindowState == FormWindowState.Minimized)
+                    ? FormStartPosition.CenterScreen
+                    : FormStartPosition.CenterParent;
+                DlgAboutBox.Instance.ShowDialog(this);
+            } else {
+                DlgAboutBox.Instance.Activate();
+            }
         }
 
         private void UserRequest_ShowDlgOptions(object sender, EventArgs e)
