@@ -75,7 +75,6 @@ namespace ProxyManager
                 EnableProxy();
                 break;
             }
-            NotifyGuiNetworkChanged(sender, e);
         }
 
         public Profile AppProfile
