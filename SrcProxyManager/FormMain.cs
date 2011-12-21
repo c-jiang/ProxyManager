@@ -242,7 +242,8 @@ namespace ProxyManager
                         if (!pg.m_listProxyItems[i].m_isEnabled) {
                             mis[i].Enabled = false;
                         } else {
-                            mis[i].Click += UserRequest_SelectProxyFromCurrentGroup;
+                            mis[i].Click += new System.EventHandler(
+                                UserRequest_SelectProxyFromCurrentGroup);
                         }
                         mis[i].Checked = false;
                         mis[i].RadioCheck = true;
