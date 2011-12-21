@@ -131,39 +131,48 @@ namespace ProxyManager
             notifyIcon.ContextMenu = new ContextMenu(m_arrayMenuItems);
         }
 
-        private void UpdateGui_TextBoxMainContent()
+        private void UpdateGui_FormMainLayout()
         {
+            // update text box
             NetworkDetector nd = m_appManagerRef.Detector;
-            string ui = "[" + Utils.GetDateTime() + "] ";
+            string ui = "[" + Utils.GetDateTime() + "]"
+                + Environment.NewLine + Environment.NewLine;
+            ui += "Network Status: ";
             if (nd.IsNetworkActive()) {
-                ui += "Network Active" + "\r\n";
-                ui += "\r\n";
-                ui += "IP . . . . . . . : " + nd.ActiveNetworkIPAddress() + "\r\n";
-                ui += "Mask . . . . . . : " + nd.ActiveNetworkSubMask() + "\r\n";
-                ui += "Gateway. . . . . : " + nd.ActiveNetworkGateway() + "\r\n";
-                ui += "DNS. . . . . . . : " + nd.ActiveNetworkDnsAddress() + "\r\n";
-                ui += "DNS Suffix . . . : " + nd.ActiveNetworkDnsSuffix() + "\r\n";
-                ui += "\r\n";
+                ui += "Active" + Environment.NewLine + Environment.NewLine;
+                ui += "Network Adaptor ID . . : " + nd.ActiveNetworkId()
+                    + Environment.NewLine;
+                ui += "Network Adaptor Name . : " + nd.ActiveNetworkName()
+                    + Environment.NewLine;
+                ui += "Network Adaptor Desc . : " + nd.ActiveNetworkDescription()
+                    + Environment.NewLine;
+                ui += "IP Address . . . . . . : " + nd.ActiveNetworkIPAddress()
+                    + Environment.NewLine;
+                ui += "Subnet Mask. . . . . . : " + nd.ActiveNetworkSubMask()
+                    + Environment.NewLine;
+                ui += "Default Gateway. . . . : " + nd.ActiveNetworkGateway()
+                    + Environment.NewLine;
+                ui += "DNS Server . . . . . . : " + nd.ActiveNetworkDnsAddress()
+                    + Environment.NewLine;
+                ui += "DNS Suffix . . . . . . : " + nd.ActiveNetworkDnsSuffix()
+                    + Environment.NewLine;
             } else {
-                ui += "Network Inactive" + "\r\n";
-                ui += "\r\n";
+                ui += "Inactive" + Environment.NewLine;
             }
-            // TODO: remove proxy info from this text box
-            ui += "Proxy Stat: ";
-            ui += (IeProxyOptions.ProxyEnable ? "Enable" : "Disable");
-            ui += "\r\n";
-            ui += "Proxy Addr: " + IeProxyOptions.ProxyAddr;
-            ui += "\r\n";
-            ui += "Bypass: " + IeProxyOptions.Bypass;
-            ui += "\r\n";
             tbStatus.Text = ui;
-        }
 
-        private void UpdateGui_GroupBoxTitle()
-        {
-            gbWorkMode.Text = "Current Work Mode: "
+            // update label text
+            labelProxyAddr.Text = "Proxy Server: "
+                + (IeProxyOptions.ProxyEnable ? IeProxyOptions.ProxyAddr : "Disabled");
+
+            // update group box title
+            gbWorkMode.Text = "Work Mode: "
                 + m_appManagerRef.AppProfile.m_workMode
                 + " Mode";
+
+            // set focus
+            tbStatus.Select(0, -1);
+            btnRefresh.Focus();
         }
 
         private void UpdateGui_NotifyIconTextIndication()
@@ -303,8 +312,7 @@ namespace ProxyManager
 
         public void AppMgrNotify_NetworkChanged(object sender, EventArgs e)
         {
-            UpdateGui_TextBoxMainContent();
-            UpdateGui_GroupBoxTitle();
+            UpdateGui_FormMainLayout();
             UpdateGui_NotifyIconTextIndication();
             UpdateGui_NotifyIconMenuNetwork();
             UpdateGui_NotifyIconMenuWorkMode();
@@ -413,7 +421,7 @@ namespace ProxyManager
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            UpdateGui_TextBoxMainContent();
+            UpdateGui_FormMainLayout();
         }
 
         private void btnAutoMode_Click(object sender, EventArgs e)

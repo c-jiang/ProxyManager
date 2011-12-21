@@ -8,7 +8,7 @@ namespace ProxyManager
     {
         public static string GetDateTime()
         {
-            return DateTime.Now.ToString(@"MM/dd HH:mm:ss");
+            return DateTime.Now.ToString(@"yyyy/MM/dd HH:mm:ss");
         }
 
         public static void RemoveFile(string path)
