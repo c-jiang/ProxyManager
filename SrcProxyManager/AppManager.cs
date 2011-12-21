@@ -89,6 +89,11 @@ namespace ProxyManager
             get { return m_detector; }
         }
 
+        public int AutoModeProxyGroupIndex
+        {
+            get { return m_idxProxyGroup; }
+        }
+
         public void ApplyProfileItemsAll()
         {
             // TODO:
@@ -179,7 +184,9 @@ namespace ProxyManager
         private ProxyItem FindMatchedProxyItem()
         {
             ProxyItem ret = null;
-            foreach (ProxyGroup pg in m_profile.m_listProxyGroups) {
+            for (int i = 0; i < m_profile.m_listProxyGroups.Count; ++i) {
+                ProxyGroup pg = m_profile.m_listProxyGroups[i];
+
                 if (!pg.m_isEnabled) {
                     continue;
                 }
@@ -194,15 +201,17 @@ namespace ProxyManager
                 } else if (pg.m_listProxyItems[pg.m_iSelectedIndex - 1].m_isEnabled) {
                     // directly get the specified selected proxy item
                     ret = pg.m_listProxyItems[pg.m_iSelectedIndex - 1];
+                    m_idxProxyGroup = i;
                     break;
                 }
 
                 // try to get the proxy item by default routine
-                for (int i = 0; i < pg.m_listProxyItems.Count; ++i) {
-                    ProxyItem pi = pg.m_listProxyItems[i];
+                for (int j = 0; j < pg.m_listProxyItems.Count; ++j) {
+                    ProxyItem pi = pg.m_listProxyItems[j];
                     if (pi.m_isEnabled) {
                         ret = pi;
-                        pg.m_iSelectedIndex = i + 1;
+                        pg.m_iSelectedIndex = j + 1;
+                        m_idxProxyGroup = i;
                         break;
                     }
                 }
@@ -264,7 +273,10 @@ namespace ProxyManager
         }
 
         private string m_szAppDir;
-        private Profile m_profile;
+
         private NetworkDetector m_detector;
+        
+        private Profile m_profile;
+        private int m_idxProxyGroup;    // current proxy group index if Auto Mode
     }
 }

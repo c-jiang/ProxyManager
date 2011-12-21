@@ -18,6 +18,9 @@ namespace ProxyManager
             m_appManagerRef = appManager;
             m_prevState = FormWindowState.Normal;
             m_listModeMenuItems = new List<MenuItem>();
+            m_miNiCtxNetworkStatus = null;
+            m_miNiCtxIPAddress = null;
+            m_idxNiCtxProxySelection = 0;
 
             m_appManagerRef.NotifyGuiNetworkChanged +=
                 new AppManager.NotifyNetworkChanged(
@@ -54,79 +57,79 @@ namespace ProxyManager
 
         private void InitGuiNotifyIcon()
         {
-            // Init NotifyIcon
+            // init NotifyIcon
             notifyIcon.ContextMenu = new ContextMenu();
             notifyIcon.Visible = true;
 
-            // Init NotifyIconBalloon
+            // init NotifyIconBalloon
             notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
             notifyIcon.BalloonTipTitle = AssemblyProduct;
             notifyIcon.BalloonTipText = " ";
 
-            // Init NotifyIconMenuContext
-            MenuItem[] mis = new MenuItem[14];
+            // init NotifyIconMenuContext
+            m_arrayMenuItems = new MenuItem[15];
             int idx = 0;
 
-            mis[idx] = new MenuItem();
-            mis[idx].Text = "Exit " + AssemblyProduct;
-            mis[idx].Click += new System.EventHandler(UserRequest_ExitApplication);
+            m_arrayMenuItems[idx] = new MenuItem();
+            m_arrayMenuItems[idx].Text = "Exit " + AssemblyProduct;
+            m_arrayMenuItems[idx].Click += new System.EventHandler(UserRequest_ExitApplication);
             ++idx;
-            mis[idx] = new MenuItem("-");
+            m_arrayMenuItems[idx] = new MenuItem("-");
             ++idx;
-            mis[idx] = new MenuItem();
-            mis[idx].Text = "About " + AssemblyProduct;
-            mis[idx].Click += new System.EventHandler(UserRequest_ShowDlgAbout);
+            m_arrayMenuItems[idx] = new MenuItem();
+            m_arrayMenuItems[idx].Text = "About " + AssemblyProduct;
+            m_arrayMenuItems[idx].Click += new System.EventHandler(UserRequest_ShowDlgAbout);
             ++idx;
-            mis[idx] = new MenuItem("-");
+            m_arrayMenuItems[idx] = new MenuItem("-");
             ++idx;
-            mis[idx] = new MenuItem();
-            mis[idx].Text = "Options";
-            mis[idx].Click += new System.EventHandler(UserRequest_ShowDlgOptions);
+            m_arrayMenuItems[idx] = new MenuItem();
+            m_arrayMenuItems[idx].Text = "Options";
+            m_arrayMenuItems[idx].Click += new System.EventHandler(UserRequest_ShowDlgOptions);
             ++idx;
-            mis[idx] = new MenuItem("-");
+            m_arrayMenuItems[idx] = new MenuItem("-");
             ++idx;
-            mis[idx] = new MenuItem();          // network status
-            mis[idx].Enabled = false;
-            m_miNiCtxNetworkStatus = mis[idx];
+            m_arrayMenuItems[idx] = new MenuItem();         // network status
+            m_arrayMenuItems[idx].Enabled = false;
+            m_miNiCtxNetworkStatus = m_arrayMenuItems[idx];
             ++idx;
-            mis[idx] = new MenuItem();          // ip address
-            mis[idx].Enabled = false;
-            m_miNiCtxIPAddress = mis[idx];
+            m_arrayMenuItems[idx] = new MenuItem();         // ip address
+            m_arrayMenuItems[idx].Enabled = false;
+            m_miNiCtxIPAddress = m_arrayMenuItems[idx];
             ++idx;
-            mis[idx] = new MenuItem("-");
+            m_arrayMenuItems[idx] = new MenuItem("");       // proxy selection
+            m_idxNiCtxProxySelection = idx;
             ++idx;
-            mis[idx] = new MenuItem();
-            mis[idx].Text = "Auto Mode";
-            mis[idx].Click += new System.EventHandler(UserRequest_SwitchToAutoMode);
-            mis[idx].RadioCheck = true;
-            mis[idx].Checked = false;
-            m_listModeMenuItems.Add(mis[idx]);  // [0] Auto Mode
+            m_arrayMenuItems[idx] = new MenuItem("-");
             ++idx;
-            mis[idx] = new MenuItem();
-            mis[idx].Text = "Direct Mode";
-            mis[idx].Click += new System.EventHandler(UserRequest_SwitchToDirectMode);
-            mis[idx].RadioCheck = true;
-            mis[idx].Checked = false;
-            m_listModeMenuItems.Add(mis[idx]);  // [1] Direct Mode
+            m_arrayMenuItems[idx] = new MenuItem();
+            m_arrayMenuItems[idx].Text = "Auto Mode";
+            m_arrayMenuItems[idx].Click += new System.EventHandler(UserRequest_SwitchToAutoMode);
+            m_arrayMenuItems[idx].RadioCheck = true;
+            m_arrayMenuItems[idx].Checked = false;
+            m_listModeMenuItems.Add(m_arrayMenuItems[idx]); // [0] Auto Mode
             ++idx;
-            mis[idx] = new MenuItem();
-            mis[idx].Text = "Proxy Mode";
-            mis[idx].Click += new System.EventHandler(UserRequest_SwitchToProxyMode);
-            mis[idx].RadioCheck = true;
-            mis[idx].Checked = false;
-            m_listModeMenuItems.Add(mis[idx]);  // [2] Proxy Mode
+            m_arrayMenuItems[idx] = new MenuItem();
+            m_arrayMenuItems[idx].Text = "Direct Mode";
+            m_arrayMenuItems[idx].Click += new System.EventHandler(UserRequest_SwitchToDirectMode);
+            m_arrayMenuItems[idx].RadioCheck = true;
+            m_arrayMenuItems[idx].Checked = false;
+            m_listModeMenuItems.Add(m_arrayMenuItems[idx]); // [1] Direct Mode
             ++idx;
-            mis[idx] = new MenuItem("-");
+            m_arrayMenuItems[idx] = new MenuItem();
+            m_arrayMenuItems[idx].Text = "Proxy Mode";
+            m_arrayMenuItems[idx].Click += new System.EventHandler(UserRequest_SwitchToProxyMode);
+            m_arrayMenuItems[idx].RadioCheck = true;
+            m_arrayMenuItems[idx].Checked = false;
+            m_listModeMenuItems.Add(m_arrayMenuItems[idx]); // [2] Proxy Mode
             ++idx;
-            mis[idx] = new MenuItem();
-            mis[idx].Text = "Open " + AssemblyProduct;
-            mis[idx].Click += new System.EventHandler(UserRequest_ShowFormMain);
-            mis[idx].DefaultItem = true;
+            m_arrayMenuItems[idx] = new MenuItem("-");
+            ++idx;
+            m_arrayMenuItems[idx] = new MenuItem();
+            m_arrayMenuItems[idx].Text = "Open " + AssemblyProduct;
+            m_arrayMenuItems[idx].Click += new System.EventHandler(UserRequest_ShowFormMain);
+            m_arrayMenuItems[idx].DefaultItem = true;
 
-            notifyIcon.ContextMenu = new ContextMenu(mis);
-
-            UpdateGui_NotifyIconMenuNetwork();
-            UpdateGui_NotifyIconTextIndication();
+            notifyIcon.ContextMenu = new ContextMenu(m_arrayMenuItems);
         }
 
         private void UpdateGui_TextBoxMainContent()
@@ -230,6 +233,78 @@ namespace ProxyManager
             }
         }
 
+        private void UpdateGui_NotifyIconMenuProxySelection()
+        {
+            switch (m_appManagerRef.AppProfile.m_workMode) {
+            case WorkMode.Auto: {
+                    if (!IeProxyOptions.ProxyEnable) {
+                        // fall through
+                        goto case WorkMode.Direct;
+                    }
+                    ProxyGroup pg = m_appManagerRef.AppProfile.m_listProxyGroups[
+                        m_appManagerRef.AutoModeProxyGroupIndex];
+                    MenuItem[] mis = new MenuItem[pg.m_listProxyItems.Count];
+                    for (int i = 0; i < pg.m_listProxyItems.Count; ++i) {
+                        mis[i] = new MenuItem(pg.m_listProxyItems[i].m_szProxyAddr);
+                        if (!pg.m_listProxyItems[i].m_isEnabled) {
+                            mis[i].Enabled = false;
+                        } else {
+                            mis[i].Click += UserRequest_SelectProxyFromCurrentGroup;
+                        }
+                        mis[i].Checked = false;
+                        mis[i].RadioCheck = true;
+                    }
+                    mis[pg.m_iSelectedIndex - 1].Checked = true;
+                    m_arrayMenuItems[m_idxNiCtxProxySelection] = new MenuItem(
+                        "Select Proxy from Group", mis);
+                    notifyIcon.ContextMenu = new ContextMenu(m_arrayMenuItems);
+                    break;
+                }
+
+            case WorkMode.Direct: {
+                    m_arrayMenuItems[m_idxNiCtxProxySelection] = new MenuItem(
+                        "Select Proxy: N/A");
+                    m_arrayMenuItems[m_idxNiCtxProxySelection].Enabled = false;
+                    notifyIcon.ContextMenu = new ContextMenu(m_arrayMenuItems);
+                    break;
+                }
+
+            case WorkMode.Proxy: {
+                    string proxyAddr = IeProxyOptions.ProxyAddr;
+                    string bypass = IeProxyOptions.Bypass;
+                    bool autoConfDisabled = IeProxyOptions.AutoConfDisabled;
+                    bool found = false;
+
+                    List<ProxyGroup> listPg = m_appManagerRef.AppProfile.m_listProxyGroups;
+                    MenuItem[] misPg = new MenuItem[listPg.Count];
+
+                    for (int i = 0; i < listPg.Count; ++i) {
+                        List<ProxyItem> listPi = listPg[i].m_listProxyItems;
+                        MenuItem[] mis = new MenuItem[listPi.Count];
+                        for (int j = 0; j < listPi.Count; ++j) {
+                            mis[j] = new MenuItem(listPi[j].m_szProxyAddr,
+                                UserRequest_SelectProxyFromPool);
+                            mis[j].Checked = false;
+                            mis[j].RadioCheck = true;
+
+                            if (!found &&
+                                listPi[j].m_szProxyAddr.Equals(proxyAddr) &&
+                                listPi[j].m_szBypass.Equals(bypass) &&
+                                listPi[j].m_isAutoConfDisabled.Equals(autoConfDisabled)) {
+                                mis[j].Checked = true;
+                                found = true;
+                            }
+                        }
+                        misPg[i] = new MenuItem(listPg[i].m_szName, mis);
+                    }
+                    m_arrayMenuItems[m_idxNiCtxProxySelection] = new MenuItem(
+                        "Select Proxy from Pool", misPg);
+                    notifyIcon.ContextMenu = new ContextMenu(m_arrayMenuItems);
+                    break;
+                }
+            }
+        }
+
         #region AppManager Notifications
 
         public void AppMgrNotify_NetworkChanged(object sender, EventArgs e)
@@ -239,6 +314,7 @@ namespace ProxyManager
             UpdateGui_NotifyIconTextIndication();
             UpdateGui_NotifyIconMenuNetwork();
             UpdateGui_NotifyIconMenuWorkMode();
+            UpdateGui_NotifyIconMenuProxySelection();
             if (WindowState == FormWindowState.Minimized) {
                 UpdateGui_NotifyIconBalloonTip();
             }
@@ -274,6 +350,39 @@ namespace ProxyManager
                 this.WindowState = m_prevState; // step 3 - show
             } else {
                 this.Activate();
+            }
+        }
+
+        private void UserRequest_SelectProxyFromCurrentGroup(object sender, EventArgs e)
+        {
+            var mi = sender as MenuItem;
+            ProxyGroup pg = m_appManagerRef.AppProfile.m_listProxyGroups[
+                m_appManagerRef.AutoModeProxyGroupIndex];
+            pg.m_iSelectedIndex = mi.Index + 1;
+            m_appManagerRef.EnableProxy(
+                pg.m_listProxyItems[pg.m_iSelectedIndex - 1]);
+        }
+
+        private void UserRequest_SelectProxyFromPool(object sender, EventArgs e)
+        {
+            var mi = sender as MenuItem;
+            int idx = mi.Index;
+
+            foreach (MenuItem iter in m_arrayMenuItems[m_idxNiCtxProxySelection].MenuItems) {
+                foreach (MenuItem i in iter.MenuItems) {
+                    i.Checked = false;
+                }
+            }
+
+            foreach (MenuItem iter in m_arrayMenuItems[m_idxNiCtxProxySelection].MenuItems) {
+                if ((idx < iter.MenuItems.Count) &&
+                    (iter.MenuItems[idx].GetHashCode() == mi.GetHashCode())) {
+                    // menu item entry found
+                    m_appManagerRef.EnableProxy(m_appManagerRef.AppProfile
+                        .m_listProxyGroups[iter.Index].m_listProxyItems[idx]);
+                    mi.Checked = true;
+                    break;
+                }
             }
         }
 
@@ -395,8 +504,11 @@ namespace ProxyManager
         
         private AppManager m_appManagerRef;
         private FormWindowState m_prevState;
+
+        private MenuItem[] m_arrayMenuItems;
         private List<MenuItem> m_listModeMenuItems;
         private MenuItem m_miNiCtxNetworkStatus;
         private MenuItem m_miNiCtxIPAddress;
+        private int m_idxNiCtxProxySelection;
     }
 }

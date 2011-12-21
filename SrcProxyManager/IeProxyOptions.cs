@@ -48,6 +48,18 @@ namespace ProxyManager
             }
         }
 
+        public static bool AutoConfDisabled
+        {
+            get
+            {
+                OpenInternetSettings(false);
+                string value = (string)m_rkIeOpt.GetValue(
+                    "AutoConfigURL", null);
+                m_rkIeOpt.Close();
+                return (value == null);
+            }
+        }
+
 
         private static void OpenInternetSettings(bool writable)
         {
