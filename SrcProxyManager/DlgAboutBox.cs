@@ -62,11 +62,15 @@ namespace ProxyManager
         {
             get
             {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
-                if (attributes.Length == 0) {
-                    return String.Empty;
-                }
-                return ((AssemblyDescriptionAttribute)attributes[0]).Description;
+                return (@"Proxy Manager is a daemon tool so as to enable and disable proxy; "
+                        + @"as well as select the proxy based on the user customized profile automatically, "
+                        + @"when the network status changes."
+                        + Environment.NewLine
+                        + Environment.NewLine
+                        + @"To obtain the latest version of Proxy Manager, please check out:"
+                        + Environment.NewLine
+                        + @"- http://github.com/c-jiang/ProxyManager"
+                        + Environment.NewLine);
             }
         }
 

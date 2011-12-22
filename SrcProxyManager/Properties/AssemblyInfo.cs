@@ -6,8 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ProxyManager")]
-[assembly: AssemblyDescription(
-    @"Proxy Manager is designed and implemented for automatically applying different proxy settings based on changeable network.")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Personal Contribution from Cheng Jiang")]
 [assembly: AssemblyProduct("Proxy Manager")]

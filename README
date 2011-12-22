@@ -2,18 +2,18 @@ Proxy Manager - A tool for switching proxy automatically on Windows Platform
 
 
 To obtain the latest version of Proxy Manager, please check out:
-- https://github.com/c-jiang/ProxyManager
+- http://github.com/c-jiang/ProxyManager
 
-Proxy Manager is a daemon tool so as to enable and disable proxy, as well as
-select the proxy based on the user customized profile, once the network status
-is changed. Besides, it also provides proxy-disabled and proxy-enabled modes.
+Proxy Manager is a daemon tool so as to enable and disable proxy; as well as
+select the proxy based on the user customized profile automatically, when the
+network status changes.
 
 OS: Windows Platform with .NET 3.5 Framework or above.
 
 
 Known Issues
 --------------------------------------------------------------------------------
-- N/A
+- May be incompatible with some VPN client software, like F5.
 
 --------------------------------------------------------------------------------
 
