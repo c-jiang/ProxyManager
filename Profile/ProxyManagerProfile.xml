@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<Profile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <WorkMode>Direct</WorkMode>
+  <StartAuto>true</StartAuto>
+  <StartMinimized>true</StartMinimized>
+  <LogToFile>false</LogToFile>
+  <ProxyGroupList>
+    <ProxyGroup Name="Jiang-Corporate" Enable="true" SelectedIndex="0">
+      <ProxyItem Enable="true">
+        <ProxyAddr>proxy.01.jiang.com:8080</ProxyAddr>
+        <Bypass>*.jiang.com</Bypass>
+        <DisableAutoConf>true</DisableAutoConf>
+      </ProxyItem>
+      <ProxyItem Enable="true">
+        <ProxyAddr>proxy.02.jiang.com:8080</ProxyAddr>
+        <Bypass>*.jiang.com</Bypass>
+        <DisableAutoConf>true</DisableAutoConf>
+      </ProxyItem>
+      <ProxyItem Enable="true">
+        <ProxyAddr>proxy.03.jiang.com:8080</ProxyAddr>
+        <Bypass>*.jiang.com</Bypass>
+        <DisableAutoConf>true</DisableAutoConf>
+      </ProxyItem>
+      <ApplyRule IdFilter="false" NameFilter="false" IpAddrFilter="true" SubMaskFilter="false" GatewayFilter="false" DnsAddrFilter="false" DnsSuffixFilter="true">
+        <IdFilterExpression />
+        <NameFilterExpression />
+        <IpAddrFilterExpression>10.*</IpAddrFilterExpression>
+        <SubMaskFilterExpression />
+        <GatewayFilterExpression />
+        <DnsAddrFilterExpression />
+        <DnsSuffixFilterExpression>*.jiang.com</DnsSuffixFilterExpression>
+      </ApplyRule>
+    </ProxyGroup>
+    <ProxyGroup Name="Cheng-Corporate" Enable="true" SelectedIndex="0">
+      <ProxyItem Enable="true">
+        <ProxyAddr>proxy.01.cheng.com:8080</ProxyAddr>
+        <Bypass>*.cheng.com</Bypass>
+        <DisableAutoConf>true</DisableAutoConf>
+      </ProxyItem>
+      <ProxyItem Enable="true">
+        <ProxyAddr>proxy.02.cheng.com:8080</ProxyAddr>
+        <Bypass>*.cheng.com</Bypass>
+        <DisableAutoConf>true</DisableAutoConf>
+      </ProxyItem>
+      <ProxyItem Enable="true">
+        <ProxyAddr>proxy.03.cheng.com:8080</ProxyAddr>
+        <Bypass>*.cheng.com</Bypass>
+        <DisableAutoConf>true</DisableAutoConf>
+      </ProxyItem>
+      <ApplyRule IdFilter="false" NameFilter="false" IpAddrFilter="true" SubMaskFilter="false" GatewayFilter="false" DnsAddrFilter="false" DnsSuffixFilter="false">
+        <IdFilterExpression />
+        <NameFilterExpression />
+        <IpAddrFilterExpression>192.168.*</IpAddrFilterExpression>
+        <SubMaskFilterExpression />
+        <GatewayFilterExpression />
+        <DnsAddrFilterExpression />
+        <DnsSuffixFilterExpression />
+      </ApplyRule>
+    </ProxyGroup>
+  </ProxyGroupList>
+</Profile>
