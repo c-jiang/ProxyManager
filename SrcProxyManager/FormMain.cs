@@ -37,18 +37,8 @@ namespace ProxyManager
                 this.WindowState = FormWindowState.Minimized;
             }
 
-            // start current work mode accordingly
-            switch (m_appManagerRef.AppProfile.m_workMode) {
-            case WorkMode.Auto:
-                m_appManagerRef.AutoSwitchProxy();
-                break;
-            case WorkMode.Direct:
-                m_appManagerRef.DisableProxy();
-                break;
-            case WorkMode.Proxy:
-                m_appManagerRef.EnableProxy();
-                break;
-            }
+            // start current work mode
+            m_appManagerRef.ApplyProfileItemWorkMode();
 
             // set registry key according to profile
             m_appManagerRef.ApplyProfileItemAutoStart();
@@ -328,20 +318,17 @@ namespace ProxyManager
 
         private void UserRequest_SwitchToAutoMode(object sender, EventArgs e)
         {
-            m_appManagerRef.ProfileChangedWorkMode(WorkMode.Auto);
-            m_appManagerRef.AutoSwitchProxy();
+            m_appManagerRef.ChangeProfileWorkMode(WorkMode.Auto);
         }
 
         private void UserRequest_SwitchToDirectMode(object sender, EventArgs e)
         {
-            m_appManagerRef.ProfileChangedWorkMode(WorkMode.Direct);
-            m_appManagerRef.DisableProxy();
+            m_appManagerRef.ChangeProfileWorkMode(WorkMode.Direct);
         }
 
         private void UserRequest_SwitchToProxyMode(object sender, EventArgs e)
         {
-            m_appManagerRef.ProfileChangedWorkMode(WorkMode.Proxy);
-            m_appManagerRef.EnableProxy();
+            m_appManagerRef.ChangeProfileWorkMode(WorkMode.Proxy);
         }
 
         private void UserRequest_ShowFormMain(object sender, EventArgs e)

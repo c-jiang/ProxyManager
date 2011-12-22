@@ -98,6 +98,31 @@ namespace ProxyManager
             // TODO:
         }
 
+        public void ApplyProfileItemWorkMode()
+        {
+            switch (m_profile.m_workMode) {
+            case WorkMode.Auto:
+                AutoSwitchProxy();
+                break;
+            case WorkMode.Direct:
+                DisableProxy();
+                break;
+            case WorkMode.Proxy:
+                EnableProxy();
+                break;
+            }
+        }
+
+        public void ChangeProfileWorkMode(WorkMode newMode)
+        {
+            WorkMode oldMode = m_profile.m_workMode;
+            if (oldMode != newMode) {
+                m_profile.m_workMode = newMode;
+                Profile.Save(m_profile);
+            }
+            ApplyProfileItemWorkMode();
+        }
+
         public void ApplyProfileItemAutoStart()
         {
             RegistryKey rk = Registry.CurrentUser.OpenSubKey(
@@ -150,12 +175,11 @@ namespace ProxyManager
             NotifyGuiNetworkChanged(this, new EventArgs());
         }
 
-        public bool AutoSwitchProxy()
+        public void AutoSwitchProxy()
         {
-            // TODO: determines whether the proxy settings should be changed, based on lastProxy
             if (m_detector.IsNetworkActive()) {
                 ProxyItem pi = FindMatchedProxyItem();
-                // here find method is not completed...
+                Profile.Save(m_profile);    // 'SelectedIndex' may be changed
                 if (pi != null) {
                     // Apply the found proxy since the rule matched
                     EnableProxy(pi);
@@ -166,17 +190,6 @@ namespace ProxyManager
             } else {
                 // Disable proxy if no active network
                 DisableProxy();
-            }
-            return true;
-        }
-
-        public void ProfileChangedWorkMode(WorkMode newMode)
-        {
-            // TODO: change to profile changed all
-            WorkMode oldMode = m_profile.m_workMode;
-            if (oldMode != newMode) {
-                m_profile.m_workMode = newMode;
-                Profile.Save(m_profile);
             }
         }
 

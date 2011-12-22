@@ -72,6 +72,7 @@
             // 
             this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnRefresh.Location = new System.Drawing.Point(286, 211);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(75, 23);
@@ -84,6 +85,7 @@
             // 
             this.btnProxyMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.btnProxyMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnProxyMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnProxyMode.Location = new System.Drawing.Point(233, 18);
             this.btnProxyMode.Name = "btnProxyMode";
             this.btnProxyMode.Size = new System.Drawing.Size(88, 23);
@@ -96,6 +98,7 @@
             // 
             this.btnDirectMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.btnDirectMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDirectMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnDirectMode.Location = new System.Drawing.Point(139, 18);
             this.btnDirectMode.Name = "btnDirectMode";
             this.btnDirectMode.Size = new System.Drawing.Size(88, 23);
@@ -108,6 +111,7 @@
             // 
             this.btnAutoMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.btnAutoMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAutoMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnAutoMode.Location = new System.Drawing.Point(45, 18);
             this.btnAutoMode.Name = "btnAutoMode";
             this.btnAutoMode.Size = new System.Drawing.Size(88, 23);
@@ -124,6 +128,7 @@
             this.gbWorkMode.Controls.Add(this.btnDirectMode);
             this.gbWorkMode.Controls.Add(this.btnAutoMode);
             this.gbWorkMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gbWorkMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.gbWorkMode.Location = new System.Drawing.Point(13, 280);
             this.gbWorkMode.Name = "gbWorkMode";
             this.gbWorkMode.Size = new System.Drawing.Size(367, 49);
@@ -202,6 +207,7 @@
             this.gbNetworkOverview.Controls.Add(this.tbStatus);
             this.gbNetworkOverview.Controls.Add(this.labelProxyAddr);
             this.gbNetworkOverview.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gbNetworkOverview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.gbNetworkOverview.Location = new System.Drawing.Point(13, 28);
             this.gbNetworkOverview.Name = "gbNetworkOverview";
             this.gbNetworkOverview.Size = new System.Drawing.Size(367, 240);
@@ -213,6 +219,7 @@
             // 
             this.labelProxyAddr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProxyAddr.AutoSize = true;
+            this.labelProxyAddr.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.labelProxyAddr.Location = new System.Drawing.Point(6, 216);
             this.labelProxyAddr.Name = "labelProxyAddr";
             this.labelProxyAddr.Size = new System.Drawing.Size(70, 13);
