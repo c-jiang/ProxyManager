@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxyManager", "SrcProxyManager\ProxyManager.csproj", "{F0723F66-EADF-4C56-8C56-E683A4B37B21}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxyAgent", "SrcProxyAgent\ProxyAgent.csproj", "{9212EA4E-A2BE-4693-B60A-F29AF2D36A5B}"
