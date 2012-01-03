@@ -46,11 +46,11 @@ namespace ProxyManager
                                 MessageBoxIcon.Question);
 
                             if (dr == DialogResult.Yes) {
-                                // TODO: Add the entry to Options dialog.
-                                MessageBox.Show(
-                                    @"The entry to Options is not implemented.",
-                                    AppManager.ASSEMBLY_PRODUCT,
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                if (DlgOptions.Instance.ShowDialog(
+                                        appManager.AppProfile) == DialogResult.OK) {
+                                    Profile.Save(DlgOptions.DlgProfile);
+                                    appManager.LoadAppProfile();
+                                }
                             }
                         }
                         if (!appManager.IsLoadAppProfileFailed()) {

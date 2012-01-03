@@ -82,7 +82,7 @@ namespace ProxyManager
         public Profile AppProfile
         {
             get { return m_profile; }
-            //set { m_profile = value; }
+            set { m_profile = value; }
         }
 
         public WorkMode CurrWorkMode

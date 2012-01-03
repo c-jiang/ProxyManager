@@ -49,6 +49,66 @@ namespace ProxyManager
             s_bLoadFailed = false;
         }
 
+        public Profile(Profile profile)
+        {
+            m_defWorkMode = profile.m_defWorkMode;
+            m_isStartAuto = profile.m_isStartAuto;
+            m_isStartMinimized = profile.m_isStartMinimized;
+            m_isLogToFile = profile.m_isLogToFile;
+            if (profile.m_listProxyGroups != null) {
+                m_listProxyGroups = new List<ProxyGroup>(profile.m_listProxyGroups);
+            } else {
+                m_listProxyGroups = null;
+            }
+            m_szProfilePath = profile.m_szProfilePath;
+            s_bLoadFailed = false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Profile)) {
+                return false;
+            }
+
+            var profile = obj as Profile;
+            if (profile == null) {
+                return false;
+            }
+
+            if (m_defWorkMode != profile.m_defWorkMode) {
+                return false;
+            }
+            if (m_isStartAuto != profile.m_isStartAuto) {
+                return false;
+            }
+            if (m_isStartMinimized != profile.m_isStartMinimized) {
+                return false;
+            }
+            if (m_szProfilePath != profile.m_szProfilePath) {
+                return false;
+            }
+
+            if (m_listProxyGroups != null && profile.m_listProxyGroups != null) {
+                if (m_listProxyGroups.Count != profile.m_listProxyGroups.Count) {
+                    return false;
+                }
+                for (int i = 0; i < m_listProxyGroups.Count; ++i) {
+                    if (!m_listProxyGroups[i].Equals(profile.m_listProxyGroups[i])) {
+                        return false;
+                    }
+                }
+            } else if (m_listProxyGroups != null || profile.m_listProxyGroups != null) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         // Method: Load from local profile
         public static Profile Load(string appDir, out bool createdNew)
         {
@@ -156,6 +216,51 @@ namespace ProxyManager
             m_listProxyItems = new List<ProxyItem>(listProxyItems);
             m_applyRule = new ApplyRule(ruleCondition);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ProxyGroup)) {
+                return false;
+            }
+
+            var pg = obj as ProxyGroup;
+            if (pg == null) {
+                return false;
+            }
+
+            if (m_szName != pg.m_szName) {
+                return false;
+            }
+            if (m_isEnabled != pg.m_isEnabled) {
+                return false;
+            }
+            if (m_iSelectedIndex != pg.m_iSelectedIndex) {
+                return false;
+            }
+            if (!m_applyRule.Equals(pg.m_applyRule)) {
+                return false;
+            }
+
+            if (m_listProxyItems != null && pg.m_listProxyItems != null) {
+                if (m_listProxyItems.Count != pg.m_listProxyItems.Count) {
+                    return false;
+                }
+                for (int i = 0; i < m_listProxyItems.Count; ++i) {
+                    if (!m_listProxyItems[i].Equals(pg.m_listProxyItems[i])) {
+                        return false;
+                    }
+                }
+            } else if (m_listProxyItems != null || pg.m_listProxyItems != null) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     public class ProxyItem
@@ -192,6 +297,37 @@ namespace ProxyManager
             m_szProxyAddr = proxyAddr;
             m_szBypass = bypass;
             m_isAutoConfDisabled = isAutoConfDisabled;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ProxyItem)) {
+                return false;
+            }
+
+            var pi = obj as ProxyItem;
+            if (pi == null) {
+                return false;
+            }
+
+            if (m_isEnabled != pi.m_isEnabled) {
+                return false;
+            }
+            if (m_szProxyAddr != pi.m_szProxyAddr) {
+                return false;
+            }
+            if (m_szBypass != pi.m_szBypass) {
+                return false;
+            }
+            if (m_isAutoConfDisabled != pi.m_isAutoConfDisabled) {
+                return false;
+            }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 
@@ -266,6 +402,67 @@ namespace ProxyManager
             m_szDnsAddrFilter = rc.m_szDnsAddrFilter;
             m_bDnsSuffixFilter = rc.m_bDnsSuffixFilter;
             m_szDnsSuffixFilter = rc.m_szDnsSuffixFilter;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ApplyRule)) {
+                return false;
+            }
+
+            var ar = obj as ApplyRule;
+            if (ar == null) {
+                return false;
+            }
+
+            if (m_bIdFilter != ar.m_bIdFilter) {
+                return false;
+            }
+            if (m_szIdFilter != ar.m_szIdFilter) {
+                return false;
+            }
+            if (m_bNameFilter != ar.m_bNameFilter) {
+                return false;
+            }
+            if (m_szNameFilter != ar.m_szNameFilter) {
+                return false;
+            }
+            if (m_bIpAddrFilter != ar.m_bIpAddrFilter) {
+                return false;
+            }
+            if (m_szIpAddrFilter != ar.m_szIpAddrFilter) {
+                return false;
+            }
+            if (m_bSubMaskFilter != ar.m_bSubMaskFilter) {
+                return false;
+            }
+            if (m_szSubMaskFilter != ar.m_szSubMaskFilter) {
+                return false;
+            }
+            if (m_bGatewayFilter != ar.m_bGatewayFilter) {
+                return false;
+            }
+            if (m_szGatewayFilter != ar.m_szGatewayFilter) {
+                return false;
+            }
+            if (m_bDnsAddrFilter != ar.m_bDnsAddrFilter) {
+                return false;
+            }
+            if (m_szDnsAddrFilter != ar.m_szDnsAddrFilter) {
+                return false;
+            }
+            if (m_bDnsSuffixFilter != ar.m_bDnsSuffixFilter) {
+                return false;
+            }
+            if (m_szDnsSuffixFilter != ar.m_szDnsSuffixFilter) {
+                return false;
+            }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

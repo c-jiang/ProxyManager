@@ -72,7 +72,7 @@ namespace ProxyManager
             m_arrayMenuItems[idx] = new MenuItem("-");
             ++idx;
             m_arrayMenuItems[idx] = new MenuItem();
-            m_arrayMenuItems[idx].Text = "Options";
+            m_arrayMenuItems[idx].Text = "Options...";
             m_arrayMenuItems[idx].Click += new System.EventHandler(UserRequest_ShowDlgOptions);
             ++idx;
             m_arrayMenuItems[idx] = new MenuItem("-");
@@ -398,11 +398,23 @@ namespace ProxyManager
 
         private void UserRequest_ShowDlgOptions(object sender, EventArgs e)
         {
-            // TODO: Add the entry to Options dialog.
-            MessageBox.Show(
-                @"The entry to Options is not implemented.",
-                AssemblyProduct,
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (!DlgOptions.Instance.Visible) {
+                DlgOptions.Instance.StartPosition =
+                    (this.WindowState == FormWindowState.Minimized)
+                    ? FormStartPosition.CenterScreen
+                    : FormStartPosition.CenterParent;
+                DialogResult dr = DlgOptions.Instance.ShowDialog(
+                    this, m_appManagerRef.AppProfile);
+                if (dr == DialogResult.OK) {
+                    if (!m_appManagerRef.AppProfile.Equals(DlgOptions.DlgProfile)) {
+                        m_appManagerRef.AppProfile = new Profile(DlgOptions.DlgProfile);
+                        Profile.Save(m_appManagerRef.AppProfile);
+                        // TODO: trigger update
+                    }
+                }
+            } else {
+                DlgOptions.Instance.Activate();
+            }
         }
 
         #endregion
@@ -439,6 +451,11 @@ namespace ProxyManager
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UserRequest_ExitApplication(sender, e);
+        }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UserRequest_ShowDlgOptions(sender, e);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
