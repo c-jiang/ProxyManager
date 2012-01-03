@@ -37,11 +37,11 @@ namespace ProxyManager
                 this.WindowState = FormWindowState.Minimized;
             }
 
-            // start current work mode
-            m_appManagerRef.ApplyProfileItemWorkMode();
-
             // set registry key according to profile
             m_appManagerRef.ApplyProfileItemAutoStart();
+
+            // start current work mode
+            m_appManagerRef.StartCurrentWorkMode();
         }
 
         private void InitGuiNotifyIcon()
@@ -157,7 +157,7 @@ namespace ProxyManager
 
             // update group box title
             gbWorkMode.Text = "Work Mode: "
-                + m_appManagerRef.AppProfile.m_workMode
+                + m_appManagerRef.CurrWorkMode
                 + " Mode";
 
             // set focus
@@ -168,7 +168,7 @@ namespace ProxyManager
         private void UpdateGui_NotifyIconTextIndication()
         {
             string str = AssemblyProduct + " ("
-                + m_appManagerRef.AppProfile.m_workMode + " Mode)"
+                + m_appManagerRef.CurrWorkMode + " Mode)"
                 + Environment.NewLine;
             str += "Network Status: "
                 + (m_appManagerRef.Detector.IsNetworkActive() ? "Active" : "Inactive");
@@ -184,7 +184,7 @@ namespace ProxyManager
                 ? m_appManagerRef.Detector.ActiveNetworkIPAddress() : "N/A")
                 + Environment.NewLine;
             tip += "Work Mode: "
-                + m_appManagerRef.AppProfile.m_workMode.ToString() + " Mode"
+                + m_appManagerRef.CurrWorkMode.ToString() + " Mode"
                 + Environment.NewLine;
             tip += "Proxy: " + (IeProxyOptions.ProxyEnable
                 ? IeProxyOptions.ProxyAddr : "Disabled");
@@ -212,7 +212,7 @@ namespace ProxyManager
             foreach (MenuItem iter in m_listModeMenuItems) {
                 iter.Checked = false;
             }
-            switch (m_appManagerRef.AppProfile.m_workMode) {
+            switch (m_appManagerRef.CurrWorkMode) {
             case WorkMode.Auto:
                 m_listModeMenuItems[0].Checked = true;
                 break;
@@ -227,7 +227,7 @@ namespace ProxyManager
 
         private void UpdateGui_NotifyIconMenuProxySelection()
         {
-            switch (m_appManagerRef.AppProfile.m_workMode) {
+            switch (m_appManagerRef.CurrWorkMode) {
             case WorkMode.Auto: {
                     if (!IeProxyOptions.ProxyEnable) {
                         // fall through
@@ -318,17 +318,20 @@ namespace ProxyManager
 
         private void UserRequest_SwitchToAutoMode(object sender, EventArgs e)
         {
-            m_appManagerRef.ChangeProfileWorkMode(WorkMode.Auto);
+            m_appManagerRef.SetCurrentWorkMode(WorkMode.Auto);
+            m_appManagerRef.StartCurrentWorkMode();
         }
 
         private void UserRequest_SwitchToDirectMode(object sender, EventArgs e)
         {
-            m_appManagerRef.ChangeProfileWorkMode(WorkMode.Direct);
+            m_appManagerRef.SetCurrentWorkMode(WorkMode.Direct);
+            m_appManagerRef.StartCurrentWorkMode();
         }
 
         private void UserRequest_SwitchToProxyMode(object sender, EventArgs e)
         {
-            m_appManagerRef.ChangeProfileWorkMode(WorkMode.Proxy);
+            m_appManagerRef.SetCurrentWorkMode(WorkMode.Proxy);
+            m_appManagerRef.StartCurrentWorkMode();
         }
 
         private void UserRequest_ShowFormMain(object sender, EventArgs e)

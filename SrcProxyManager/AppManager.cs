@@ -21,6 +21,7 @@ namespace ProxyManager
             m_szAppDir = Path.GetDirectoryName(path);
             m_detector = new NetworkDetector();
             m_profile = null;
+            m_currWorkMode = WorkMode.Direct;
 
             // link NetworkDetector to AppManager
             m_detector.NetworkChanged +=
@@ -50,6 +51,7 @@ namespace ProxyManager
         {
             bool createdNew;
             m_profile = Profile.Load(m_szAppDir, out createdNew);
+            m_currWorkMode = m_profile.m_defWorkMode;
             return (!createdNew);
         }
 
@@ -64,7 +66,7 @@ namespace ProxyManager
 
         public void DetectorNotify_NetworkChanged(object sender, EventArgs e)
         {
-            switch (m_profile.m_workMode) {
+            switch (m_currWorkMode) {
             case WorkMode.Auto:
                 AutoSwitchProxy();
                 break;
@@ -83,6 +85,11 @@ namespace ProxyManager
             //set { m_profile = value; }
         }
 
+        public WorkMode CurrWorkMode
+        {
+            get { return m_currWorkMode; }
+        }
+
         public NetworkDetector Detector
         {
             get { return m_detector; }
@@ -98,31 +105,6 @@ namespace ProxyManager
             // TODO:
         }
 
-        public void ApplyProfileItemWorkMode()
-        {
-            switch (m_profile.m_workMode) {
-            case WorkMode.Auto:
-                AutoSwitchProxy();
-                break;
-            case WorkMode.Direct:
-                DisableProxy();
-                break;
-            case WorkMode.Proxy:
-                EnableProxy();
-                break;
-            }
-        }
-
-        public void ChangeProfileWorkMode(WorkMode newMode)
-        {
-            WorkMode oldMode = m_profile.m_workMode;
-            if (oldMode != newMode) {
-                m_profile.m_workMode = newMode;
-                Profile.Save(m_profile);
-            }
-            ApplyProfileItemWorkMode();
-        }
-
         public void ApplyProfileItemAutoStart()
         {
             RegistryKey rk = Registry.CurrentUser.OpenSubKey(
@@ -134,6 +116,26 @@ namespace ProxyManager
                 rk.DeleteValue(ASSEMBLY_PRODUCT);
             }
             rk.Close();
+        }
+
+        public void SetCurrentWorkMode(WorkMode newMode)
+        {
+            m_currWorkMode = newMode;
+        }
+
+        public void StartCurrentWorkMode()
+        {
+            switch (m_currWorkMode) {
+            case WorkMode.Auto:
+                AutoSwitchProxy();
+                break;
+            case WorkMode.Direct:
+                DisableProxy();
+                break;
+            case WorkMode.Proxy:
+                EnableProxy();
+                break;
+            }
         }
 
         public void EnableProxy()
@@ -307,8 +309,9 @@ namespace ProxyManager
         private string m_szAppDir;
 
         private NetworkDetector m_detector;
-        
         private Profile m_profile;
+
+        private WorkMode m_currWorkMode;// current work mode
         private int m_idxProxyGroup;    // current proxy group index if Auto Mode
     }
 }

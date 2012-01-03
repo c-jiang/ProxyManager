@@ -24,7 +24,7 @@ namespace ProxyManager
 
         // settings - options
         [XmlElement("WorkMode")]
-        public WorkMode m_workMode;
+        public WorkMode m_defWorkMode;
         [XmlElement("StartAuto")]
         public bool m_isStartAuto;
         [XmlElement("StartMinimized")]
@@ -39,7 +39,7 @@ namespace ProxyManager
         // Contructor Method
         public Profile()
         {
-            m_workMode = WorkMode.Direct;
+            m_defWorkMode = WorkMode.Auto;
             m_isStartAuto = true;
             m_isStartMinimized = true;
             m_isLogToFile = false;
