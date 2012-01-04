@@ -255,6 +255,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvProxyGroups.Location = new System.Drawing.Point(7, 20);
+            this.lvProxyGroups.MultiSelect = false;
             this.lvProxyGroups.Name = "lvProxyGroups";
             this.lvProxyGroups.Size = new System.Drawing.Size(260, 139);
             this.lvProxyGroups.TabIndex = 0;

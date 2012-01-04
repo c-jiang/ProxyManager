@@ -196,7 +196,20 @@ namespace ProxyManager
             m_isEnabled = false;
             m_iSelectedIndex = 0;
             m_listProxyItems = new List<ProxyItem>();
-            m_applyRule = null;
+            m_applyRule = new ApplyRule();
+        }
+
+        public ProxyGroup(ProxyGroup pg)
+        {
+            m_szName = pg.m_szName;
+            m_isEnabled = pg.m_isEnabled;
+            m_iSelectedIndex = pg.m_iSelectedIndex;
+            m_applyRule = new ApplyRule(pg.m_applyRule);
+            if (pg.m_listProxyItems != null) {
+                m_listProxyItems = new List<ProxyItem>(pg.m_listProxyItems);
+            } else {
+                m_listProxyItems = null;
+            }
         }
 
         public ProxyGroup(string name, bool isEnabled, List<ProxyItem> listProxyItems)
@@ -205,7 +218,7 @@ namespace ProxyManager
             m_isEnabled = isEnabled;
             m_iSelectedIndex = 0;
             m_listProxyItems = new List<ProxyItem>(listProxyItems);
-            m_applyRule = null;
+            m_applyRule = new ApplyRule();
         }
 
         public ProxyGroup(string name, bool isEnabled, List<ProxyItem> listProxyItems, ApplyRule ruleCondition)
@@ -386,22 +399,22 @@ namespace ProxyManager
             m_szDnsSuffixFilter = String.Empty;
         }
 
-        public ApplyRule(ApplyRule rc)
+        public ApplyRule(ApplyRule ar)
         {
-            m_bIdFilter = rc.m_bIdFilter;
-            m_szIdFilter = rc.m_szIdFilter;
-            m_bNameFilter = rc.m_bNameFilter;
-            m_szNameFilter = rc.m_szNameFilter;
-            m_bIpAddrFilter = rc.m_bIpAddrFilter;
-            m_szIpAddrFilter = rc.m_szIpAddrFilter;
-            m_bSubMaskFilter = rc.m_bSubMaskFilter;
-            m_szSubMaskFilter = rc.m_szSubMaskFilter;
-            m_bGatewayFilter = rc.m_bGatewayFilter;
-            m_szGatewayFilter = rc.m_szGatewayFilter;
-            m_bDnsAddrFilter = rc.m_bDnsAddrFilter;
-            m_szDnsAddrFilter = rc.m_szDnsAddrFilter;
-            m_bDnsSuffixFilter = rc.m_bDnsSuffixFilter;
-            m_szDnsSuffixFilter = rc.m_szDnsSuffixFilter;
+            m_bIdFilter = ar.m_bIdFilter;
+            m_szIdFilter = ar.m_szIdFilter;
+            m_bNameFilter = ar.m_bNameFilter;
+            m_szNameFilter = ar.m_szNameFilter;
+            m_bIpAddrFilter = ar.m_bIpAddrFilter;
+            m_szIpAddrFilter = ar.m_szIpAddrFilter;
+            m_bSubMaskFilter = ar.m_bSubMaskFilter;
+            m_szSubMaskFilter = ar.m_szSubMaskFilter;
+            m_bGatewayFilter = ar.m_bGatewayFilter;
+            m_szGatewayFilter = ar.m_szGatewayFilter;
+            m_bDnsAddrFilter = ar.m_bDnsAddrFilter;
+            m_szDnsAddrFilter = ar.m_szDnsAddrFilter;
+            m_bDnsSuffixFilter = ar.m_bDnsSuffixFilter;
+            m_szDnsSuffixFilter = ar.m_szDnsSuffixFilter;
         }
 
         public override bool Equals(object obj)

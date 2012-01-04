@@ -74,6 +74,12 @@
     <Compile Include="DlgOptions.Designer.cs">
       <DependentUpon>DlgOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="DlgOptionsProxyGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DlgOptionsProxyGroup.Designer.cs">
+      <DependentUpon>DlgOptionsProxyGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +97,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DlgOptions.resx">
       <DependentUpon>DlgOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DlgOptionsProxyGroup.resx">
+      <DependentUpon>DlgOptionsProxyGroup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>

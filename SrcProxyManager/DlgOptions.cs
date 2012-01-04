@@ -131,7 +131,9 @@ namespace ProxyManager
             m_dlgProfile.m_isLogToFile = m_dlgInstance.cbLogToFile.Checked;
 
             // proxy group
-            // TODO:
+            if (m_dlgProfile.m_listProxyGroups.Count <= 0) {
+                m_dlgProfile.m_listProxyGroups = null;
+            }
         }
 
         #endregion
@@ -140,7 +142,10 @@ namespace ProxyManager
 
         private void lvProxyGroups_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            // TODO: entry the dialog for editing Proxy Group
+            if (e.Button != MouseButtons.Left) {
+                return;
+            }
+            EditProxyGroup(lvProxyGroups.FocusedItem);
         }
 
         private void btnNew_Click(object sender, EventArgs e)
@@ -150,12 +155,33 @@ namespace ProxyManager
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            // TODO: edit current Proxy Group
+            if (lvProxyGroups.SelectedItems.Count <= 0) {
+                MessageBox.Show("No Proxy Group is selected.",
+                    AppManager.ASSEMBLY_PRODUCT,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+            EditProxyGroup(lvProxyGroups.SelectedItems[0]);
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            // TODO: delete current Proxy Group
+            if (lvProxyGroups.SelectedItems.Count <= 0) {
+                MessageBox.Show("No Proxy Group is selected.",
+                    AppManager.ASSEMBLY_PRODUCT,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+            DialogResult dr = MessageBox.Show(
+                "Are you sure to delete the selected Proxy Group?",
+                AppManager.ASSEMBLY_PRODUCT,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes) {
+                DeleteProxyGroup(lvProxyGroups.SelectedItems[0]);
+            }
         }
 
         private void btnUp_Click(object sender, EventArgs e)
@@ -166,6 +192,27 @@ namespace ProxyManager
         private void btnDown_Click(object sender, EventArgs e)
         {
             // TODO: move current Proxy Group down
+        }
+
+        private void EditProxyGroup(ListViewItem item)
+        {
+            ProxyGroup pg = m_dlgProfile.m_listProxyGroups[item.Index];
+            DialogResult dr = DlgOptionsProxyGroup.Instance.ShowDialog(this, pg);
+            if ((dr == DialogResult.OK) && (!pg.Equals(DlgOptionsProxyGroup.Instance.DlgProxyGroup))) {
+                m_dlgProfile.m_listProxyGroups[item.Index] = new ProxyGroup(
+                    DlgOptionsProxyGroup.Instance.DlgProxyGroup);
+                pg = m_dlgProfile.m_listProxyGroups[item.Index];
+                item.SubItems[0].Text = pg.m_szName;
+                item.SubItems[1].Text = (pg.m_isEnabled ? "Enable" : "Disable");
+                item.SubItems[2].Text = (pg.m_listProxyItems == null
+                    ? "0" : pg.m_listProxyItems.Count.ToString());
+            }
+        }
+
+        private void DeleteProxyGroup(ListViewItem item)
+        {
+            m_dlgProfile.m_listProxyGroups.RemoveAt(item.Index);
+            lvProxyGroups.Items.RemoveAt(item.Index);
         }
 
         #endregion
