@@ -13,6 +13,7 @@ namespace ProxyManager
     {
         private static DlgOptionsProxyGroup m_dlgInstance = null;
         private static ProxyGroup m_dlgProxyGroup = null;
+        private static bool m_bExitByOK = false;
 
         public static DlgOptionsProxyGroup Instance
         {
@@ -27,6 +28,7 @@ namespace ProxyManager
 
         public DialogResult ShowDialog(IWin32Window owner, ProxyGroup pg)
         {
+            m_bExitByOK = false;
             SetDialogLayout(pg);
             return ShowDialog(owner);
         }
@@ -72,39 +74,133 @@ namespace ProxyManager
                 m_dlgProxyGroup.m_applyRule = new ApplyRule();
             }
             // filter network adapter id
-            m_dlgInstance.cbFilterId.Checked = m_dlgProxyGroup.m_applyRule.m_bIdFilter;
-            m_dlgInstance.tbFilterId.Text = m_dlgProxyGroup.m_applyRule.m_szIdFilter;
-            m_dlgInstance.tbFilterId.Enabled = m_dlgInstance.cbFilterId.Checked;
+            cbFilterId.Checked = m_dlgProxyGroup.m_applyRule.m_bIdFilter;
+            tbFilterId.Text = m_dlgProxyGroup.m_applyRule.m_szIdFilter;
+            tbFilterId.Enabled = cbFilterId.Checked;
             // filter network adapter name
-            m_dlgInstance.cbFilterName.Checked = m_dlgProxyGroup.m_applyRule.m_bNameFilter;
-            m_dlgInstance.tbFilterName.Text = m_dlgProxyGroup.m_applyRule.m_szNameFilter;
-            m_dlgInstance.tbFilterName.Enabled = m_dlgInstance.cbFilterName.Checked;
+            cbFilterName.Checked = m_dlgProxyGroup.m_applyRule.m_bNameFilter;
+            tbFilterName.Text = m_dlgProxyGroup.m_applyRule.m_szNameFilter;
+            tbFilterName.Enabled = cbFilterName.Checked;
             // filter ip addr
-            m_dlgInstance.cbFilterIpAddr.Checked = m_dlgProxyGroup.m_applyRule.m_bIpAddrFilter;
-            m_dlgInstance.tbFilterIpAddr.Text = m_dlgProxyGroup.m_applyRule.m_szIpAddrFilter;
-            m_dlgInstance.tbFilterIpAddr.Enabled = m_dlgInstance.cbFilterIpAddr.Checked;
+            cbFilterIpAddr.Checked = m_dlgProxyGroup.m_applyRule.m_bIpAddrFilter;
+            tbFilterIpAddr.Text = m_dlgProxyGroup.m_applyRule.m_szIpAddrFilter;
+            tbFilterIpAddr.Enabled = cbFilterIpAddr.Checked;
             // filter subnet mask
-            m_dlgInstance.cbFilterMask.Checked = m_dlgProxyGroup.m_applyRule.m_bSubMaskFilter;
-            m_dlgInstance.tbFilterMask.Text = m_dlgProxyGroup.m_applyRule.m_szSubMaskFilter;
-            m_dlgInstance.tbFilterMask.Enabled = m_dlgInstance.cbFilterMask.Checked;
+            cbFilterMask.Checked = m_dlgProxyGroup.m_applyRule.m_bSubMaskFilter;
+            tbFilterMask.Text = m_dlgProxyGroup.m_applyRule.m_szSubMaskFilter;
+            tbFilterMask.Enabled = cbFilterMask.Checked;
             // filter gateway
-            m_dlgInstance.cbFilterGateway.Checked = m_dlgProxyGroup.m_applyRule.m_bGatewayFilter;
-            m_dlgInstance.tbFilterGateway.Text = m_dlgProxyGroup.m_applyRule.m_szGatewayFilter;
-            m_dlgInstance.tbFilterGateway.Enabled = m_dlgInstance.cbFilterGateway.Checked;
+            cbFilterGateway.Checked = m_dlgProxyGroup.m_applyRule.m_bGatewayFilter;
+            tbFilterGateway.Text = m_dlgProxyGroup.m_applyRule.m_szGatewayFilter;
+            tbFilterGateway.Enabled = cbFilterGateway.Checked;
             // filter dns addr
-            m_dlgInstance.cbFilterDns.Checked = m_dlgProxyGroup.m_applyRule.m_bDnsAddrFilter;
-            m_dlgInstance.tbFilterDns.Text = m_dlgProxyGroup.m_applyRule.m_szDnsAddrFilter;
-            m_dlgInstance.tbFilterDns.Enabled = m_dlgInstance.cbFilterDns.Checked;
+            cbFilterDns.Checked = m_dlgProxyGroup.m_applyRule.m_bDnsAddrFilter;
+            tbFilterDns.Text = m_dlgProxyGroup.m_applyRule.m_szDnsAddrFilter;
+            tbFilterDns.Enabled = cbFilterDns.Checked;
             // filter dns suffix
-            m_dlgInstance.cbFilterDnsSuffix.Checked = m_dlgProxyGroup.m_applyRule.m_bDnsSuffixFilter;
-            m_dlgInstance.tbFilterDnsSuffix.Text = m_dlgProxyGroup.m_applyRule.m_szDnsSuffixFilter;
-            m_dlgInstance.tbFilterDnsSuffix.Enabled = m_dlgInstance.cbFilterDnsSuffix.Checked;
+            cbFilterDnsSuffix.Checked = m_dlgProxyGroup.m_applyRule.m_bDnsSuffixFilter;
+            tbFilterDnsSuffix.Text = m_dlgProxyGroup.m_applyRule.m_szDnsSuffixFilter;
+            tbFilterDnsSuffix.Enabled = cbFilterDnsSuffix.Checked;
         }
 
         private void DlgOptionsProxyGroup_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (!m_bExitByOK) {
+                return;
+            }
+
+            tbName.Text = tbName.Text.Trim();
+            tbFilterId.Text = tbFilterId.Text.Trim();
+            tbFilterName.Text = tbFilterName.Text.Trim();
+            tbFilterIpAddr.Text = tbFilterIpAddr.Text.Trim();
+            tbFilterMask.Text = tbFilterMask.Text.Trim();
+            tbFilterGateway.Text = tbFilterGateway.Text.Trim();
+            tbFilterDns.Text = tbFilterDns.Text.Trim();
+            tbFilterDnsSuffix.Text = tbFilterDnsSuffix.Text.Trim();
+
+            string msg = String.Empty;
+
+            if (tbName.Text.Length == 0) {
+                msg = "Proxy Group name can not be blank.";
+                tbName.Focus();
+                goto END;
+            }
+
+            if (cbFilterId.Checked && tbFilterId.Text.Length == 0) {
+                msg = "Expression for Adapter ID is blank while this filter is enabled.";
+                tbFilterId.Focus();
+                goto END;
+            }
+            if (cbFilterName.Checked && tbFilterName.Text.Length == 0) {
+                msg = "Expression for Adapter Name is blank while this filter is enabled.";
+                tbFilterName.Focus();
+                goto END;
+            }
+            if (cbFilterIpAddr.Checked && tbFilterIpAddr.Text.Length == 0) {
+                msg = "Expression for IP Address is blank while this filter is enabled.";
+                tbFilterIpAddr.Focus();
+                goto END;
+            }
+            if (cbFilterMask.Checked && tbFilterMask.Text.Length == 0) {
+                msg = "Expression for Subnet Mask is blank while this filter is enabled.";
+                tbFilterMask.Focus();
+                goto END;
+            }
+            if (cbFilterGateway.Checked && tbFilterGateway.Text.Length == 0) {
+                msg = "Expression for Default Gateway is blank while this filter is enabled.";
+                tbFilterGateway.Focus();
+                goto END;
+            }
+            if (cbFilterDns.Checked && tbFilterDns.Text.Length == 0) {
+                msg = "Expression for Default DNS is blank while this filter is enabled.";
+                tbFilterDns.Focus();
+                goto END;
+            }
+            if (cbFilterDnsSuffix.Checked && tbFilterDnsSuffix.Text.Length == 0) {
+                msg = "Expression for DNS Suffix is blank while this filter is enabled.";
+                tbFilterDnsSuffix.Focus();
+                goto END;
+            }
+
+            bool flag = cbFilterId.Checked
+                      | cbFilterName.Checked
+                      | cbFilterIpAddr.Checked
+                      | cbFilterMask.Checked
+                      | cbFilterGateway.Checked
+                      | cbFilterDns.Checked
+                      | cbFilterDnsSuffix.Checked;
+            if (flag == false) {
+                DialogResult dr = MessageBox.Show(
+                    @"All filters have been turned off." + Environment.NewLine
+                    + @"Are you sure to turn all of them off?",
+                    AppManager.ASSEMBLY_PRODUCT,
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if (dr == DialogResult.No) {
+                    e.Cancel = true;
+                    m_bExitByOK = false;
+                    cbFilterId.Focus();
+                }
+            }
+
+            return;
+        END:
+            e.Cancel = true;
+            m_bExitByOK = false;
+            MessageBox.Show(msg,
+                AppManager.ASSEMBLY_PRODUCT,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+
+        private void DlgOptionsProxyGroup_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (!m_bExitByOK) {
+                return;
+            }
+
             // proxy group name
-            m_dlgProxyGroup.m_szName = tbName.Text.Trim();
+            m_dlgProxyGroup.m_szName = tbName.Text;
             // proxy group enable/disable
             m_dlgProxyGroup.m_isEnabled = cbEnable.Checked;
 
@@ -129,26 +225,26 @@ namespace ProxyManager
                 m_dlgProxyGroup.m_applyRule = new ApplyRule();
             }
             // filter network adapter id
-            m_dlgProxyGroup.m_applyRule.m_bIdFilter = m_dlgInstance.cbFilterId.Checked;
-            m_dlgProxyGroup.m_applyRule.m_szIdFilter = m_dlgInstance.tbFilterId.Text.Trim();
+            m_dlgProxyGroup.m_applyRule.m_bIdFilter = cbFilterId.Checked;
+            m_dlgProxyGroup.m_applyRule.m_szIdFilter = tbFilterId.Text;
             // filter network adapter name
-            m_dlgProxyGroup.m_applyRule.m_bNameFilter = m_dlgInstance.cbFilterName.Checked;
-            m_dlgProxyGroup.m_applyRule.m_szNameFilter = m_dlgInstance.tbFilterName.Text.Trim();
+            m_dlgProxyGroup.m_applyRule.m_bNameFilter = cbFilterName.Checked;
+            m_dlgProxyGroup.m_applyRule.m_szNameFilter = tbFilterName.Text;
             // filter ip addr
-            m_dlgProxyGroup.m_applyRule.m_bIpAddrFilter = m_dlgInstance.cbFilterIpAddr.Checked;
-            m_dlgProxyGroup.m_applyRule.m_szIpAddrFilter = m_dlgInstance.tbFilterIpAddr.Text.Trim();
+            m_dlgProxyGroup.m_applyRule.m_bIpAddrFilter = cbFilterIpAddr.Checked;
+            m_dlgProxyGroup.m_applyRule.m_szIpAddrFilter = tbFilterIpAddr.Text;
             // filter subnet mask
-            m_dlgProxyGroup.m_applyRule.m_bSubMaskFilter = m_dlgInstance.cbFilterMask.Checked;
-            m_dlgProxyGroup.m_applyRule.m_szSubMaskFilter = m_dlgInstance.tbFilterMask.Text.Trim();
+            m_dlgProxyGroup.m_applyRule.m_bSubMaskFilter = cbFilterMask.Checked;
+            m_dlgProxyGroup.m_applyRule.m_szSubMaskFilter = tbFilterMask.Text;
             // filter gateway
-            m_dlgProxyGroup.m_applyRule.m_bGatewayFilter = m_dlgInstance.cbFilterGateway.Checked;
-            m_dlgProxyGroup.m_applyRule.m_szGatewayFilter = m_dlgInstance.tbFilterGateway.Text.Trim();
+            m_dlgProxyGroup.m_applyRule.m_bGatewayFilter = cbFilterGateway.Checked;
+            m_dlgProxyGroup.m_applyRule.m_szGatewayFilter = tbFilterGateway.Text;
             // filter dns addr
-            m_dlgProxyGroup.m_applyRule.m_bDnsAddrFilter = m_dlgInstance.cbFilterDns.Checked;
-            m_dlgProxyGroup.m_applyRule.m_szDnsAddrFilter = m_dlgInstance.tbFilterDns.Text.Trim();
+            m_dlgProxyGroup.m_applyRule.m_bDnsAddrFilter = cbFilterDns.Checked;
+            m_dlgProxyGroup.m_applyRule.m_szDnsAddrFilter = tbFilterDns.Text;
             // filter dns suffix
-            m_dlgProxyGroup.m_applyRule.m_bDnsSuffixFilter = m_dlgInstance.cbFilterDnsSuffix.Checked;
-            m_dlgProxyGroup.m_applyRule.m_szDnsSuffixFilter = m_dlgInstance.tbFilterDnsSuffix.Text.Trim();
+            m_dlgProxyGroup.m_applyRule.m_bDnsSuffixFilter = cbFilterDnsSuffix.Checked;
+            m_dlgProxyGroup.m_applyRule.m_szDnsSuffixFilter = tbFilterDnsSuffix.Text;
         }
 
         #endregion
@@ -196,6 +292,11 @@ namespace ProxyManager
         private void cbFilterDnsSuffix_CheckedChanged(object sender, EventArgs e)
         {
             m_dlgInstance.tbFilterDnsSuffix.Enabled = m_dlgInstance.cbFilterDnsSuffix.Checked;
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            m_bExitByOK = true;
         }
 
         #endregion

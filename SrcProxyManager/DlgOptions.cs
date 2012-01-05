@@ -104,7 +104,7 @@ namespace ProxyManager
             }
         }
 
-        private void DlgOptions_FormClosing(object sender, FormClosingEventArgs e)
+        private void DlgOptions_FormClosed(object sender, FormClosedEventArgs e)
         {
             // default work mode
             if (m_dlgInstance.rbAuto.Checked) {

@@ -279,7 +279,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Options";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DlgOptions_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DlgOptions_FormClosed);
             this.gbCommon.ResumeLayout(false);
             this.gbCommon.PerformLayout();
             this.gbProxyGroups.ResumeLayout(false);

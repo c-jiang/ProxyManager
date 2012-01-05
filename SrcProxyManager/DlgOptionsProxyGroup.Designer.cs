@@ -68,6 +68,7 @@
             this.btnOK.TabIndex = 5;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnCancel
             // 
@@ -205,7 +206,7 @@
             this.cbFilterName.Name = "cbFilterName";
             this.cbFilterName.Size = new System.Drawing.Size(116, 17);
             this.cbFilterName.TabIndex = 2;
-            this.cbFilterName.Text = "Filter Adaptor Name";
+            this.cbFilterName.Text = "Filter Adapter Name";
             this.cbFilterName.UseVisualStyleBackColor = true;
             this.cbFilterName.CheckedChanged += new System.EventHandler(this.cbFilterName_CheckedChanged);
             // 
@@ -218,7 +219,7 @@
             this.cbFilterId.Name = "cbFilterId";
             this.cbFilterId.Size = new System.Drawing.Size(99, 17);
             this.cbFilterId.TabIndex = 0;
-            this.cbFilterId.Text = "Filter Adaptor ID";
+            this.cbFilterId.Text = "Filter Adapter ID";
             this.cbFilterId.UseVisualStyleBackColor = true;
             this.cbFilterId.CheckedChanged += new System.EventHandler(this.cbFilterId_CheckedChanged);
             // 
@@ -354,6 +355,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.ClientSize = new System.Drawing.Size(584, 428);
             this.Controls.Add(this.cbEnable);
             this.Controls.Add(this.tbName);
@@ -370,6 +372,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Options - Proxy Group";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DlgOptionsProxyGroup_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DlgOptionsProxyGroup_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProxyItems)).EndInit();
             this.gbApplyRule.ResumeLayout(false);
             this.tlp.ResumeLayout(false);
