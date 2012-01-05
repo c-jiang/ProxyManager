@@ -254,6 +254,10 @@
             this.lvProxyGroups.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvProxyGroups.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lvProxyGroups.FullRowSelect = true;
+            this.lvProxyGroups.GridLines = true;
+            this.lvProxyGroups.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvProxyGroups.Location = new System.Drawing.Point(7, 20);
             this.lvProxyGroups.MultiSelect = false;
             this.lvProxyGroups.Name = "lvProxyGroups";
@@ -265,6 +269,7 @@
             // 
             // DlgOptions
             // 
+            this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(354, 340);
@@ -280,6 +285,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Options";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DlgOptions_FormClosed);
+            this.Shown += new System.EventHandler(this.DlgOptions_Shown);
             this.gbCommon.ResumeLayout(false);
             this.gbCommon.PerformLayout();
             this.gbProxyGroups.ResumeLayout(false);

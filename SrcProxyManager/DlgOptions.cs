@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ProxyManager
@@ -47,14 +41,18 @@ namespace ProxyManager
             InitializeComponent();
 
             ColumnHeader cb;
+            // proxy group name
             cb = new ColumnHeader();
             cb.Text = "Proxy Group Name";
             cb.Width = 120;
             lvProxyGroups.Columns.Add(cb);
+            // status: enable/disable
             cb = new ColumnHeader();
             cb.Text = "Status";
             cb.Width = 60;
+            cb.TextAlign = HorizontalAlignment.Center;
             lvProxyGroups.Columns.Add(cb);
+            // item count
             cb = new ColumnHeader();
             cb.Text = "Item #";
             cb.Width = 50;
@@ -102,6 +100,11 @@ namespace ProxyManager
                     lvProxyGroups.Items.Add(item);
                 }
             }
+        }
+
+        private void DlgOptions_Shown(object sender, EventArgs e)
+        {
+            btnOK.Focus();
         }
 
         private void DlgOptions_FormClosed(object sender, FormClosedEventArgs e)

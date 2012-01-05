@@ -27,12 +27,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.dgvProxyItems = new System.Windows.Forms.DataGridView();
-            this.ColEnable = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.ColProxyAddr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColBypass = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblName = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.cbEnable = new System.Windows.Forms.CheckBox();
@@ -52,9 +54,14 @@
             this.cbFilterDnsSuffix = new System.Windows.Forms.CheckBox();
             this.tbFilterDnsSuffix = new System.Windows.Forms.TextBox();
             this.tbFilterMask = new System.Windows.Forms.TextBox();
+            this.ColEnable = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColProxyAddr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColBypass = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gbProxyItems = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProxyItems)).BeginInit();
             this.gbApplyRule.SuspendLayout();
             this.tlp.SuspendLayout();
+            this.gbProxyItems.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnOK
@@ -62,7 +69,7 @@
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOK.Location = new System.Drawing.Point(414, 393);
+            this.btnOK.Location = new System.Drawing.Point(414, 387);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 5;
@@ -75,7 +82,7 @@
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Location = new System.Drawing.Point(495, 393);
+            this.btnCancel.Location = new System.Drawing.Point(495, 387);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 6;
@@ -88,55 +95,64 @@
             this.dgvProxyItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvProxyItems.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            this.dgvProxyItems.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvProxyItems.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
-            this.dgvProxyItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvProxyItems.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvProxyItems.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvProxyItems.ColumnHeadersHeight = 20;
+            this.dgvProxyItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvProxyItems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColEnable,
             this.ColProxyAddr,
             this.ColBypass});
-            this.dgvProxyItems.Location = new System.Drawing.Point(15, 38);
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvProxyItems.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dgvProxyItems.Location = new System.Drawing.Point(9, 19);
             this.dgvProxyItems.Name = "dgvProxyItems";
-            this.dgvProxyItems.Size = new System.Drawing.Size(555, 219);
+            this.dgvProxyItems.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvProxyItems.RowHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            this.dgvProxyItems.RowHeadersWidth = 24;
+            this.dgvProxyItems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dgvProxyItems.RowTemplate.Height = 20;
+            this.dgvProxyItems.Size = new System.Drawing.Size(539, 188);
             this.dgvProxyItems.TabIndex = 3;
             this.dgvProxyItems.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvProxyItems_RowsAdded);
-            // 
-            // ColEnable
-            // 
-            this.ColEnable.HeaderText = "Enable";
-            this.ColEnable.Name = "ColEnable";
-            this.ColEnable.Width = 46;
-            // 
-            // ColProxyAddr
-            // 
-            this.ColProxyAddr.HeaderText = "Proxy Address";
-            this.ColProxyAddr.Name = "ColProxyAddr";
-            this.ColProxyAddr.Width = 99;
-            // 
-            // ColBypass
-            // 
-            this.ColBypass.HeaderText = "Bypass";
-            this.ColBypass.Name = "ColBypass";
-            this.ColBypass.Width = 66;
             // 
             // lblName
             // 
             this.lblName.AutoSize = true;
             this.lblName.Location = new System.Drawing.Point(12, 14);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(99, 13);
+            this.lblName.Size = new System.Drawing.Size(68, 13);
             this.lblName.TabIndex = 0;
-            this.lblName.Text = "Proxy Group Name:";
+            this.lblName.Text = "Proxy Group:";
             // 
             // tbName
             // 
             this.tbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbName.Location = new System.Drawing.Point(117, 12);
+            this.tbName.Location = new System.Drawing.Point(86, 12);
             this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(372, 20);
+            this.tbName.Size = new System.Drawing.Size(250, 20);
             this.tbName.TabIndex = 1;
             // 
             // cbEnable
@@ -144,11 +160,11 @@
             this.cbEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbEnable.AutoSize = true;
             this.cbEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbEnable.Location = new System.Drawing.Point(516, 12);
+            this.cbEnable.Location = new System.Drawing.Point(418, 12);
             this.cbEnable.Name = "cbEnable";
-            this.cbEnable.Size = new System.Drawing.Size(56, 17);
+            this.cbEnable.Size = new System.Drawing.Size(154, 17);
             this.cbEnable.TabIndex = 2;
-            this.cbEnable.Text = "Enable";
+            this.cbEnable.Text = "Enable Current Proxy Group";
             this.cbEnable.UseVisualStyleBackColor = true;
             // 
             // gbApplyRule
@@ -157,12 +173,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbApplyRule.Controls.Add(this.tlp);
             this.gbApplyRule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gbApplyRule.Location = new System.Drawing.Point(15, 263);
+            this.gbApplyRule.Location = new System.Drawing.Point(15, 257);
             this.gbApplyRule.Name = "gbApplyRule";
             this.gbApplyRule.Size = new System.Drawing.Size(557, 124);
             this.gbApplyRule.TabIndex = 4;
             this.gbApplyRule.TabStop = false;
-            this.gbApplyRule.Text = "Apply Rule for Current Proxy Group";
+            this.gbApplyRule.Text = "Apply Rule for Current Proxy Group (Wildcard characters * and ? allowed)";
             // 
             // tlp
             // 
@@ -253,9 +269,10 @@
             // 
             this.tbFilterGateway.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFilterGateway.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbFilterGateway.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbFilterGateway.Location = new System.Drawing.Point(428, 3);
             this.tbFilterGateway.Name = "tbFilterGateway";
-            this.tbFilterGateway.Size = new System.Drawing.Size(114, 20);
+            this.tbFilterGateway.Size = new System.Drawing.Size(114, 19);
             this.tbFilterGateway.TabIndex = 9;
             // 
             // cbFilterDns
@@ -275,18 +292,20 @@
             // 
             this.tbFilterId.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFilterId.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbFilterId.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbFilterId.Location = new System.Drawing.Point(138, 3);
             this.tbFilterId.Name = "tbFilterId";
-            this.tbFilterId.Size = new System.Drawing.Size(114, 20);
+            this.tbFilterId.Size = new System.Drawing.Size(114, 19);
             this.tbFilterId.TabIndex = 1;
             // 
             // tbFilterIpAddr
             // 
             this.tbFilterIpAddr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFilterIpAddr.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbFilterIpAddr.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbFilterIpAddr.Location = new System.Drawing.Point(138, 51);
             this.tbFilterIpAddr.Name = "tbFilterIpAddr";
-            this.tbFilterIpAddr.Size = new System.Drawing.Size(114, 20);
+            this.tbFilterIpAddr.Size = new System.Drawing.Size(114, 19);
             this.tbFilterIpAddr.TabIndex = 5;
             // 
             // cbFilterGateway
@@ -306,18 +325,20 @@
             // 
             this.tbFilterName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFilterName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbFilterName.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbFilterName.Location = new System.Drawing.Point(138, 27);
             this.tbFilterName.Name = "tbFilterName";
-            this.tbFilterName.Size = new System.Drawing.Size(114, 20);
+            this.tbFilterName.Size = new System.Drawing.Size(114, 19);
             this.tbFilterName.TabIndex = 3;
             // 
             // tbFilterDns
             // 
             this.tbFilterDns.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFilterDns.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbFilterDns.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbFilterDns.Location = new System.Drawing.Point(428, 27);
             this.tbFilterDns.Name = "tbFilterDns";
-            this.tbFilterDns.Size = new System.Drawing.Size(114, 20);
+            this.tbFilterDns.Size = new System.Drawing.Size(114, 19);
             this.tbFilterDns.TabIndex = 11;
             // 
             // cbFilterDnsSuffix
@@ -337,33 +358,79 @@
             // 
             this.tbFilterDnsSuffix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFilterDnsSuffix.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbFilterDnsSuffix.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbFilterDnsSuffix.Location = new System.Drawing.Point(428, 51);
             this.tbFilterDnsSuffix.Name = "tbFilterDnsSuffix";
-            this.tbFilterDnsSuffix.Size = new System.Drawing.Size(114, 20);
+            this.tbFilterDnsSuffix.Size = new System.Drawing.Size(114, 19);
             this.tbFilterDnsSuffix.TabIndex = 13;
             // 
             // tbFilterMask
             // 
             this.tbFilterMask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFilterMask.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbFilterMask.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbFilterMask.Location = new System.Drawing.Point(138, 75);
             this.tbFilterMask.Name = "tbFilterMask";
-            this.tbFilterMask.Size = new System.Drawing.Size(114, 20);
+            this.tbFilterMask.Size = new System.Drawing.Size(114, 19);
             this.tbFilterMask.TabIndex = 7;
+            // 
+            // ColEnable
+            // 
+            this.ColEnable.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ColEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ColEnable.HeaderText = "Enable";
+            this.ColEnable.Name = "ColEnable";
+            this.ColEnable.Width = 46;
+            // 
+            // ColProxyAddr
+            // 
+            this.ColProxyAddr.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(2, 0, 16, 0);
+            this.ColProxyAddr.DefaultCellStyle = dataGridViewCellStyle2;
+            this.ColProxyAddr.HeaderText = "Proxy Address";
+            this.ColProxyAddr.Name = "ColProxyAddr";
+            this.ColProxyAddr.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ColProxyAddr.Width = 80;
+            // 
+            // ColBypass
+            // 
+            this.ColBypass.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(2, 0, 16, 0);
+            this.ColBypass.DefaultCellStyle = dataGridViewCellStyle3;
+            this.ColBypass.HeaderText = "Bypass";
+            this.ColBypass.Name = "ColBypass";
+            this.ColBypass.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // gbProxyItems
+            // 
+            this.gbProxyItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbProxyItems.Controls.Add(this.dgvProxyItems);
+            this.gbProxyItems.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gbProxyItems.Location = new System.Drawing.Point(15, 38);
+            this.gbProxyItems.Name = "gbProxyItems";
+            this.gbProxyItems.Size = new System.Drawing.Size(557, 213);
+            this.gbProxyItems.TabIndex = 7;
+            this.gbProxyItems.TabStop = false;
+            this.gbProxyItems.Text = "Item List for Current Proxy Group";
             // 
             // DlgOptionsProxyGroup
             // 
+            this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-            this.ClientSize = new System.Drawing.Size(584, 428);
+            this.ClientSize = new System.Drawing.Size(584, 422);
             this.Controls.Add(this.cbEnable);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.gbApplyRule);
-            this.Controls.Add(this.dgvProxyItems);
+            this.Controls.Add(this.gbProxyItems);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(500, 350);
             this.Name = "DlgOptionsProxyGroup";
@@ -373,10 +440,12 @@
             this.Text = "Options - Proxy Group";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DlgOptionsProxyGroup_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DlgOptionsProxyGroup_FormClosed);
+            this.Shown += new System.EventHandler(this.DlgOptionsProxyGroup_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProxyItems)).EndInit();
             this.gbApplyRule.ResumeLayout(false);
             this.tlp.ResumeLayout(false);
             this.tlp.PerformLayout();
+            this.gbProxyItems.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -387,9 +456,6 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.DataGridView dgvProxyItems;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn ColEnable;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColProxyAddr;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColBypass;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.CheckBox cbEnable;
@@ -409,5 +475,9 @@
         private System.Windows.Forms.CheckBox cbFilterId;
         private System.Windows.Forms.CheckBox cbFilterDnsSuffix;
         private System.Windows.Forms.TextBox tbFilterDnsSuffix;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn ColEnable;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColProxyAddr;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColBypass;
+        private System.Windows.Forms.GroupBox gbProxyItems;
     }
 }

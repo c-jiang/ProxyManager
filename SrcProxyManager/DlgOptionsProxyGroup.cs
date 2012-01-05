@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ProxyManager
@@ -101,6 +95,11 @@ namespace ProxyManager
             cbFilterDnsSuffix.Checked = m_dlgProxyGroup.m_applyRule.m_bDnsSuffixFilter;
             tbFilterDnsSuffix.Text = m_dlgProxyGroup.m_applyRule.m_szDnsSuffixFilter;
             tbFilterDnsSuffix.Enabled = cbFilterDnsSuffix.Checked;
+        }
+
+        private void DlgOptionsProxyGroup_Shown(object sender, EventArgs e)
+        {
+            btnOK.Focus();
         }
 
         private void DlgOptionsProxyGroup_FormClosing(object sender, FormClosingEventArgs e)
