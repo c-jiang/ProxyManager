@@ -98,14 +98,8 @@ namespace ProxyManager
             lvProxyGroups.Items.Clear();
             if (m_dlgProfile.m_listProxyGroups != null) {
                 foreach (ProxyGroup pg in m_dlgProfile.m_listProxyGroups) {
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Text = pg.m_szName;
-                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi,
-                        (pg.m_isEnabled ? "Enable" : "Disable")));
-                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi,
-                        (pg.m_listProxyItems == null
-                            ? "0" : pg.m_listProxyItems.Count.ToString())));
-                    lvProxyGroups.Items.Add(lvi);
+                    ListViewItem item = CreateListViewItem(pg);
+                    lvProxyGroups.Items.Add(item);
                 }
             }
         }
@@ -150,7 +144,22 @@ namespace ProxyManager
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            // TODO: create a new Proxy Group
+            DialogResult dr = DlgOptionsProxyGroup.Instance.ShowDialog(
+                this, new ProxyGroup());
+            if (dr == DialogResult.OK) {
+                ProxyGroup pg = new ProxyGroup(DlgOptionsProxyGroup.Instance.DlgProxyGroup);
+                ListViewItem item = CreateListViewItem(pg);
+                if (lvProxyGroups.SelectedItems.Count <= 0) {
+                    // add to the tail
+                    m_dlgProfile.m_listProxyGroups.Add(pg);
+                    lvProxyGroups.Items.Add(item);
+                } else {
+                    // insert after current selected item
+                    int idx = lvProxyGroups.SelectedItems[0].Index + 1;
+                    m_dlgProfile.m_listProxyGroups.Insert(idx, pg);
+                    lvProxyGroups.Items.Insert(idx, item);
+                }
+            }
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -213,6 +222,18 @@ namespace ProxyManager
         {
             m_dlgProfile.m_listProxyGroups.RemoveAt(item.Index);
             lvProxyGroups.Items.RemoveAt(item.Index);
+        }
+
+        private ListViewItem CreateListViewItem(ProxyGroup pg)
+        {
+            ListViewItem item = new ListViewItem();
+            item.Text = pg.m_szName;
+            item.SubItems.Add(new ListViewItem.ListViewSubItem(item,
+                (pg.m_isEnabled ? "Enable" : "Disable")));
+            item.SubItems.Add(new ListViewItem.ListViewSubItem(item,
+                    (pg.m_listProxyItems == null
+                        ? "0" : pg.m_listProxyItems.Count.ToString())));
+            return item;
         }
 
         #endregion
