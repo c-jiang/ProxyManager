@@ -160,27 +160,21 @@ namespace ProxyManager
                     lvProxyGroups.Items.Insert(idx, item);
                 }
             }
+            lvProxyGroups.Focus();
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (lvProxyGroups.SelectedItems.Count <= 0) {
-                MessageBox.Show("No Proxy Group is selected.",
-                    AppManager.ASSEMBLY_PRODUCT,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+            if (!HasListViewItemSelected()) {
                 return;
             }
             EditProxyGroup(lvProxyGroups.SelectedItems[0]);
+            lvProxyGroups.Focus();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (lvProxyGroups.SelectedItems.Count <= 0) {
-                MessageBox.Show("No Proxy Group is selected.",
-                    AppManager.ASSEMBLY_PRODUCT,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+            if (!HasListViewItemSelected()) {
                 return;
             }
             DialogResult dr = MessageBox.Show(
@@ -189,18 +183,50 @@ namespace ProxyManager
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
             if (dr == DialogResult.Yes) {
+                int idx = lvProxyGroups.SelectedItems[0].Index;
                 DeleteProxyGroup(lvProxyGroups.SelectedItems[0]);
+                if (idx >= lvProxyGroups.Items.Count) {
+                    idx = lvProxyGroups.Items.Count - 1;
+                }
+                lvProxyGroups.Items[idx].Selected = true;
             }
+            lvProxyGroups.Focus();
         }
 
         private void btnUp_Click(object sender, EventArgs e)
         {
-            // TODO: move current Proxy Group up
+            if (!HasListViewItemSelected()) {
+                return;
+            }
+            int idx = lvProxyGroups.SelectedItems[0].Index;
+            if (idx > 0) {
+                ProxyGroup pg = m_dlgProfile.m_listProxyGroups[idx];
+                m_dlgProfile.m_listProxyGroups.RemoveAt(idx);
+                m_dlgProfile.m_listProxyGroups.Insert(idx - 1, pg);
+
+                ListViewItem item = lvProxyGroups.Items[idx];
+                lvProxyGroups.Items.RemoveAt(idx);
+                lvProxyGroups.Items.Insert(idx - 1, item);
+            }
+            lvProxyGroups.Focus();
         }
 
         private void btnDown_Click(object sender, EventArgs e)
         {
-            // TODO: move current Proxy Group down
+            if (!HasListViewItemSelected()) {
+                return;
+            }
+            int idx = lvProxyGroups.SelectedItems[0].Index;
+            if (idx < lvProxyGroups.Items.Count - 1) {
+                ProxyGroup pg = m_dlgProfile.m_listProxyGroups[idx];
+                m_dlgProfile.m_listProxyGroups.RemoveAt(idx);
+                m_dlgProfile.m_listProxyGroups.Insert(idx + 1, pg);
+
+                ListViewItem item = lvProxyGroups.Items[idx];
+                lvProxyGroups.Items.RemoveAt(idx);
+                lvProxyGroups.Items.Insert(idx + 1, item);
+            }
+            lvProxyGroups.Focus();
         }
 
         private void EditProxyGroup(ListViewItem item)
@@ -234,6 +260,19 @@ namespace ProxyManager
                     (pg.m_listProxyItems == null
                         ? "0" : pg.m_listProxyItems.Count.ToString())));
             return item;
+        }
+
+        private bool HasListViewItemSelected()
+        {
+            if (lvProxyGroups.SelectedItems.Count <= 0) {
+                MessageBox.Show("No Proxy Group is selected.",
+                    AppManager.ASSEMBLY_PRODUCT,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            } else {
+                return true;
+            }
         }
 
         #endregion
