@@ -208,25 +208,17 @@ namespace ProxyManager
             m_dlgProxyGroup.m_isEnabled = cbEnable.Checked;
 
             // proxy group items
-            if (dgvProxyItems.RowCount <= 0) {
-                m_dlgProxyGroup.m_listProxyItems = null;
-            } else {
-                m_dlgProxyGroup.m_listProxyItems.Clear();
-                foreach (DataGridViewRow row in dgvProxyItems.Rows) {
-                    if (row.IsNewRow) {
-                        continue;
-                    }
-                    m_dlgProxyGroup.m_listProxyItems.Add(new ProxyItem(
-                        Boolean.Parse(row.Cells[IDX_IS_ENABLED].Value.ToString()),
-                        row.Cells[IDX_PROXY_ADDR].Value.ToString().Trim(),
-                        row.Cells[IDX_BYPASS].Value.ToString().Trim()));
+            m_dlgProxyGroup.m_listProxyItems.Clear();
+            foreach (DataGridViewRow row in dgvProxyItems.Rows) {
+                if (row.IsNewRow) {
+                    continue;
                 }
+                m_dlgProxyGroup.m_listProxyItems.Add(new ProxyItem(
+                    Boolean.Parse(row.Cells[IDX_IS_ENABLED].Value.ToString()),
+                    row.Cells[IDX_PROXY_ADDR].Value.ToString().Trim(),
+                    row.Cells[IDX_BYPASS].Value.ToString().Trim()));
             }
 
-            // proxy group apply rule
-            if (m_dlgProxyGroup.m_applyRule == null) {
-                m_dlgProxyGroup.m_applyRule = new ApplyRule();
-            }
             // filter network adapter id
             m_dlgProxyGroup.m_applyRule.m_bIdFilter = cbFilterId.Checked;
             m_dlgProxyGroup.m_applyRule.m_szIdFilter = tbFilterId.Text;

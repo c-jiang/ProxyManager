@@ -190,7 +190,6 @@ namespace ProxyManager
         {
             if (m_detector.IsNetworkActive()) {
                 ProxyItem pi = FindMatchedProxyItem();
-                Profile.Save(m_profile);    // 'SelectedIndex' may be changed
                 if (pi != null) {
                     // Apply the found proxy since the rule matched
                     EnableProxy(pi);

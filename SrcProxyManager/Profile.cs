@@ -43,7 +43,7 @@ namespace ProxyManager
             m_isStartAuto = true;
             m_isStartMinimized = true;
             m_isLogToFile = false;
-            m_listProxyGroups = null;
+            m_listProxyGroups = new List<ProxyGroup>();
 
             m_szProfilePath = String.Empty;
             s_bLoadFailed = false;
@@ -55,11 +55,7 @@ namespace ProxyManager
             m_isStartAuto = profile.m_isStartAuto;
             m_isStartMinimized = profile.m_isStartMinimized;
             m_isLogToFile = profile.m_isLogToFile;
-            if (profile.m_listProxyGroups != null) {
-                m_listProxyGroups = new List<ProxyGroup>(profile.m_listProxyGroups);
-            } else {
-                m_listProxyGroups = null;
-            }
+            m_listProxyGroups = new List<ProxyGroup>(profile.m_listProxyGroups);
             m_szProfilePath = profile.m_szProfilePath;
             s_bLoadFailed = false;
         }
@@ -88,17 +84,13 @@ namespace ProxyManager
                 return false;
             }
 
-            if (m_listProxyGroups != null && profile.m_listProxyGroups != null) {
-                if (m_listProxyGroups.Count != profile.m_listProxyGroups.Count) {
+            if (m_listProxyGroups.Count != profile.m_listProxyGroups.Count) {
+                return false;
+            }
+            for (int i = 0; i < m_listProxyGroups.Count; ++i) {
+                if (!m_listProxyGroups[i].Equals(profile.m_listProxyGroups[i])) {
                     return false;
                 }
-                for (int i = 0; i < m_listProxyGroups.Count; ++i) {
-                    if (!m_listProxyGroups[i].Equals(profile.m_listProxyGroups[i])) {
-                        return false;
-                    }
-                }
-            } else if (m_listProxyGroups != null || profile.m_listProxyGroups != null) {
-                return false;
             }
 
             return true;
@@ -205,29 +197,7 @@ namespace ProxyManager
             m_isEnabled = pg.m_isEnabled;
             m_iSelectedIndex = pg.m_iSelectedIndex;
             m_applyRule = new ApplyRule(pg.m_applyRule);
-            if (pg.m_listProxyItems != null) {
-                m_listProxyItems = new List<ProxyItem>(pg.m_listProxyItems);
-            } else {
-                m_listProxyItems = null;
-            }
-        }
-
-        public ProxyGroup(string name, bool isEnabled, List<ProxyItem> listProxyItems)
-        {
-            m_szName = name;
-            m_isEnabled = isEnabled;
-            m_iSelectedIndex = 0;
-            m_listProxyItems = new List<ProxyItem>(listProxyItems);
-            m_applyRule = new ApplyRule();
-        }
-
-        public ProxyGroup(string name, bool isEnabled, List<ProxyItem> listProxyItems, ApplyRule ruleCondition)
-        {
-            m_szName = name;
-            m_isEnabled = isEnabled;
-            m_iSelectedIndex = 0;
-            m_listProxyItems = new List<ProxyItem>(listProxyItems);
-            m_applyRule = new ApplyRule(ruleCondition);
+            m_listProxyItems = new List<ProxyItem>(pg.m_listProxyItems);
         }
 
         public override bool Equals(object obj)
@@ -254,17 +224,13 @@ namespace ProxyManager
                 return false;
             }
 
-            if (m_listProxyItems != null && pg.m_listProxyItems != null) {
-                if (m_listProxyItems.Count != pg.m_listProxyItems.Count) {
+            if (m_listProxyItems.Count != pg.m_listProxyItems.Count) {
+                return false;
+            }
+            for (int i = 0; i < m_listProxyItems.Count; ++i) {
+                if (!m_listProxyItems[i].Equals(pg.m_listProxyItems[i])) {
                     return false;
                 }
-                for (int i = 0; i < m_listProxyItems.Count; ++i) {
-                    if (!m_listProxyItems[i].Equals(pg.m_listProxyItems[i])) {
-                        return false;
-                    }
-                }
-            } else if (m_listProxyItems != null || pg.m_listProxyItems != null) {
-                return false;
             }
 
             return true;

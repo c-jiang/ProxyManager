@@ -46,10 +46,12 @@ namespace ProxyManager
                                 MessageBoxIcon.Question);
 
                             if (dr == DialogResult.Yes) {
-                                if (DlgOptions.Instance.ShowDialog(
-                                        appManager.AppProfile) == DialogResult.OK) {
+                                dr = DlgOptions.Instance.ShowDialog(
+                                    appManager.AppProfile);
+                                if ((dr == DialogResult.OK) &&
+                                        (!appManager.AppProfile.Equals(DlgOptions.DlgProfile))) {
+                                    appManager.AppProfile = new Profile(DlgOptions.DlgProfile);
                                     Profile.Save(DlgOptions.DlgProfile);
-                                    appManager.LoadAppProfile();
                                 }
                             }
                         }

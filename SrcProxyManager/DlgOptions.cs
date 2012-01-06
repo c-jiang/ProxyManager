@@ -94,11 +94,9 @@ namespace ProxyManager
 
             // proxy group
             lvProxyGroups.Items.Clear();
-            if (m_dlgProfile.m_listProxyGroups != null) {
-                foreach (ProxyGroup pg in m_dlgProfile.m_listProxyGroups) {
-                    ListViewItem item = CreateListViewItem(pg);
-                    lvProxyGroups.Items.Add(item);
-                }
+            foreach (ProxyGroup pg in m_dlgProfile.m_listProxyGroups) {
+                ListViewItem item = CreateListViewItem(pg);
+                lvProxyGroups.Items.Add(item);
             }
         }
 
@@ -117,20 +115,12 @@ namespace ProxyManager
             } else {
                 m_dlgProfile.m_defWorkMode = WorkMode.Proxy;
             }
-
             // start auto
             m_dlgProfile.m_isStartAuto = m_dlgInstance.cbStartAuto.Checked;
-
             // start minimized
             m_dlgProfile.m_isStartMinimized = m_dlgInstance.cbStartMinimized.Checked;
-
             // log to file
             m_dlgProfile.m_isLogToFile = m_dlgInstance.cbLogToFile.Checked;
-
-            // proxy group
-            if (m_dlgProfile.m_listProxyGroups.Count <= 0) {
-                m_dlgProfile.m_listProxyGroups = null;
-            }
         }
 
         #endregion
@@ -157,11 +147,12 @@ namespace ProxyManager
                     m_dlgProfile.m_listProxyGroups.Add(pg);
                     lvProxyGroups.Items.Add(item);
                 } else {
-                    // insert after current selected item
-                    int idx = lvProxyGroups.SelectedItems[0].Index + 1;
+                    // insert at current selected item
+                    int idx = lvProxyGroups.SelectedItems[0].Index;
                     m_dlgProfile.m_listProxyGroups.Insert(idx, pg);
                     lvProxyGroups.Items.Insert(idx, item);
                 }
+                item.Selected = true;
             }
             lvProxyGroups.Focus();
         }
@@ -188,7 +179,9 @@ namespace ProxyManager
                     if (idx >= lvProxyGroups.Items.Count) {
                         idx = lvProxyGroups.Items.Count - 1;
                     }
-                    lvProxyGroups.Items[idx].Selected = true;
+                    if (idx >= 0) {
+                        lvProxyGroups.Items[idx].Selected = true;
+                    }
                 }
             }
             lvProxyGroups.Focus();
