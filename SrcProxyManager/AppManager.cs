@@ -100,9 +100,18 @@ namespace ProxyManager
             get { return m_idxProxyGroup; }
         }
 
-        public void ApplyProfileItemsAll()
+        public void ApplyProfileUpdate()
         {
+            // XPath: /Profile/StartAuto
+            ApplyProfileItemAutoStart();
+
+            // XPath: /Profile/LogToFile
             // TODO:
+
+            // restart work mode in case of Auto Mode
+            if (m_currWorkMode == WorkMode.Auto) {
+                AutoSwitchProxy();
+            }
         }
 
         public void ApplyProfileItemAutoStart()

@@ -405,12 +405,11 @@ namespace ProxyManager
                     : FormStartPosition.CenterParent;
                 DialogResult dr = DlgOptions.Instance.ShowDialog(
                     this, m_appManagerRef.AppProfile);
-                if (dr == DialogResult.OK) {
-                    if (!m_appManagerRef.AppProfile.Equals(DlgOptions.DlgProfile)) {
-                        m_appManagerRef.AppProfile = new Profile(DlgOptions.DlgProfile);
-                        Profile.Save(m_appManagerRef.AppProfile);
-                        // TODO: trigger update
-                    }
+                if ((dr == DialogResult.OK) &&
+                        (!m_appManagerRef.AppProfile.Equals(DlgOptions.DlgProfile))) {
+                    m_appManagerRef.AppProfile = new Profile(DlgOptions.DlgProfile);
+                    Profile.Save(m_appManagerRef.AppProfile);
+                    m_appManagerRef.ApplyProfileUpdate();
                 }
             } else {
                 DlgOptions.Instance.Activate();
