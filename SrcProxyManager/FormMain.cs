@@ -130,11 +130,11 @@ namespace ProxyManager
             ui += "Network Status: ";
             if (nd.IsNetworkActive()) {
                 ui += "Active" + Environment.NewLine + Environment.NewLine;
-                ui += "Network Adaptor ID . . : " + nd.ActiveNetworkId()
+                ui += "Network Adapter ID . . : " + nd.ActiveNetworkId()
                     + Environment.NewLine;
-                ui += "Network Adaptor Name . : " + nd.ActiveNetworkName()
+                ui += "Network Adapter Name . : " + nd.ActiveNetworkName()
                     + Environment.NewLine;
-                ui += "Network Adaptor Desc . : " + nd.ActiveNetworkDescription()
+                ui += "Network Adapter Desc . : " + nd.ActiveNetworkDescription()
                     + Environment.NewLine;
                 ui += "IP Address . . . . . . : " + nd.ActiveNetworkIPAddress()
                     + Environment.NewLine;
