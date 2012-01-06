@@ -140,6 +140,7 @@
             this.dgvProxyItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvProxyItems.Size = new System.Drawing.Size(483, 188);
             this.dgvProxyItems.TabIndex = 0;
+            this.dgvProxyItems.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProxyItems_CellEndEdit);
             this.dgvProxyItems.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvProxyItems_RowsAdded);
             // 
             // ColEnable

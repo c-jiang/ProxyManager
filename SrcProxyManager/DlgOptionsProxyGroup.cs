@@ -9,6 +9,10 @@ namespace ProxyManager
         private static ProxyGroup m_dlgProxyGroup = null;
         private static bool m_bExitByOK = false;
 
+        private const int IDX_IS_ENABLED = 0;
+        private const int IDX_PROXY_ADDR = 1;
+        private const int IDX_BYPASS = 2;
+
         public static DlgOptionsProxyGroup Instance
         {
             get
@@ -57,9 +61,9 @@ namespace ProxyManager
             if (m_dlgProxyGroup.m_listProxyItems != null) {
                 foreach (ProxyItem pi in m_dlgProxyGroup.m_listProxyItems) {
                     int idx = dgvProxyItems.Rows.Add();
-                    dgvProxyItems.Rows[idx].Cells[0].Value = pi.m_isEnabled;
-                    dgvProxyItems.Rows[idx].Cells[1].Value = pi.m_szProxyAddr;
-                    dgvProxyItems.Rows[idx].Cells[2].Value = pi.m_szBypass;
+                    dgvProxyItems.Rows[idx].Cells[IDX_IS_ENABLED].Value = pi.m_isEnabled;
+                    dgvProxyItems.Rows[idx].Cells[IDX_PROXY_ADDR].Value = pi.m_szProxyAddr;
+                    dgvProxyItems.Rows[idx].Cells[IDX_BYPASS].Value = pi.m_szBypass;
                 }
             }
 
@@ -213,9 +217,9 @@ namespace ProxyManager
                         continue;
                     }
                     m_dlgProxyGroup.m_listProxyItems.Add(new ProxyItem(
-                        Boolean.Parse(row.Cells[0].Value.ToString()),
-                        row.Cells[1].Value.ToString().Trim(),
-                        row.Cells[2].Value.ToString().Trim()));
+                        Boolean.Parse(row.Cells[IDX_IS_ENABLED].Value.ToString()),
+                        row.Cells[IDX_PROXY_ADDR].Value.ToString().Trim(),
+                        row.Cells[IDX_BYPASS].Value.ToString().Trim()));
                 }
             }
 
@@ -253,15 +257,42 @@ namespace ProxyManager
         private void dgvProxyItems_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             // init the default value for each data grid view row
-            if (dgvProxyItems.Rows[e.RowIndex].Cells[0].Value == null) {
-                dgvProxyItems.Rows[e.RowIndex].Cells[0].Value = false;
+            if (dgvProxyItems.Rows[e.RowIndex].Cells[IDX_IS_ENABLED].Value == null) {
+                dgvProxyItems.Rows[e.RowIndex].Cells[IDX_IS_ENABLED].Value = false;
             }
-            if (dgvProxyItems.Rows[e.RowIndex].Cells[1].Value == null) {
-                dgvProxyItems.Rows[e.RowIndex].Cells[1].Value = String.Empty;
+            if (dgvProxyItems.Rows[e.RowIndex].Cells[IDX_PROXY_ADDR].Value == null) {
+                dgvProxyItems.Rows[e.RowIndex].Cells[IDX_PROXY_ADDR].Value = String.Empty;
             }
-            if (dgvProxyItems.Rows[e.RowIndex].Cells[2].Value == null) {
-                dgvProxyItems.Rows[e.RowIndex].Cells[2].Value = String.Empty;
+            if (dgvProxyItems.Rows[e.RowIndex].Cells[IDX_BYPASS].Value == null) {
+                dgvProxyItems.Rows[e.RowIndex].Cells[IDX_BYPASS].Value = String.Empty;
             }
+        }
+
+        private void dgvProxyItems_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!dgvProxyItems.IsCurrentRowDirty) {
+                return;
+            }
+            if (e.ColumnIndex == IDX_IS_ENABLED) {
+                return;
+            }
+
+            DataGridViewCell cell = dgvProxyItems.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var str = cell.Value as string;
+            str = str.Trim().ToLower();
+
+            switch (e.ColumnIndex) {
+            case IDX_PROXY_ADDR:
+                if (str.StartsWith("http://")) {
+                    str = str.Remove(0, 7);
+                }
+                str = str.TrimEnd('/');
+                break;
+            case IDX_BYPASS:
+                str = str.TrimEnd(';');
+                break;
+            }
+            cell.Value = str;
         }
 
         private void cbFilterId_CheckedChanged(object sender, EventArgs e)
@@ -305,7 +336,7 @@ namespace ProxyManager
                 int idx = dgvProxyItems.SelectedRows[0].Index;
                 dgvProxyItems.Rows.Insert(idx, new DataGridViewRow());
                 dgvProxyItems.Rows[idx].Selected = true;
-                dgvProxyItems.CurrentCell = dgvProxyItems.Rows[idx].Cells[1];
+                dgvProxyItems.CurrentCell = dgvProxyItems.Rows[idx].Cells[IDX_PROXY_ADDR];
                 dgvProxyItems.Focus();
                 dgvProxyItems.BeginEdit(false);
             } else {
@@ -343,7 +374,7 @@ namespace ProxyManager
                     dgvProxyItems.Rows.Insert(idx - 1, item);
                     item.Selected = true;
                 }
-                dgvProxyItems.CurrentCell = dgvProxyItems.SelectedRows[0].Cells[1];
+                dgvProxyItems.CurrentCell = dgvProxyItems.SelectedRows[0].Cells[IDX_PROXY_ADDR];
             }
             dgvProxyItems.Focus();
         }
@@ -363,7 +394,7 @@ namespace ProxyManager
                     dgvProxyItems.Rows.Insert(idx + 1, item);
                     item.Selected = true;
                 }
-                dgvProxyItems.CurrentCell = dgvProxyItems.SelectedRows[0].Cells[1];
+                dgvProxyItems.CurrentCell = dgvProxyItems.SelectedRows[0].Cells[IDX_PROXY_ADDR];
             }
             dgvProxyItems.Focus();
         }
