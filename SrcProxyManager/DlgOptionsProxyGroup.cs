@@ -253,9 +253,15 @@ namespace ProxyManager
         private void dgvProxyItems_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             // init the default value for each data grid view row
-            dgvProxyItems.Rows[e.RowIndex].Cells[0].Value = false;
-            dgvProxyItems.Rows[e.RowIndex].Cells[1].Value = String.Empty;
-            dgvProxyItems.Rows[e.RowIndex].Cells[2].Value = String.Empty;
+            if (dgvProxyItems.Rows[e.RowIndex].Cells[0].Value == null) {
+                dgvProxyItems.Rows[e.RowIndex].Cells[0].Value = false;
+            }
+            if (dgvProxyItems.Rows[e.RowIndex].Cells[1].Value == null) {
+                dgvProxyItems.Rows[e.RowIndex].Cells[1].Value = String.Empty;
+            }
+            if (dgvProxyItems.Rows[e.RowIndex].Cells[2].Value == null) {
+                dgvProxyItems.Rows[e.RowIndex].Cells[2].Value = String.Empty;
+            }
         }
 
         private void cbFilterId_CheckedChanged(object sender, EventArgs e)
@@ -293,9 +299,91 @@ namespace ProxyManager
             m_dlgInstance.tbFilterDnsSuffix.Enabled = m_dlgInstance.cbFilterDnsSuffix.Checked;
         }
 
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            if (HasDataGridViewRowSelected()) {
+                int idx = dgvProxyItems.SelectedRows[0].Index;
+                dgvProxyItems.Rows.Insert(idx, new DataGridViewRow());
+                dgvProxyItems.Rows[idx].Selected = true;
+                dgvProxyItems.CurrentCell = dgvProxyItems.Rows[idx].Cells[1];
+                dgvProxyItems.Focus();
+                dgvProxyItems.BeginEdit(false);
+            } else {
+                dgvProxyItems.Focus();
+            }
+        }
+
+        private void btnDel_Click(object sender, EventArgs e)
+        {
+            if (HasDataGridViewRowSelected()) {
+                if (dgvProxyItems.SelectedRows[0].IsNewRow) {
+                    MessageBox.Show("The last row cannot be deleted.",
+                        AppManager.ASSEMBLY_PRODUCT,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                } else {
+                    dgvProxyItems.Rows.Remove(dgvProxyItems.SelectedRows[0]);
+                }
+            }
+            dgvProxyItems.Focus();
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            if (HasDataGridViewRowSelected()) {
+                int idx = dgvProxyItems.SelectedRows[0].Index;
+                if (dgvProxyItems.SelectedRows[0].IsNewRow) {
+                    MessageBox.Show("The last row cannot be moved up.",
+                        AppManager.ASSEMBLY_PRODUCT,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                } else if (idx > 0) {
+                    DataGridViewRow item = dgvProxyItems.SelectedRows[0];
+                    dgvProxyItems.Rows.RemoveAt(idx);
+                    dgvProxyItems.Rows.Insert(idx - 1, item);
+                    item.Selected = true;
+                }
+                dgvProxyItems.CurrentCell = dgvProxyItems.SelectedRows[0].Cells[1];
+            }
+            dgvProxyItems.Focus();
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            if (HasDataGridViewRowSelected()) {
+                int idx = dgvProxyItems.SelectedRows[0].Index;
+                if (dgvProxyItems.SelectedRows[0].IsNewRow) {
+                    MessageBox.Show("The last row cannot be moved down.",
+                        AppManager.ASSEMBLY_PRODUCT,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                } else if (idx < dgvProxyItems.Rows.Count - 2) {
+                    DataGridViewRow item = dgvProxyItems.SelectedRows[0];
+                    dgvProxyItems.Rows.RemoveAt(idx);
+                    dgvProxyItems.Rows.Insert(idx + 1, item);
+                    item.Selected = true;
+                }
+                dgvProxyItems.CurrentCell = dgvProxyItems.SelectedRows[0].Cells[1];
+            }
+            dgvProxyItems.Focus();
+        }
+
         private void btnOK_Click(object sender, EventArgs e)
         {
             m_bExitByOK = true;
+        }
+
+        private bool HasDataGridViewRowSelected()
+        {
+            if (dgvProxyItems.SelectedRows.Count <= 0) {
+                MessageBox.Show("No row is selected.",
+                    AppManager.ASSEMBLY_PRODUCT,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            } else {
+                return true;
+            }
         }
 
         #endregion

@@ -168,66 +168,62 @@ namespace ProxyManager
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (!HasListViewItemSelected()) {
-                return;
+            if (HasListViewItemSelected()) {
+                EditProxyGroup(lvProxyGroups.SelectedItems[0]);
             }
-            EditProxyGroup(lvProxyGroups.SelectedItems[0]);
             lvProxyGroups.Focus();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (!HasListViewItemSelected()) {
-                return;
-            }
-            DialogResult dr = MessageBox.Show(
-                "Are you sure to delete the selected Proxy Group?",
-                AppManager.ASSEMBLY_PRODUCT,
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-            if (dr == DialogResult.Yes) {
-                int idx = lvProxyGroups.SelectedItems[0].Index;
-                DeleteProxyGroup(lvProxyGroups.SelectedItems[0]);
-                if (idx >= lvProxyGroups.Items.Count) {
-                    idx = lvProxyGroups.Items.Count - 1;
+            if (HasListViewItemSelected()) {
+                DialogResult dr = MessageBox.Show(
+                    "Are you sure to delete the selected Proxy Group?",
+                    AppManager.ASSEMBLY_PRODUCT,
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if (dr == DialogResult.Yes) {
+                    int idx = lvProxyGroups.SelectedItems[0].Index;
+                    DeleteProxyGroup(lvProxyGroups.SelectedItems[0]);
+                    if (idx >= lvProxyGroups.Items.Count) {
+                        idx = lvProxyGroups.Items.Count - 1;
+                    }
+                    lvProxyGroups.Items[idx].Selected = true;
                 }
-                lvProxyGroups.Items[idx].Selected = true;
             }
             lvProxyGroups.Focus();
         }
 
         private void btnUp_Click(object sender, EventArgs e)
         {
-            if (!HasListViewItemSelected()) {
-                return;
-            }
-            int idx = lvProxyGroups.SelectedItems[0].Index;
-            if (idx > 0) {
-                ProxyGroup pg = m_dlgProfile.m_listProxyGroups[idx];
-                m_dlgProfile.m_listProxyGroups.RemoveAt(idx);
-                m_dlgProfile.m_listProxyGroups.Insert(idx - 1, pg);
+            if (HasListViewItemSelected()) {
+                int idx = lvProxyGroups.SelectedItems[0].Index;
+                if (idx > 0) {
+                    ProxyGroup pg = m_dlgProfile.m_listProxyGroups[idx];
+                    m_dlgProfile.m_listProxyGroups.RemoveAt(idx);
+                    m_dlgProfile.m_listProxyGroups.Insert(idx - 1, pg);
 
-                ListViewItem item = lvProxyGroups.Items[idx];
-                lvProxyGroups.Items.RemoveAt(idx);
-                lvProxyGroups.Items.Insert(idx - 1, item);
+                    ListViewItem item = lvProxyGroups.Items[idx];
+                    lvProxyGroups.Items.RemoveAt(idx);
+                    lvProxyGroups.Items.Insert(idx - 1, item);
+                }
             }
             lvProxyGroups.Focus();
         }
 
         private void btnDown_Click(object sender, EventArgs e)
         {
-            if (!HasListViewItemSelected()) {
-                return;
-            }
-            int idx = lvProxyGroups.SelectedItems[0].Index;
-            if (idx < lvProxyGroups.Items.Count - 1) {
-                ProxyGroup pg = m_dlgProfile.m_listProxyGroups[idx];
-                m_dlgProfile.m_listProxyGroups.RemoveAt(idx);
-                m_dlgProfile.m_listProxyGroups.Insert(idx + 1, pg);
+            if (HasListViewItemSelected()) {
+                int idx = lvProxyGroups.SelectedItems[0].Index;
+                if (idx < lvProxyGroups.Items.Count - 1) {
+                    ProxyGroup pg = m_dlgProfile.m_listProxyGroups[idx];
+                    m_dlgProfile.m_listProxyGroups.RemoveAt(idx);
+                    m_dlgProfile.m_listProxyGroups.Insert(idx + 1, pg);
 
-                ListViewItem item = lvProxyGroups.Items[idx];
-                lvProxyGroups.Items.RemoveAt(idx);
-                lvProxyGroups.Items.Insert(idx + 1, item);
+                    ListViewItem item = lvProxyGroups.Items[idx];
+                    lvProxyGroups.Items.RemoveAt(idx);
+                    lvProxyGroups.Items.Insert(idx + 1, item);
+                }
             }
             lvProxyGroups.Focus();
         }

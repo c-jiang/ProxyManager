@@ -35,6 +35,9 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.dgvProxyItems = new System.Windows.Forms.DataGridView();
+            this.ColEnable = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColProxyAddr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColBypass = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblName = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.cbEnable = new System.Windows.Forms.CheckBox();
@@ -54,10 +57,11 @@
             this.cbFilterDnsSuffix = new System.Windows.Forms.CheckBox();
             this.tbFilterDnsSuffix = new System.Windows.Forms.TextBox();
             this.tbFilterMask = new System.Windows.Forms.TextBox();
-            this.ColEnable = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.ColProxyAddr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColBypass = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbProxyItems = new System.Windows.Forms.GroupBox();
+            this.btnDown = new System.Windows.Forms.Button();
+            this.btnUp = new System.Windows.Forms.Button();
+            this.btnDel = new System.Windows.Forms.Button();
+            this.btnAdd = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProxyItems)).BeginInit();
             this.gbApplyRule.SuspendLayout();
             this.tlp.SuspendLayout();
@@ -119,6 +123,7 @@
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvProxyItems.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvProxyItems.Location = new System.Drawing.Point(9, 19);
+            this.dgvProxyItems.MultiSelect = false;
             this.dgvProxyItems.Name = "dgvProxyItems";
             this.dgvProxyItems.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
@@ -132,9 +137,39 @@
             this.dgvProxyItems.RowHeadersWidth = 24;
             this.dgvProxyItems.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvProxyItems.RowTemplate.Height = 20;
-            this.dgvProxyItems.Size = new System.Drawing.Size(539, 188);
-            this.dgvProxyItems.TabIndex = 3;
+            this.dgvProxyItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvProxyItems.Size = new System.Drawing.Size(483, 188);
+            this.dgvProxyItems.TabIndex = 0;
             this.dgvProxyItems.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvProxyItems_RowsAdded);
+            // 
+            // ColEnable
+            // 
+            this.ColEnable.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ColEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ColEnable.HeaderText = "Enable";
+            this.ColEnable.Name = "ColEnable";
+            this.ColEnable.Width = 46;
+            // 
+            // ColProxyAddr
+            // 
+            this.ColProxyAddr.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(2, 0, 16, 0);
+            this.ColProxyAddr.DefaultCellStyle = dataGridViewCellStyle2;
+            this.ColProxyAddr.HeaderText = "Proxy Address";
+            this.ColProxyAddr.Name = "ColProxyAddr";
+            this.ColProxyAddr.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ColProxyAddr.Width = 80;
+            // 
+            // ColBypass
+            // 
+            this.ColBypass.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(2, 0, 16, 0);
+            this.ColBypass.DefaultCellStyle = dataGridViewCellStyle3;
+            this.ColBypass.HeaderText = "Bypass List";
+            this.ColBypass.Name = "ColBypass";
+            this.ColBypass.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // lblName
             // 
@@ -374,48 +409,71 @@
             this.tbFilterMask.Size = new System.Drawing.Size(114, 19);
             this.tbFilterMask.TabIndex = 7;
             // 
-            // ColEnable
-            // 
-            this.ColEnable.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.ColEnable.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ColEnable.HeaderText = "Enable";
-            this.ColEnable.Name = "ColEnable";
-            this.ColEnable.Width = 46;
-            // 
-            // ColProxyAddr
-            // 
-            this.ColProxyAddr.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(2, 0, 16, 0);
-            this.ColProxyAddr.DefaultCellStyle = dataGridViewCellStyle2;
-            this.ColProxyAddr.HeaderText = "Proxy Address";
-            this.ColProxyAddr.Name = "ColProxyAddr";
-            this.ColProxyAddr.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.ColProxyAddr.Width = 80;
-            // 
-            // ColBypass
-            // 
-            this.ColBypass.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(2, 0, 16, 0);
-            this.ColBypass.DefaultCellStyle = dataGridViewCellStyle3;
-            this.ColBypass.HeaderText = "Bypass";
-            this.ColBypass.Name = "ColBypass";
-            this.ColBypass.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
             // gbProxyItems
             // 
             this.gbProxyItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbProxyItems.Controls.Add(this.btnDown);
+            this.gbProxyItems.Controls.Add(this.btnUp);
+            this.gbProxyItems.Controls.Add(this.btnDel);
+            this.gbProxyItems.Controls.Add(this.btnAdd);
             this.gbProxyItems.Controls.Add(this.dgvProxyItems);
             this.gbProxyItems.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.gbProxyItems.Location = new System.Drawing.Point(15, 38);
             this.gbProxyItems.Name = "gbProxyItems";
             this.gbProxyItems.Size = new System.Drawing.Size(557, 213);
-            this.gbProxyItems.TabIndex = 7;
+            this.gbProxyItems.TabIndex = 3;
             this.gbProxyItems.TabStop = false;
-            this.gbProxyItems.Text = "Item List for Current Proxy Group";
+            this.gbProxyItems.Text = "Items for Current Proxy Group";
+            // 
+            // btnDown
+            // 
+            this.btnDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDown.Location = new System.Drawing.Point(498, 107);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(50, 23);
+            this.btnDown.TabIndex = 4;
+            this.btnDown.Text = "Down";
+            this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
+            // 
+            // btnUp
+            // 
+            this.btnUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUp.Location = new System.Drawing.Point(498, 78);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(50, 23);
+            this.btnUp.TabIndex = 3;
+            this.btnUp.Text = "Up";
+            this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
+            // 
+            // btnDel
+            // 
+            this.btnDel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDel.Location = new System.Drawing.Point(498, 49);
+            this.btnDel.Name = "btnDel";
+            this.btnDel.Size = new System.Drawing.Size(50, 23);
+            this.btnDel.TabIndex = 2;
+            this.btnDel.Text = "Del";
+            this.btnDel.UseVisualStyleBackColor = true;
+            this.btnDel.Click += new System.EventHandler(this.btnDel_Click);
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAdd.Location = new System.Drawing.Point(498, 20);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(50, 23);
+            this.btnAdd.TabIndex = 1;
+            this.btnAdd.Text = "Add";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // DlgOptionsProxyGroup
             // 
@@ -475,9 +533,13 @@
         private System.Windows.Forms.CheckBox cbFilterId;
         private System.Windows.Forms.CheckBox cbFilterDnsSuffix;
         private System.Windows.Forms.TextBox tbFilterDnsSuffix;
+        private System.Windows.Forms.GroupBox gbProxyItems;
+        private System.Windows.Forms.Button btnDown;
+        private System.Windows.Forms.Button btnUp;
+        private System.Windows.Forms.Button btnDel;
+        private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColEnable;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColProxyAddr;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColBypass;
-        private System.Windows.Forms.GroupBox gbProxyItems;
     }
 }
