@@ -26,9 +26,12 @@ namespace ProxyManager
 
         public DialogResult ShowDialog(IWin32Window owner, ProxyGroup pg)
         {
+            Logger.V(">> DlgOptionsProxyGroup.ShowDialog");
             m_bExitByOK = false;
             SetDialogLayout(pg);
-            return ShowDialog(owner);
+            DialogResult dr = ShowDialog(owner);
+            Logger.V("<< DlgOptionsProxyGroup.ShowDialog : " + dr.ToString());
+            return dr;
         }
 
         public ProxyGroup DlgProxyGroup

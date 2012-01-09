@@ -31,6 +31,8 @@ namespace ProxyManager
         public bool m_isStartMinimized;
         [XmlElement("LogToFile")]
         public bool m_isLogToFile;
+        [XmlElement("LogLevel")]
+        public Logger.Category m_logLevel;
 
         // settings - proxy group list
         [XmlArrayAttribute("ProxyGroupList")]
@@ -39,25 +41,30 @@ namespace ProxyManager
         // Contructor Method
         public Profile()
         {
+            Logger.V(">> Profile.Profile");
             m_defWorkMode = WorkMode.Auto;
             m_isStartAuto = true;
             m_isStartMinimized = true;
-            m_isLogToFile = false;
+            m_isLogToFile = true;
+            m_logLevel = Logger.Category.Information;
             m_listProxyGroups = new List<ProxyGroup>();
-
             m_szProfilePath = String.Empty;
             s_bLoadFailed = false;
+            Logger.V("<< Profile.Profile");
         }
 
         public Profile(Profile profile)
         {
+            Logger.V(">> Profile.Profile");
             m_defWorkMode = profile.m_defWorkMode;
             m_isStartAuto = profile.m_isStartAuto;
             m_isStartMinimized = profile.m_isStartMinimized;
             m_isLogToFile = profile.m_isLogToFile;
+            m_logLevel = profile.m_logLevel;
             m_listProxyGroups = new List<ProxyGroup>(profile.m_listProxyGroups);
             m_szProfilePath = profile.m_szProfilePath;
             s_bLoadFailed = false;
+            Logger.V("<< Profile.Profile");
         }
 
         public override bool Equals(object obj)
@@ -78,6 +85,12 @@ namespace ProxyManager
                 return false;
             }
             if (m_isStartMinimized != profile.m_isStartMinimized) {
+                return false;
+            }
+            if (m_isLogToFile != profile.m_isLogToFile) {
+                return false;
+            }
+            if (m_logLevel != profile.m_logLevel) {
                 return false;
             }
             if (m_szProfilePath != profile.m_szProfilePath) {
@@ -104,6 +117,7 @@ namespace ProxyManager
         // Method: Load from local profile
         public static Profile Load(string appDir, out bool createdNew)
         {
+            Logger.V(">> Profile.Load");
             Profile profile = null;
             string profilePath = Path.Combine(appDir, PROFILE_FILE_NAME);
             if (File.Exists(profilePath)) {
@@ -144,12 +158,14 @@ namespace ProxyManager
                 Save(profile);
                 createdNew = true;
             }
+            Logger.V("<< Profile.Load");
             return profile;
         }
 
         // Method: Save to local profile
         public static void Save(Profile profile)
         {
+            Logger.V(">> Profile.Save");
             XmlSerializer xs = new XmlSerializer(typeof(Profile));
             StreamWriter writer = new StreamWriter(profile.m_szProfilePath, false);
             try {
@@ -158,6 +174,7 @@ namespace ProxyManager
                 System.Diagnostics.Debug.WriteLine(x.Message);
             }
             writer.Close();
+            Logger.V("<< Profile.Save");
         }
 
         public static bool IsLoadFailed()

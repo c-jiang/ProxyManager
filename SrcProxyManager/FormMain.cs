@@ -13,6 +13,8 @@ namespace ProxyManager
     {
         public FormMain(AppManager appManager)
         {
+            Logger.V(">> FormMain.FormMain");
+
             // init member variables
             m_appManagerRef = appManager;
             m_prevState = FormWindowState.Normal;
@@ -42,10 +44,14 @@ namespace ProxyManager
 
             // start current work mode
             m_appManagerRef.StartCurrentWorkMode();
+
+            Logger.V("<< FormMain.FormMain");
         }
 
         private void InitGuiNotifyIcon()
         {
+            Logger.V(">> FormMain.InitGuiNotifyIcon");
+
             // init NotifyIcon
             notifyIcon.ContextMenu = new ContextMenu();
             notifyIcon.Visible = true;
@@ -119,10 +125,14 @@ namespace ProxyManager
             m_arrayMenuItems[idx].DefaultItem = true;
 
             notifyIcon.ContextMenu = new ContextMenu(m_arrayMenuItems);
+
+            Logger.V("<< FormMain.InitGuiNotifyIcon");
         }
 
         private void UpdateGui_FormMainLayout()
         {
+            Logger.V(">> FormMain.UpdateGui_FormMainLayout");
+
             // update text box
             NetworkDetector nd = m_appManagerRef.Detector;
             string ui = "[" + Utils.GetDateTime() + "]"
@@ -163,20 +173,28 @@ namespace ProxyManager
             // set focus
             tbStatus.Select(0, -1);
             btnRefresh.Focus();
+
+            Logger.V("<< FormMain.UpdateGui_FormMainLayout");
         }
 
         private void UpdateGui_NotifyIconTextIndication()
         {
+            Logger.V(">> FormMain.UpdateGui_NotifyIconTextIndication");
+
             string str = AssemblyProduct + " ("
                 + m_appManagerRef.CurrWorkMode + " Mode)"
                 + Environment.NewLine;
             str += "Network Status: "
                 + (m_appManagerRef.Detector.IsNetworkActive() ? "Active" : "Inactive");
             notifyIcon.Text = str;
+
+            Logger.V("<< FormMain.UpdateGui_NotifyIconTextIndication");
         }
 
         private void UpdateGui_NotifyIconBalloonTip()
         {
+            Logger.V(">> FormMain.UpdateGui_NotifyIconBalloonTip");
+
             string tip = "Network Status: "
                 + (m_appManagerRef.Detector.IsNetworkActive() ? "Active" : "Inactive")
                 + Environment.NewLine;
@@ -191,10 +209,14 @@ namespace ProxyManager
 
             notifyIcon.BalloonTipText = tip;
             notifyIcon.ShowBalloonTip(3000);
+
+            Logger.V("<< FormMain.UpdateGui_NotifyIconBalloonTip");
         }
 
         private void UpdateGui_NotifyIconMenuNetwork()
         {
+            Logger.V(">> FormMain.UpdateGui_NotifyIconMenuNetwork");
+
             // change reference: network
             m_miNiCtxNetworkStatus.Text = "Network Status: "
                 + (m_appManagerRef.Detector.IsNetworkActive()
@@ -204,10 +226,14 @@ namespace ProxyManager
                 + (m_appManagerRef.Detector.IsNetworkActive()
                     ? m_appManagerRef.Detector.ActiveNetworkIPAddress()
                     : "N/A");
+
+            Logger.V("<< FormMain.UpdateGui_NotifyIconMenuNetwork");
         }
 
         private void UpdateGui_NotifyIconMenuWorkMode()
         {
+            Logger.V(">> FormMain.UpdateGui_NotifyIconMenuWorkMode");
+
             // change reference: proxy
             foreach (MenuItem iter in m_listModeMenuItems) {
                 iter.Checked = false;
@@ -223,10 +249,14 @@ namespace ProxyManager
                 m_listModeMenuItems[2].Checked = true;
                 break;
             }
+
+            Logger.V("<< FormMain.UpdateGui_NotifyIconMenuWorkMode");
         }
 
         private void UpdateGui_NotifyIconMenuProxySelection()
         {
+            Logger.V(">> FormMain.UpdateGui_NotifyIconMenuProxySelection");
+
             switch (m_appManagerRef.CurrWorkMode) {
             case WorkMode.Auto: {
                     if (!IeProxyOptions.ProxyEnable) {
@@ -296,12 +326,15 @@ namespace ProxyManager
                     break;
                 }
             }
+
+            Logger.V("<< FormMain.UpdateGui_NotifyIconMenuProxySelection");
         }
 
         #region AppManager Notifications
 
         public void AppMgrNotify_NetworkChanged(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.AppMgrNotify_NetworkChanged");
             UpdateGui_FormMainLayout();
             UpdateGui_NotifyIconTextIndication();
             UpdateGui_NotifyIconMenuNetwork();
@@ -310,6 +343,7 @@ namespace ProxyManager
             if (WindowState == FormWindowState.Minimized) {
                 UpdateGui_NotifyIconBalloonTip();
             }
+            Logger.V("<< FormMain.AppMgrNotify_NetworkChanged");
         }
 
         #endregion
@@ -318,24 +352,31 @@ namespace ProxyManager
 
         private void UserRequest_SwitchToAutoMode(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.UserRequest_SwitchToAutoMode");
             m_appManagerRef.SetCurrentWorkMode(WorkMode.Auto);
             m_appManagerRef.StartCurrentWorkMode();
+            Logger.V("<< FormMain.UserRequest_SwitchToAutoMode");
         }
 
         private void UserRequest_SwitchToDirectMode(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.UserRequest_SwitchToDirectMode");
             m_appManagerRef.SetCurrentWorkMode(WorkMode.Direct);
             m_appManagerRef.StartCurrentWorkMode();
+            Logger.V("<< FormMain.UserRequest_SwitchToDirectMode");
         }
 
         private void UserRequest_SwitchToProxyMode(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.UserRequest_SwitchToProxyMode");
             m_appManagerRef.SetCurrentWorkMode(WorkMode.Proxy);
             m_appManagerRef.StartCurrentWorkMode();
+            Logger.V("<< FormMain.UserRequest_SwitchToProxyMode");
         }
 
         private void UserRequest_ShowFormMain(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.UserRequest_ShowFormMain");
             if (this.WindowState == FormWindowState.Minimized) {
                 this.Show();                    // step 1 - show
                 this.ShowInTaskbar = true;      // step 2 - show
@@ -343,20 +384,25 @@ namespace ProxyManager
             } else {
                 this.Activate();
             }
+            Logger.V("<< FormMain.UserRequest_ShowFormMain");
         }
 
         private void UserRequest_SelectProxyFromCurrentGroup(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.UserRequest_SelectProxyFromCurrentGroup");
             var mi = sender as MenuItem;
             ProxyGroup pg = m_appManagerRef.AppProfile.m_listProxyGroups[
                 m_appManagerRef.AutoModeProxyGroupIndex];
             pg.m_iSelectedIndex = mi.Index + 1;
             m_appManagerRef.EnableProxy(
                 pg.m_listProxyItems[pg.m_iSelectedIndex - 1]);
+            Logger.V("<< FormMain.UserRequest_SelectProxyFromCurrentGroup");
         }
 
         private void UserRequest_SelectProxyFromPool(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.UserRequest_SelectProxyFromPool");
+
             var mi = sender as MenuItem;
             int idx = mi.Index;
 
@@ -376,15 +422,19 @@ namespace ProxyManager
                     break;
                 }
             }
+            Logger.V("<< FormMain.UserRequest_SelectProxyFromPool");
         }
 
         private void UserRequest_ExitApplication(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.UserRequest_ExitApplication");
             Application.Exit();
+            Logger.V("<< FormMain.UserRequest_ExitApplication");
         }
 
         private void UserRequest_ShowDlgAbout(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.UserRequest_ShowDlgAbout");
             if (!DlgAboutBox.Instance.Visible) {
                 DlgAboutBox.Instance.StartPosition =
                     (this.WindowState == FormWindowState.Minimized)
@@ -394,10 +444,12 @@ namespace ProxyManager
             } else {
                 DlgAboutBox.Instance.Activate();
             }
+            Logger.V("<< FormMain.UserRequest_ShowDlgAbout");
         }
 
         private void UserRequest_ShowDlgOptions(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.UserRequest_ShowDlgOptions");
             if (!DlgOptions.Instance.Visible) {
                 DlgOptions.Instance.StartPosition =
                     (this.WindowState == FormWindowState.Minimized)
@@ -414,6 +466,7 @@ namespace ProxyManager
             } else {
                 DlgOptions.Instance.Activate();
             }
+            Logger.V("<< FormMain.UserRequest_ShowDlgOptions");
         }
 
         #endregion
@@ -422,48 +475,65 @@ namespace ProxyManager
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.btnRefresh_Click");
             UpdateGui_FormMainLayout();
+            Logger.V("<< FormMain.btnRefresh_Click");
         }
 
         private void btnAutoMode_Click(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.btnAutoMode_Click");
             UserRequest_SwitchToAutoMode(sender, e);
+            Logger.V("<< FormMain.btnAutoMode_Click");
         }
 
         private void btnDirectMode_Click(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.btnDirectMode_Click");
             UserRequest_SwitchToDirectMode(sender, e);
+            Logger.V("<< FormMain.btnDirectMode_Click");
         }
 
         private void btnProxyMode_Click(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.btnProxyMode_Click");
             UserRequest_SwitchToProxyMode(sender, e);
+            Logger.V("<< FormMain.btnProxyMode_Click");
         }
 
         private void minimizeToTrayToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.minimizeToTrayToolStripMenuItem_Click");
             this.ShowInTaskbar = false;                     // step 1 - hide
             this.WindowState = FormWindowState.Minimized;   // step 2 - hide
             this.Hide();                                    // step 3 - hide
+            Logger.V("<< FormMain.minimizeToTrayToolStripMenuItem_Click");
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.exitToolStripMenuItem_Click");
             UserRequest_ExitApplication(sender, e);
+            Logger.V("<< FormMain.exitToolStripMenuItem_Click");
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.optionsToolStripMenuItem_Click");
             UserRequest_ShowDlgOptions(sender, e);
+            Logger.V("<< FormMain.optionsToolStripMenuItem_Click");
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.aboutToolStripMenuItem_Click");
             UserRequest_ShowDlgAbout(sender, e);
+            Logger.V("<< FormMain.aboutToolStripMenuItem_Click");
         }
 
         private void notifyIcon_Click(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.notifyIcon_Click");
             var evt = e as MouseEventArgs;
             if (evt.Button == MouseButtons.Left) {
                 // trigger the show/hide
@@ -480,10 +550,12 @@ namespace ProxyManager
                     break;
                 }
             }
+            Logger.V("<< FormMain.notifyIcon_Click");
         }
 
         private void FormMain_Resize(object sender, EventArgs e)
         {
+            Logger.V(">> FormMain.FormMain_Resize");
             switch (this.WindowState) {
             case FormWindowState.Minimized:
                 this.Hide();                        // step 3 - hide
@@ -493,16 +565,19 @@ namespace ProxyManager
                 m_prevState = this.WindowState;
                 break;
             }
+            Logger.V("<< FormMain.FormMain_Resize");
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Logger.V(">> FormMain.FormMain_FormClosing");
             if (e.CloseReason == CloseReason.UserClosing) {
                 e.Cancel = true;
                 this.ShowInTaskbar = false;                     // step 1 - hide
                 this.WindowState = FormWindowState.Minimized;   // step 2 - hide
                 this.Hide();                                    // step 3 - hide
             }
+            Logger.V("<< FormMain.FormMain_FormClosing");
         }
 
         #endregion

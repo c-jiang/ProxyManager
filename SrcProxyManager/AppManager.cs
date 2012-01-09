@@ -12,13 +12,15 @@ namespace ProxyManager
     {
         public const string PROXY_MANAGER_FILE_NAME = "ProxyManager.exe";
         public const string PROXY_AGENT_FILE_NAME = "ProxyAgent.exe";
+        public const string APP_LOG_FILE_NAME = "ProxyManager.log";
         // Refer to [assembly: AssemblyProduct]
         public const string ASSEMBLY_PRODUCT = "Proxy Manager";
 
-        public AppManager()
+        public AppManager(string appDir)
         {
-            string path = Process.GetCurrentProcess().MainModule.FileName;
-            m_szAppDir = Path.GetDirectoryName(path);
+            Logger.V(">> AppManager.AppManager");
+
+            m_szAppDir = appDir;
             m_detector = new NetworkDetector();
             m_profile = null;
             m_currWorkMode = WorkMode.Direct;
@@ -32,32 +34,48 @@ namespace ProxyManager
             NetworkChange.NetworkAddressChanged +=
                 new NetworkAddressChangedEventHandler(
                     m_detector.OsNotify_NetworkChanged);
+
+            Logger.V("<< AppManager.AppManager");
         }
 
         ~AppManager()
         {
+            Logger.V(">> AppManager.~AppManager");
             if (!IsLoadAppProfileFailed()) {
                 Profile.Save(m_profile);
             }
+            Logger.V("<< AppManager.~AppManager");
         }
 
         public bool LoadAppEnvironment()
         {
+            Logger.V(">> AppManager.LoadAppEnvironment");
             string path = Path.Combine(m_szAppDir, PROXY_AGENT_FILE_NAME);
-            return File.Exists(path);
+            bool ret = File.Exists(path);
+            Logger.V("<< AppManager.LoadAppEnvironment : " + ret.ToString());
+            return ret;
         }
 
         public bool LoadAppProfile()
         {
+            Logger.V(">> AppManager.LoadAppProfile");
             bool createdNew;
             m_profile = Profile.Load(m_szAppDir, out createdNew);
             m_currWorkMode = m_profile.m_defWorkMode;
-            return (!createdNew);
+            if (m_profile.m_isLogToFile) {
+                Logger.Enable(m_profile.m_logLevel);
+            }
+            bool ret = !createdNew;
+            Logger.V("<< AppManager.LoadAppProfile : " + ret.ToString());
+            return ret;
         }
 
         public bool IsLoadAppProfileFailed()
         {
-            return Profile.IsLoadFailed();
+            Logger.V(">> AppManager.IsLoadAppProfileFailed");
+            bool ret = Profile.IsLoadFailed();
+            Logger.V("<< AppManager.IsLoadAppProfileFailed : " + ret.ToString());
+            return ret;
         }
 
 
@@ -66,6 +84,7 @@ namespace ProxyManager
 
         public void DetectorNotify_NetworkChanged(object sender, EventArgs e)
         {
+            Logger.V(">> AppManager.DetectorNotify_NetworkChanged");
             switch (m_currWorkMode) {
             case WorkMode.Auto:
                 AutoSwitchProxy();
@@ -77,6 +96,7 @@ namespace ProxyManager
                 EnableProxy();
                 break;
             }
+            Logger.V("<< AppManager.DetectorNotify_NetworkChanged");
         }
 
         public Profile AppProfile
@@ -102,20 +122,25 @@ namespace ProxyManager
 
         public void ApplyProfileUpdate()
         {
+            Logger.V(">> AppManager.ApplyProfileUpdate");
             // XPath: /Profile/StartAuto
             ApplyProfileItemAutoStart();
-
             // XPath: /Profile/LogToFile
-            // TODO:
-
+            if (m_profile.m_isLogToFile) {
+                Logger.Enable(m_profile.m_logLevel);
+            } else {
+                Logger.Disable();
+            }
             // restart work mode in case of Auto Mode
             if (m_currWorkMode == WorkMode.Auto) {
                 AutoSwitchProxy();
             }
+            Logger.V("<< AppManager.ApplyProfileUpdate");
         }
 
         public void ApplyProfileItemAutoStart()
         {
+            Logger.V(">> AppManager.ApplyProfileItemAutoStart");
             RegistryKey rk = Registry.CurrentUser.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Run", true);
             if (m_profile.m_isStartAuto) {
@@ -125,15 +150,19 @@ namespace ProxyManager
                 rk.DeleteValue(ASSEMBLY_PRODUCT);
             }
             rk.Close();
+            Logger.V("<< AppManager.ApplyProfileItemAutoStart");
         }
 
         public void SetCurrentWorkMode(WorkMode newMode)
         {
+            Logger.V(">> AppManager.SetCurrentWorkMode(@1:" + newMode.ToString() + ")");
             m_currWorkMode = newMode;
+            Logger.V("<< AppManager.SetCurrentWorkMode(@1:" + newMode.ToString() + ")");
         }
 
         public void StartCurrentWorkMode()
         {
+            Logger.V(">> AppManager.StartCurrentWorkMode");
             switch (m_currWorkMode) {
             case WorkMode.Auto:
                 AutoSwitchProxy();
@@ -145,49 +174,52 @@ namespace ProxyManager
                 EnableProxy();
                 break;
             }
+            Logger.V("<< AppManager.StartCurrentWorkMode");
         }
 
         public void EnableProxy()
         {
+            Logger.V(">> AppManager.EnableProxy");
             string szProxyAddr = IeProxyOptions.ProxyAddr;
             string szBypass = IeProxyOptions.Bypass;
             string args = true.ToString() + " "
                 + "\"" + szProxyAddr + "\" "
                 + "\"" + szBypass + "\" "
                 + true.ToString();
-
             Process process = PrepareProxyAgentProcess();
             SetArgsProxyAgentProcess(process, args);
             ExecuteProxyAgentProcess(process);
-
             NotifyGuiNetworkChanged(this, new EventArgs());
+            Logger.V("<< AppManager.EnableProxy");
         }
 
         public void EnableProxy(ProxyItem pi)
         {
+            Logger.V(">> AppManager.EnableProxy(@1.ProxyAddr:" + pi.m_szProxyAddr + ")");
             string args = true.ToString() + " "
                 + "\"" + pi.m_szProxyAddr + "\" "
                 + "\"" + pi.m_szBypass + "\" "
                 + pi.m_isAutoConfDisabled.ToString();
-            
             Process process = PrepareProxyAgentProcess();
             SetArgsProxyAgentProcess(process, args);
             ExecuteProxyAgentProcess(process);
-
             NotifyGuiNetworkChanged(this, new EventArgs());
+            Logger.V("<< AppManager.EnableProxy(@1.ProxyAddr:" + pi.m_szProxyAddr + ")");
         }
 
         public void DisableProxy()
         {
+            Logger.V(">> AppManager.DisableProxy");
             Process process = PrepareProxyAgentProcess();
             SetArgsProxyAgentProcess(process, false.ToString());
             ExecuteProxyAgentProcess(process);
-
             NotifyGuiNetworkChanged(this, new EventArgs());
+            Logger.V("<< AppManager.DisableProxy");
         }
 
         public void AutoSwitchProxy()
         {
+            Logger.V(">> AppManager.AutoSwitchProxy");
             if (m_detector.IsNetworkActive()) {
                 ProxyItem pi = FindMatchedProxyItem();
                 if (pi != null) {
@@ -201,10 +233,12 @@ namespace ProxyManager
                 // Disable proxy if no active network
                 DisableProxy();
             }
+            Logger.V("<< AppManager.AutoSwitchProxy");
         }
 
         private ProxyItem FindMatchedProxyItem()
         {
+            Logger.V(">> AppManager.FindMatchedProxyItem");
             ProxyItem ret = null;
             for (int i = 0; i < m_profile.m_listProxyGroups.Count; ++i) {
                 ProxyGroup pg = m_profile.m_listProxyGroups[i];
@@ -243,6 +277,7 @@ namespace ProxyManager
                     pg.m_iSelectedIndex = 0;
                 }
             }
+            Logger.V("<< AppManager.FindMatchedProxyItem");
             return ret;
         }
 

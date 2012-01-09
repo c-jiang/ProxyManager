@@ -21,14 +21,20 @@ namespace ProxyManager
 
         public DialogResult ShowDialog(Profile profile)
         {
+            Logger.V(">> DlgOptions.ShowDialog");
             SetDialogLayout(profile);
-            return ShowDialog();
+            DialogResult dr = ShowDialog();
+            Logger.V("<< DlgOptions.ShowDialog : " + dr.ToString());
+            return dr;
         }
 
         public DialogResult ShowDialog(IWin32Window owner, Profile profile)
         {
+            Logger.V(">> DlgOptions.ShowDialog");
             SetDialogLayout(profile);
-            return ShowDialog(owner);
+            DialogResult dr = ShowDialog(owner);
+            Logger.V("<< DlgOptions.ShowDialog : " + dr.ToString());
+            return dr;
         }
 
         public static Profile DlgProfile
@@ -92,6 +98,19 @@ namespace ProxyManager
             // log to file
             m_dlgInstance.cbLogToFile.Checked = m_dlgProfile.m_isLogToFile;
 
+            // log level
+            m_dlgInstance.cbLogLevel.Enabled = m_dlgInstance.cbLogToFile.Checked;
+            m_dlgInstance.cbLogLevel.Items.Add(Logger.Category.Error);
+            m_dlgInstance.cbLogLevel.Items.Add(Logger.Category.Warning);
+            m_dlgInstance.cbLogLevel.Items.Add(Logger.Category.Information);
+            m_dlgInstance.cbLogLevel.Items.Add(Logger.Category.Verbose);
+            if (profile.m_logLevel != Logger.Category.NONE) {
+                m_dlgInstance.cbLogLevel.Text = profile.m_logLevel.ToString();
+            } else {
+                // default, for forbidding NONE category
+                m_dlgInstance.cbLogLevel.Text = Logger.Category.Information.ToString();
+            }
+
             // proxy group
             lvProxyGroups.Items.Clear();
             foreach (ProxyGroup pg in m_dlgProfile.m_listProxyGroups) {
@@ -121,6 +140,17 @@ namespace ProxyManager
             m_dlgProfile.m_isStartMinimized = m_dlgInstance.cbStartMinimized.Checked;
             // log to file
             m_dlgProfile.m_isLogToFile = m_dlgInstance.cbLogToFile.Checked;
+            // log level
+            if (m_dlgInstance.cbLogLevel.Text.Equals(Logger.Category.Error.ToString())) {
+                m_dlgProfile.m_logLevel = Logger.Category.Error;
+            } else if (m_dlgInstance.cbLogLevel.Text.Equals(Logger.Category.Warning.ToString())) {
+                m_dlgProfile.m_logLevel = Logger.Category.Warning;
+            } else if (m_dlgInstance.cbLogLevel.Text.Equals(Logger.Category.Verbose.ToString())) {
+                m_dlgProfile.m_logLevel = Logger.Category.Verbose;
+            } else {
+                // default, for forbidding NONE category
+                m_dlgProfile.m_logLevel = Logger.Category.Information;
+            }
         }
 
         #endregion
@@ -133,6 +163,11 @@ namespace ProxyManager
                 return;
             }
             EditProxyGroup(lvProxyGroups.FocusedItem);
+        }
+
+        private void cbLogToFile_CheckedChanged(object sender, EventArgs e)
+        {
+            cbLogLevel.Enabled = cbLogToFile.Checked;
         }
 
         private void btnNew_Click(object sender, EventArgs e)

@@ -9,10 +9,11 @@ namespace ProxyManager
     {
         public NetworkDetector()
         {
+            Logger.V(">> NetworkDetector.NetworkDetector");
             m_activeNetwork = null;
             m_activeIP = null;
-
             DetectActiveNetwork();
+            Logger.V("<< NetworkDetector.NetworkDetector");
         }
 
         public delegate void NotifyAppManagerNetworkChanged(object sender, EventArgs e);
@@ -90,7 +91,7 @@ namespace ProxyManager
                 }
                 return ret;
             } else {
-                return null;    // TODO: reasonable?
+                return new string[] { String.Empty };
             }
         }
 
@@ -104,26 +105,29 @@ namespace ProxyManager
 
         public void OsNotify_NetworkChanged(object sender, EventArgs e)
         {
+            Logger.V(">> NetworkDetector.OsNotify_NetworkChanged");
             DetectActiveNetwork();
             NetworkChanged(this, new EventArgs());
+            Logger.V("<< NetworkDetector.OsNotify_NetworkChanged");
         }
 
         public void DetectActiveNetwork()
         {
+            Logger.V(">> NetworkDetector.DetectActiveNetwork");
             m_activeNetwork = null;
             m_activeIP = null;
             NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
             
             foreach (NetworkInterface ni in adapters) {
-                // skip the non-up network adaptor
+                // skip the non-up network adapter
                 if (!ni.OperationalStatus.Equals(OperationalStatus.Up)) {
                     continue;
                 }
-                // skip the loopback (localhost) network adaptor
+                // skip the loopback (localhost) network adapter
                 if (ni.NetworkInterfaceType.Equals(NetworkInterfaceType.Loopback)) {
                     continue;
                 }
-                // skip the unknown network adaptor
+                // skip the unknown network adapter
                 if (ni.NetworkInterfaceType.Equals(NetworkInterfaceType.Unknown)) {
                     continue;
                 }
@@ -143,7 +147,7 @@ namespace ProxyManager
                     } else if (mediaSubType == 1) {
                         ;   // Virtual Network, not verified
                     } else if (mediaSubType == 2) {
-                        ;   // Wirless Network, not verified
+                        ;   // Wireless Network, not verified
                     } else {
                         // VirtualBox Host-Only falls into this case
                         continue;
@@ -157,6 +161,7 @@ namespace ProxyManager
                 m_activeIP = ni.GetIPProperties();
                 break;
             }
+            Logger.V("<< NetworkDetector.DetectActiveNetwork");
         }
 
 

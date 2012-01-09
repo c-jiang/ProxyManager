@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -14,28 +16,33 @@ namespace ProxyManager
         static void Main()
         {
             try {
+                string path = Process.GetCurrentProcess().MainModule.FileName;
+                path = Path.GetDirectoryName(path);
+
                 bool createdNew;
                 Mutex instance = new Mutex(true,
-                    System.Diagnostics.Process.GetCurrentProcess().ProcessName,
-                    out createdNew);
+                    Process.GetCurrentProcess().ProcessName, out createdNew);
 
                 if (createdNew) {
-                    AppManager appManager = new AppManager();
+                    Logger.Initialize(Path.Combine(path, AppManager.APP_LOG_FILE_NAME));
+                    AppManager appManager = new AppManager(path);
 
                     if (!appManager.LoadAppEnvironment()) {
-                        MessageBox.Show(
-                            @"'" + AppManager.PROXY_AGENT_FILE_NAME + "' is missing."
-                            + Environment.NewLine
-                            + @"Failed to launch " + AppManager.ASSEMBLY_PRODUCT + @".",
+                        string msg = @"'" + AppManager.PROXY_AGENT_FILE_NAME
+                            + "' is missing." + Environment.NewLine
+                            + @"Failed to launch " + AppManager.ASSEMBLY_PRODUCT + @".";
+                        Logger.E(msg);
+                        MessageBox.Show(msg,
                             AppManager.ASSEMBLY_PRODUCT,
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     } else {
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
                         if (!appManager.LoadAppProfile()) {
-                            DialogResult dr = MessageBox.Show(
-                                @"New profile '" + Profile.PROFILE_FILE_NAME
-                                + @"' has been created successfully."
+                            string msg = @"New profile '" + Profile.PROFILE_FILE_NAME
+                                + @"' has been created successfully.";
+                            Logger.I(msg);
+                            DialogResult dr = MessageBox.Show(msg
                                 + Environment.NewLine
                                 + @"It is strongly recommended to set the options before using "
                                 + AppManager.ASSEMBLY_PRODUCT + @"."
@@ -63,17 +70,20 @@ namespace ProxyManager
                     instance.ReleaseMutex();
                 } else {
                     MessageBox.Show(
-                        @"ProxyManager is already running.",
+                        "ProxyManager is already running.",
                         AppManager.ASSEMBLY_PRODUCT,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
             } catch (Exception x) {
-                MessageBox.Show(
-                        x.Message + Environment.NewLine + x.StackTrace,
+                string msg = x.Message + Environment.NewLine + x.StackTrace;
+                Logger.E(msg);
+                MessageBox.Show(msg,
                         AppManager.ASSEMBLY_PRODUCT,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
+            } finally {
+                Logger.Terminate();
             }
         }
     }

@@ -30,6 +30,7 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.gbCommon = new System.Windows.Forms.GroupBox();
+            this.cbLogLevel = new System.Windows.Forms.ComboBox();
             this.lblDefWorkMode = new System.Windows.Forms.Label();
             this.rbProxy = new System.Windows.Forms.RadioButton();
             this.rbDirect = new System.Windows.Forms.RadioButton();
@@ -76,6 +77,7 @@
             // 
             this.gbCommon.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbCommon.Controls.Add(this.cbLogLevel);
             this.gbCommon.Controls.Add(this.lblDefWorkMode);
             this.gbCommon.Controls.Add(this.rbProxy);
             this.gbCommon.Controls.Add(this.rbDirect);
@@ -90,6 +92,16 @@
             this.gbCommon.TabIndex = 0;
             this.gbCommon.TabStop = false;
             this.gbCommon.Text = "Common Settings";
+            // 
+            // cbLogLevel
+            // 
+            this.cbLogLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbLogLevel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbLogLevel.FormattingEnabled = true;
+            this.cbLogLevel.Location = new System.Drawing.Point(105, 89);
+            this.cbLogLevel.Name = "cbLogLevel";
+            this.cbLogLevel.Size = new System.Drawing.Size(90, 21);
+            this.cbLogLevel.TabIndex = 7;
             // 
             // lblDefWorkMode
             // 
@@ -147,6 +159,7 @@
             this.cbLogToFile.TabIndex = 6;
             this.cbLogToFile.Text = "Log to logfile";
             this.cbLogToFile.UseVisualStyleBackColor = true;
+            this.cbLogToFile.CheckedChanged += new System.EventHandler(this.cbLogToFile_CheckedChanged);
             // 
             // cbStartMinimized
             // 
@@ -312,5 +325,6 @@
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.Button btnNew;
+        private System.Windows.Forms.ComboBox cbLogLevel;
     }
 }
