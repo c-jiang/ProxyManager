@@ -380,7 +380,7 @@ namespace ProxyManager
 
         private void UserRequest_ExitApplication(object sender, EventArgs e)
         {
-            this.Close();
+            Application.Exit();
         }
 
         private void UserRequest_ShowDlgAbout(object sender, EventArgs e)
@@ -492,6 +492,16 @@ namespace ProxyManager
             case FormWindowState.Normal:
                 m_prevState = this.WindowState;
                 break;
+            }
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing) {
+                e.Cancel = true;
+                this.ShowInTaskbar = false;                     // step 1 - hide
+                this.WindowState = FormWindowState.Minimized;   // step 2 - hide
+                this.Hide();                                    // step 3 - hide
             }
         }
 
