@@ -131,10 +131,8 @@ namespace ProxyManager
             } else {
                 Logger.Disable();
             }
-            // restart work mode in case of Auto Mode
-            if (m_currWorkMode == WorkMode.Auto) {
-                AutoSwitchProxy();
-            }
+            // restart current work mode, and update GUI
+            StartCurrentWorkMode();
             Logger.V("<< AppManager.ApplyProfileUpdate");
         }
 
