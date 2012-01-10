@@ -303,20 +303,27 @@ namespace ProxyManager
 
                     for (int i = 0; i < listPg.Count; ++i) {
                         List<ProxyItem> listPi = listPg[i].m_listProxyItems;
-                        MenuItem[] mis = new MenuItem[listPi.Count];
-                        for (int j = 0; j < listPi.Count; ++j) {
-                            mis[j] = new MenuItem(listPi[j].m_szProxyAddr,
-                                UserRequest_SelectProxyFromPool);
-                            mis[j].Checked = false;
-                            mis[j].RadioCheck = true;
+                        MenuItem[] mis;
+                        if (listPi.Count > 0) {
+                            mis = new MenuItem[listPi.Count];
+                            for (int j = 0; j < listPi.Count; ++j) {
+                                mis[j] = new MenuItem(listPi[j].m_szProxyAddr,
+                                    UserRequest_SelectProxyFromPool);
+                                mis[j].Checked = false;
+                                mis[j].RadioCheck = true;
 
-                            if (!found &&
-                                listPi[j].m_szProxyAddr.Equals(proxyAddr) &&
-                                listPi[j].m_szBypass.Equals(bypass) &&
-                                listPi[j].m_isAutoConfDisabled.Equals(autoConfDisabled)) {
-                                mis[j].Checked = true;
-                                found = true;
+                                if (!found &&
+                                    listPi[j].m_szProxyAddr.Equals(proxyAddr) &&
+                                    listPi[j].m_szBypass.Equals(bypass) &&
+                                    listPi[j].m_isAutoConfDisabled.Equals(autoConfDisabled)) {
+                                    mis[j].Checked = true;
+                                    found = true;
+                                }
                             }
+                        } else {
+                            mis = new MenuItem[1];
+                            mis[0] = new MenuItem("(N/A)");
+                            mis[0].Enabled = false;
                         }
                         misPg[i] = new MenuItem(listPg[i].m_szName, mis);
                     }
