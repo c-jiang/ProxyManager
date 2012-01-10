@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.Win32;
 
 
@@ -21,6 +22,7 @@ namespace ProxyManager
         {
             Logger.V(">> AppManager.AppManager");
 
+            m_semaphore = new Semaphore(1, 1);
             m_szAppDir = appDir;
             m_detector = new NetworkDetector();
             m_profile = null;
@@ -179,6 +181,7 @@ namespace ProxyManager
         public void EnableProxy()
         {
             Logger.V(">> AppManager.EnableProxy");
+            m_semaphore.WaitOne();
             string szProxyAddr = IeProxyOptions.ProxyAddr;
             string szBypass = IeProxyOptions.Bypass;
             string args = true.ToString() + " "
@@ -189,12 +192,14 @@ namespace ProxyManager
             SetArgsProxyAgentProcess(process, args);
             ExecuteProxyAgentProcess(process);
             NotifyGuiNetworkChanged(this, new EventArgs());
+            m_semaphore.Release();
             Logger.V("<< AppManager.EnableProxy");
         }
 
         public void EnableProxy(ProxyItem pi)
         {
             Logger.V(">> AppManager.EnableProxy(@1.ProxyAddr:" + pi.m_szProxyAddr + ")");
+            m_semaphore.WaitOne();
             string args = true.ToString() + " "
                 + "\"" + pi.m_szProxyAddr + "\" "
                 + "\"" + pi.m_szBypass + "\" "
@@ -203,16 +208,19 @@ namespace ProxyManager
             SetArgsProxyAgentProcess(process, args);
             ExecuteProxyAgentProcess(process);
             NotifyGuiNetworkChanged(this, new EventArgs());
+            m_semaphore.Release();
             Logger.V("<< AppManager.EnableProxy(@1.ProxyAddr:" + pi.m_szProxyAddr + ")");
         }
 
         public void DisableProxy()
         {
             Logger.V(">> AppManager.DisableProxy");
+            m_semaphore.WaitOne();
             Process process = PrepareProxyAgentProcess();
             SetArgsProxyAgentProcess(process, false.ToString());
             ExecuteProxyAgentProcess(process);
             NotifyGuiNetworkChanged(this, new EventArgs());
+            m_semaphore.Release();
             Logger.V("<< AppManager.DisableProxy");
         }
 
@@ -348,6 +356,8 @@ namespace ProxyManager
             process.Close();
         }
 
+
+        private Semaphore m_semaphore;
         private string m_szAppDir;
 
         private NetworkDetector m_detector;

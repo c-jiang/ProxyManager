@@ -23,10 +23,6 @@ namespace ProxyManager
             m_miNiCtxIPAddress = null;
             m_idxNiCtxProxySelection = 0;
 
-            m_appManagerRef.NotifyGuiNetworkChanged +=
-                new AppManager.NotifyNetworkChanged(
-                    this.AppMgrNotify_NetworkChanged);
-
             // init GUI components
             InitializeComponent();
             this.Text = AssemblyProduct;
@@ -41,6 +37,11 @@ namespace ProxyManager
 
             // set registry key according to profile
             m_appManagerRef.ApplyProfileItemAutoStart();
+
+            // link AppManager to GUI
+            m_appManagerRef.NotifyGuiNetworkChanged +=
+                new AppManager.NotifyNetworkChanged(
+                    this.AppMgrNotify_NetworkChanged);
 
             // start current work mode
             m_appManagerRef.StartCurrentWorkMode();
