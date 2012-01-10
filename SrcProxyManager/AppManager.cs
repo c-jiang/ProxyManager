@@ -144,7 +144,7 @@ namespace ProxyManager
             if (m_profile.m_isStartAuto) {
                 rk.SetValue(ASSEMBLY_PRODUCT,
                     Path.Combine(m_szAppDir, PROXY_MANAGER_FILE_NAME));
-            } else {
+            } else if (rk.GetValue(ASSEMBLY_PRODUCT) != null) {
                 rk.DeleteValue(ASSEMBLY_PRODUCT);
             }
             rk.Close();
