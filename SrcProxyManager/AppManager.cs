@@ -188,9 +188,24 @@ namespace ProxyManager
                 + "\"" + szProxyAddr + "\" "
                 + "\"" + szBypass + "\" "
                 + true.ToString();
-            Process process = PrepareProxyAgentProcess();
-            SetArgsProxyAgentProcess(process, args);
-            ExecuteProxyAgentProcess(process);
+            RunProcessProxyAgent(args);
+            if (IeProxyOptions.ProxyEnable != true
+                || IeProxyOptions.AutoConfDisabled != true) {
+                Logger.W("AppManager.EnableProxy :: "
+                    + "Failed to enable system proxy for the 1st round.");
+                RunProcessProxyAgent(args);
+                if (IeProxyOptions.ProxyEnable != true
+                    || IeProxyOptions.AutoConfDisabled != true) {
+                    Logger.E("AppManager.EnableProxy :: "
+                        + "Failed to enable system proxy for the 2nd round.");
+                } else {
+                    Logger.I("AppManager.EnableProxy :: "
+                    + "Correctly enable system proxy for the 2nd round.");
+                }
+            } else {
+                Logger.I("AppManager.EnableProxy :: "
+                    + "Correctly enable system proxy for the 1st round.");
+            }
             NotifyGuiNetworkChanged(this, new EventArgs());
             m_semaphore.Release();
             Logger.V("<< AppManager.EnableProxy");
@@ -204,9 +219,28 @@ namespace ProxyManager
                 + "\"" + pi.m_szProxyAddr + "\" "
                 + "\"" + pi.m_szBypass + "\" "
                 + pi.m_isAutoConfDisabled.ToString();
-            Process process = PrepareProxyAgentProcess();
-            SetArgsProxyAgentProcess(process, args);
-            ExecuteProxyAgentProcess(process);
+            RunProcessProxyAgent(args);
+            if (IeProxyOptions.ProxyEnable != true
+                || IeProxyOptions.ProxyAddr != pi.m_szProxyAddr
+                || IeProxyOptions.Bypass != pi.m_szBypass
+                || IeProxyOptions.AutoConfDisabled != pi.m_isAutoConfDisabled) {
+                Logger.W("AppManager.EnableProxy :: "
+                    + "Failed to enable system proxy as specified for the 1st round.");
+                RunProcessProxyAgent(args);
+                if (IeProxyOptions.ProxyEnable != true
+                    || IeProxyOptions.ProxyAddr != pi.m_szProxyAddr
+                    || IeProxyOptions.Bypass != pi.m_szBypass
+                    || IeProxyOptions.AutoConfDisabled != pi.m_isAutoConfDisabled) {
+                    Logger.E("AppManager.EnableProxy :: "
+                        + "Failed to enable system proxy as specified for the 2nd round.");
+                } else {
+                    Logger.I("AppManager.EnableProxy :: "
+                        + "Correctly enable system proxy as specified for the 2nd round.");
+                }
+            } else {
+                Logger.I("AppManager.EnableProxy :: "
+                    + "Correctly enable system proxy as specified for the 1st round.");
+            }
             NotifyGuiNetworkChanged(this, new EventArgs());
             m_semaphore.Release();
             Logger.V("<< AppManager.EnableProxy(@1.ProxyAddr:" + pi.m_szProxyAddr + ")");
@@ -216,9 +250,22 @@ namespace ProxyManager
         {
             Logger.V(">> AppManager.DisableProxy");
             m_semaphore.WaitOne();
-            Process process = PrepareProxyAgentProcess();
-            SetArgsProxyAgentProcess(process, false.ToString());
-            ExecuteProxyAgentProcess(process);
+            RunProcessProxyAgent(false.ToString());
+            if (IeProxyOptions.ProxyEnable != false) {
+                Logger.W("AppManager.DisableProxy :: "
+                    + "Failed to disable system proxy for the 1st round.");
+                RunProcessProxyAgent(false.ToString());
+                if (IeProxyOptions.ProxyEnable != false) {
+                    Logger.E("AppManager.DisableProxy :: "
+                        + "Failed to disable system proxy for the 2nd round.");
+                } else {
+                    Logger.I("AppManager.DisableProxy :: "
+                        + "Correctly disable system proxy for the 2nd round.");
+                }
+            } else {
+                Logger.I("AppManager.DisableProxy :: "
+                    + "Correctly disable system proxy for the 1st round.");
+            }
             NotifyGuiNetworkChanged(this, new EventArgs());
             m_semaphore.Release();
             Logger.V("<< AppManager.DisableProxy");
@@ -332,7 +379,7 @@ namespace ProxyManager
             return (match.Success && match.Value.Length == target.Length);
         }
 
-        private Process PrepareProxyAgentProcess()
+        private void RunProcessProxyAgent(string args)
         {
             Process process = new Process();
             process.StartInfo.CreateNoWindow = true;
@@ -341,16 +388,7 @@ namespace ProxyManager
             process.StartInfo.FileName = PROXY_AGENT_FILE_NAME;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
-            return process;
-        }
-
-        private void SetArgsProxyAgentProcess(Process process, string args)
-        {
             process.StartInfo.Arguments = args;
-        }
-
-        private void ExecuteProxyAgentProcess(Process process)
-        {
             process.Start();
             process.WaitForExit();
             process.Close();
