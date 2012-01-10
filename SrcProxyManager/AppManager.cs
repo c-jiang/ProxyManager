@@ -12,7 +12,8 @@ namespace ProxyManager
     {
         public const string PROXY_MANAGER_FILE_NAME = "ProxyManager.exe";
         public const string PROXY_AGENT_FILE_NAME = "ProxyAgent.exe";
-        public const string APP_LOG_FILE_NAME = "ProxyManager.log";
+        public const string APP_NEW_LOG_FILE_NAME = "ProxyManager-New.log";
+        public const string APP_OLD_LOG_FILE_NAME = "ProxyManager-Old.log";
         // Refer to [assembly: AssemblyProduct]
         public const string ASSEMBLY_PRODUCT = "Proxy Manager";
 

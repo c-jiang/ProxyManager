@@ -24,7 +24,9 @@ namespace ProxyManager
                     Process.GetCurrentProcess().ProcessName, out createdNew);
 
                 if (createdNew) {
-                    Logger.Initialize(Path.Combine(path, AppManager.APP_LOG_FILE_NAME));
+                    Logger.Initialize(
+                        Path.Combine(path, AppManager.APP_NEW_LOG_FILE_NAME),
+                        Path.Combine(path, AppManager.APP_OLD_LOG_FILE_NAME));
                     AppManager appManager = new AppManager(path);
 
                     if (!appManager.LoadAppEnvironment()) {
