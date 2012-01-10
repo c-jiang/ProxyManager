@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using Microsoft.Win32;
 
 
@@ -48,20 +49,24 @@ namespace ProxyManager
 
         public string ActiveNetworkIPAddress()
         {
-            if (m_activeIP.UnicastAddresses.Count > 0) {
-                return m_activeIP.UnicastAddresses[0].Address.ToString();
-            } else {
-                return String.Empty;
+            foreach (UnicastIPAddressInformation iter in m_activeIP.UnicastAddresses) {
+                if (iter.Address.AddressFamily != AddressFamily.InterNetwork) {
+                    continue;
+                }
+                return iter.Address.ToString();
             }
+            return String.Empty;
         }
 
         public string ActiveNetworkSubMask()
         {
-            if (m_activeIP.UnicastAddresses.Count > 0) {
-                return m_activeIP.UnicastAddresses[0].IPv4Mask.ToString();
-            } else {
-                return String.Empty;
+            foreach (UnicastIPAddressInformation iter in m_activeIP.UnicastAddresses) {
+                if (iter.Address.AddressFamily != AddressFamily.InterNetwork) {
+                    continue;
+                }
+                return iter.IPv4Mask.ToString();
             }
+            return String.Empty;
         }
 
         public string ActiveNetworkGateway()
