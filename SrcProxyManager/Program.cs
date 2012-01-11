@@ -40,7 +40,7 @@ namespace ProxyManager
                     } else {
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
-                        if (!appManager.LoadAppProfile()) {
+                        if (appManager.LoadAppProfile()) {
                             string msg = @"New profile '" + Profile.PROFILE_FILE_NAME
                                 + @"' has been created successfully.";
                             Logger.I(msg);

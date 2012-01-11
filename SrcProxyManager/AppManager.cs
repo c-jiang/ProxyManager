@@ -45,6 +45,7 @@ namespace ProxyManager
         {
             Logger.V(">> AppManager.~AppManager");
             if (!IsLoadAppProfileFailed()) {
+                Logger.I("AppManager.~AppManager :: Save the profile to local disk.");
                 Profile.Save(m_profile);
             }
             Logger.V("<< AppManager.~AppManager");
@@ -61,16 +62,20 @@ namespace ProxyManager
 
         public bool LoadAppProfile()
         {
-            Logger.V(">> AppManager.LoadAppProfile");
             bool createdNew;
             m_profile = Profile.Load(m_szAppDir, out createdNew);
             m_currWorkMode = m_profile.m_defWorkMode;
             if (m_profile.m_isLogToFile) {
                 Logger.Enable(m_profile.m_logLevel);
             }
-            bool ret = !createdNew;
-            Logger.V("<< AppManager.LoadAppProfile : " + ret.ToString());
-            return ret;
+            Logger.V(">> AppManager.LoadAppProfile");   // move to here as a countermeasure
+            if (createdNew) {
+                Logger.I("AppManager.LoadAppProfile :: Profile is created and loaded.");
+            } else {
+                Logger.I("AppManager.LoadAppProfile :: Profile exists and is loaded.");
+            }
+            Logger.V("<< AppManager.LoadAppProfile : " + createdNew.ToString());
+            return createdNew;
         }
 
         public bool IsLoadAppProfileFailed()
@@ -90,12 +95,18 @@ namespace ProxyManager
             Logger.V(">> AppManager.DetectorNotify_NetworkChanged");
             switch (m_currWorkMode) {
             case WorkMode.Auto:
+                Logger.I("AppManager.DetectorNotify_NetworkChanged :: "
+                    + "Apply Auto Mode by the following routines.");
                 AutoSwitchProxy();
                 break;
             case WorkMode.Direct:
+                Logger.I("AppManager.DetectorNotify_NetworkChanged :: "
+                    + "Apply Direct Mode by disabling system proxy option.");
                 DisableProxy();
                 break;
             case WorkMode.Proxy:
+                Logger.I("AppManager.DetectorNotify_NetworkChanged :: "
+                    + "Apply Proxy Mode by enabling system proxy option.");
                 EnableProxy();
                 break;
             }
@@ -135,6 +146,8 @@ namespace ProxyManager
                 Logger.Disable();
             }
             // restart current work mode, and update GUI
+            Logger.I("AppManager.ApplyProfileUpdate :: "
+                + "Trigger the current work mode restarting.");
             StartCurrentWorkMode();
             Logger.V("<< AppManager.ApplyProfileUpdate");
         }
@@ -166,12 +179,18 @@ namespace ProxyManager
             Logger.V(">> AppManager.StartCurrentWorkMode");
             switch (m_currWorkMode) {
             case WorkMode.Auto:
+                Logger.I("AppManager.StartCurrentWorkMode :: "
+                    + "Apply Auto Mode by the following routines.");
                 AutoSwitchProxy();
                 break;
             case WorkMode.Direct:
+                Logger.I("AppManager.StartCurrentWorkMode :: "
+                    + "Apply Direct Mode by disabling system proxy option.");
                 DisableProxy();
                 break;
             case WorkMode.Proxy:
+                Logger.I("AppManager.StartCurrentWorkMode :: "
+                    + "Apply Proxy Mode by enabling system proxy option.");
                 EnableProxy();
                 break;
             }
@@ -275,16 +294,23 @@ namespace ProxyManager
         {
             Logger.V(">> AppManager.AutoSwitchProxy");
             if (m_detector.IsNetworkActive()) {
+                Logger.I("AppManager.AutoSwitchProxy :: "
+                    + "Network is active and now trying to find an appropriate proxy item.");
                 ProxyItem pi = FindMatchedProxyItem();
                 if (pi != null) {
                     // Apply the found proxy since the rule matched
+                    Logger.I("AppManager.AutoSwitchProxy :: "
+                        + "The appropriate proxy item is found.");
                     EnableProxy(pi);
                 } else {
                     // Disable proxy since no rule applied
+                    Logger.I("AppManager.AutoSwitchProxy :: "
+                        + "Failed to find an appropriate proxy item.");
                     DisableProxy();
                 }
             } else {
                 // Disable proxy if no active network
+                Logger.I("AppManager.AutoSwitchProxy :: Network is inactive.");
                 DisableProxy();
             }
             Logger.V("<< AppManager.AutoSwitchProxy");
