@@ -9,17 +9,30 @@ select the proxy based on the user customized profile automatically, when the
 network status changes.
 
 OS: Windows Platform with .NET 3.5 Framework or above.
+Network: Currently not fully support IPv6 environment.
 
 
 Known Issues
 --------------------------------------------------------------------------------
-- May be incompatible with some VPN client software, like F5.
+- Incompatible with some VPN client software, like F5.
+- Item is displayed in "Windows Task Manager" "Application" tab once startup
+  with start minimized option enabled.
 
 --------------------------------------------------------------------------------
 
 
 Changelog
 --------------------------------------------------------------------------------
+v1.1
+- Add Options dialog for setting the profile.
+- Add feature Log to File.
+- Change: Use close button as minimizing to tray.
+- Bug-fix: Tray icon GUI is not refreshed if proxy groups changed.
+- Bug-fix: No N/A item is displayed in Proxy Mode.
+- Bug-fix: Exception if AutoStart is disabled and no key entry in Registry.
+- Bug-fix: Auto Mode does not revert to correct state if F5 disconnects.
+- Bug-fix: IP Address & Mask are not correct in IPv6 network.
+
 v1.0
 - First release.
 
