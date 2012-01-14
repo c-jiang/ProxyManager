@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <Profile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <WorkMode>Direct</WorkMode>
+  <WorkMode>Auto</WorkMode>
   <StartAuto>true</StartAuto>
   <StartMinimized>true</StartMinimized>
-  <LogToFile>false</LogToFile>
+  <LogToFile>true</LogToFile>
+  <LogLevel>Information</LogLevel>
   <ProxyGroupList>
     <ProxyGroup Name="Jiang-Corporate" Enable="true" SelectedIndex="0">
       <ProxyItem Enable="true">
