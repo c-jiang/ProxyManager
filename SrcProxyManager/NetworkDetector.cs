@@ -111,6 +111,7 @@ namespace ProxyManager
         public void OsNotify_NetworkChanged(object sender, EventArgs e)
         {
             Logger.V(">> NetworkDetector.OsNotify_NetworkChanged");
+            System.Threading.Thread.Sleep(1000);
             DetectActiveNetwork();
             NetworkChanged(this, new EventArgs());
             Logger.V("<< NetworkDetector.OsNotify_NetworkChanged");
