@@ -384,6 +384,7 @@ namespace ProxyManager
             Logger.I("UserRequest :: Select proxy item from the current group ("
                 + pi.m_szProxyAddr + ").");
             m_appManagerRef.EnableProxy(pi);
+            Profile.Save(m_appManagerRef.AppProfile);
             Logger.V("<< FormMain.UserRequest_SelectProxyFromCurrentGroup");
         }
 
