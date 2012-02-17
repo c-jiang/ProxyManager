@@ -23,6 +23,11 @@ Known Issues
 
 Changelog
 --------------------------------------------------------------------------------
+v1.1.1
+- Bug-fix: SelectedIndex for Auto Mode fails to be saved if reboot.
+- Bug-fix: App can be tabbed and shown in TaskMgr Application Lists.
+- Bug-fix: Double checks for proxy settings may fail.
+
 v1.1
 - Add Options dialog for setting the profile.
 - Add feature Log to File.
