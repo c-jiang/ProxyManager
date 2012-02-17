@@ -14,9 +14,7 @@ Network: Currently not fully support IPv6 environment.
 
 Known Issues
 --------------------------------------------------------------------------------
-- Incompatible with some VPN client software, like F5.
-- Item is displayed in "Windows Task Manager" "Application" tab once startup
-  with start minimized option enabled.
+- Not fully compatible with some VPN client software, like F5.
 
 --------------------------------------------------------------------------------
 
