@@ -212,6 +212,7 @@ namespace ProxyManager
                 || IeProxyOptions.AutoConfDisabled != true) {
                 Logger.W("AppManager.EnableProxy :: "
                     + "Failed to enable system proxy for the 1st round.");
+                System.Threading.Thread.Sleep(1000);
                 RunProcessProxyAgent(args);
                 if (IeProxyOptions.ProxyEnable != true
                     || IeProxyOptions.AutoConfDisabled != true) {

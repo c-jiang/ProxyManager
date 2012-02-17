@@ -32,8 +32,7 @@ namespace ProxyManager
 
             // set GUI properties according to profile
             if (m_appManagerRef.AppProfile.m_isStartMinimized) {
-                this.ShowInTaskbar = false;
-                this.WindowState = FormWindowState.Minimized;
+                this.Visible = false;
             }
 
             // set registry key according to profile
@@ -384,6 +383,7 @@ namespace ProxyManager
             Logger.I("UserRequest :: Select proxy item from the current group ("
                 + pi.m_szProxyAddr + ").");
             m_appManagerRef.EnableProxy(pi);
+            Profile.Save(m_appManagerRef.AppProfile);
             Logger.V("<< FormMain.UserRequest_SelectProxyFromCurrentGroup");
         }
 
@@ -529,6 +529,15 @@ namespace ProxyManager
                     this.WindowState = FormWindowState.Minimized;   // step 2 - hide
                     break;
                 }
+            }
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            if (m_appManagerRef.AppProfile.m_isStartMinimized) {
+                this.ShowInTaskbar = false;
+                this.WindowState = FormWindowState.Minimized;
+                UpdateGui_NotifyIconBalloonTip();
             }
         }
 
