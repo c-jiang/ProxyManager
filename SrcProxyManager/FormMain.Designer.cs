@@ -235,12 +235,13 @@
             // 
             // labelProxyAddr
             // 
-            this.labelProxyAddr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelProxyAddr.AutoSize = true;
+            this.labelProxyAddr.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelProxyAddr.AutoEllipsis = true;
             this.labelProxyAddr.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.labelProxyAddr.Location = new System.Drawing.Point(6, 216);
             this.labelProxyAddr.Name = "labelProxyAddr";
-            this.labelProxyAddr.Size = new System.Drawing.Size(70, 13);
+            this.labelProxyAddr.Size = new System.Drawing.Size(274, 21);
             this.labelProxyAddr.TabIndex = 1;
             this.labelProxyAddr.Text = "Proxy Server:";
             // 
