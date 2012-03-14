@@ -14,15 +14,17 @@ Network: Currently not fully support IPv6 environment.
 
 Known Issues
 --------------------------------------------------------------------------------
-- Incompatible with some VPN client software, like F5.
-- Item is displayed in "Windows Task Manager" "Application" tab once startup
-  with start minimized option enabled.
+- Not fully compatible with some VPN client software, like F5.
 
 --------------------------------------------------------------------------------
 
 
 Changelog
 --------------------------------------------------------------------------------
+v1.1.2
+- Bug-fix: Text of proxy server exceeds the left of Refresh button.
+- Bug-fix: Log level items increase in Options dialog.
+
 v1.1.1
 - Bug-fix: SelectedIndex for Auto Mode fails to be saved if reboot.
 - Bug-fix: App can be tabbed and shown in TaskMgr Application Lists.

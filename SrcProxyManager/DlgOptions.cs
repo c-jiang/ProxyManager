@@ -100,6 +100,7 @@ namespace ProxyManager
 
             // log level
             m_dlgInstance.cbLogLevel.Enabled = m_dlgInstance.cbLogToFile.Checked;
+            m_dlgInstance.cbLogLevel.Items.Clear();
             m_dlgInstance.cbLogLevel.Items.Add(Logger.Category.Error);
             m_dlgInstance.cbLogLevel.Items.Add(Logger.Category.Warning);
             m_dlgInstance.cbLogLevel.Items.Add(Logger.Category.Information);
