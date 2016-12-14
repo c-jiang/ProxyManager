@@ -11,9 +11,12 @@ namespace ProxyManager
         public NetworkDetector()
         {
             Logger.V(">> NetworkDetector.NetworkDetector");
-            m_activeNetwork = null;
-            m_activeIP = null;
-            DetectActiveNetwork();
+            DetectActiveNetwork(out m_activeNetwork);
+            if (m_activeNetwork != null) {
+                m_activeIP = m_activeNetwork.GetIPProperties();
+            } else {
+                m_activeIP = null;
+            }
             Logger.V("<< NetworkDetector.NetworkDetector");
         }
 
@@ -108,20 +111,33 @@ namespace ProxyManager
         #endregion
 
 
-        public void OsNotify_NetworkChanged(object sender, EventArgs e)
-        {
+        public void OsNotify_NetworkChanged(object sender, EventArgs e) {
             Logger.V(">> NetworkDetector.OsNotify_NetworkChanged");
-            System.Threading.Thread.Sleep(1000);
-            DetectActiveNetwork();
-            NetworkChanged(this, new EventArgs());
+            System.Threading.Thread.Sleep(200);
+            NetworkInterface activeNetwork;
+            DetectActiveNetwork(out activeNetwork);
+
+            if (activeNetwork == null && m_activeNetwork == null) {
+                // do nothing
+            } else if (activeNetwork != null && activeNetwork.Equals(m_activeNetwork)) {
+                // do nothing
+            } else {
+                m_activeNetwork = activeNetwork;
+                if (m_activeNetwork != null) {
+                    m_activeIP = m_activeNetwork.GetIPProperties();
+                } else {
+                    m_activeIP = null;
+                }
+                // only notify the app manager when the network interface is really changed
+                NetworkChanged(this, new EventArgs());
+            }
             Logger.V("<< NetworkDetector.OsNotify_NetworkChanged");
         }
 
-        public void DetectActiveNetwork()
+        public void DetectActiveNetwork(out NetworkInterface activeNetwork)
         {
             Logger.V(">> NetworkDetector.DetectActiveNetwork");
-            m_activeNetwork = null;
-            m_activeIP = null;
+            activeNetwork = null;
             NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
             
             foreach (NetworkInterface ni in adapters) {
@@ -163,8 +179,7 @@ namespace ProxyManager
                 }
                 #endregion
 
-                m_activeNetwork = ni;
-                m_activeIP = ni.GetIPProperties();
+                activeNetwork = ni;
                 break;
             }
             Logger.V("<< NetworkDetector.DetectActiveNetwork");
