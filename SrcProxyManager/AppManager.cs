@@ -389,8 +389,8 @@ namespace ProxyManager
                 ret &= IsExpressionMatched(rule.m_szDnsAddrFilter,
                     m_detector.ActiveNetworkDnsAddress());
             }
-            if (ret && rule.m_bDnsSuffixFilter) {
-                ret &= IsExpressionMatched(rule.m_szDnsSuffixFilter,
+            if (ret && rule.m_bDnsSuffixListFilter) {
+                ret &= IsExpressionListMatched(rule.m_szDnsSuffixListFilter,
                     m_detector.ActiveNetworkDnsSuffix());
             }
             return ret;
@@ -404,6 +404,20 @@ namespace ProxyManager
             Regex regex = new Regex(pattern);
             Match match = regex.Match(target);
             return (match.Success && match.Value.Length == target.Length);
+        }
+
+        private bool IsExpressionListMatched(string expList, string target)
+        {
+            char[] delimiter = { ';' };
+            string[] exps = expList.Split(delimiter);
+            bool ret = false;
+            foreach (string exp in exps) {
+                ret |= IsExpressionMatched(exp, target);
+                if (ret) {
+                    break;
+                }
+            }
+            return ret;
         }
 
         private void RunProcessProxyAgent(string args)

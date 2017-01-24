@@ -359,10 +359,10 @@ namespace ProxyManager
         [XmlElement("DnsAddrFilterExpression")]
         public string m_szDnsAddrFilter;
 
-        [XmlAttribute("DnsSuffixFilter")]
-        public bool m_bDnsSuffixFilter;
-        [XmlElement("DnsSuffixFilterExpression")]
-        public string m_szDnsSuffixFilter;
+        [XmlAttribute("DnsSuffixListFilter")]
+        public bool m_bDnsSuffixListFilter;
+        [XmlElement("DnsSuffixListFilterExpression")]
+        public string m_szDnsSuffixListFilter;
 
         public ApplyRule()
         {
@@ -378,8 +378,8 @@ namespace ProxyManager
             m_szGatewayFilter = String.Empty;
             m_bDnsAddrFilter = false;
             m_szDnsAddrFilter = String.Empty;
-            m_bDnsSuffixFilter = false;
-            m_szDnsSuffixFilter = String.Empty;
+            m_bDnsSuffixListFilter = false;
+            m_szDnsSuffixListFilter = String.Empty;
         }
 
         public ApplyRule(ApplyRule ar)
@@ -396,8 +396,8 @@ namespace ProxyManager
             m_szGatewayFilter = ar.m_szGatewayFilter;
             m_bDnsAddrFilter = ar.m_bDnsAddrFilter;
             m_szDnsAddrFilter = ar.m_szDnsAddrFilter;
-            m_bDnsSuffixFilter = ar.m_bDnsSuffixFilter;
-            m_szDnsSuffixFilter = ar.m_szDnsSuffixFilter;
+            m_bDnsSuffixListFilter = ar.m_bDnsSuffixListFilter;
+            m_szDnsSuffixListFilter = ar.m_szDnsSuffixListFilter;
         }
 
         public override bool Equals(object obj)
@@ -447,10 +447,10 @@ namespace ProxyManager
             if (m_szDnsAddrFilter != ar.m_szDnsAddrFilter) {
                 return false;
             }
-            if (m_bDnsSuffixFilter != ar.m_bDnsSuffixFilter) {
+            if (m_bDnsSuffixListFilter != ar.m_bDnsSuffixListFilter) {
                 return false;
             }
-            if (m_szDnsSuffixFilter != ar.m_szDnsSuffixFilter) {
+            if (m_szDnsSuffixListFilter != ar.m_szDnsSuffixListFilter) {
                 return false;
             }
             return true;

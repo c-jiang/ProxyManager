@@ -385,9 +385,9 @@
             this.cbFilterDnsSuffix.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cbFilterDnsSuffix.Location = new System.Drawing.Point(293, 51);
             this.cbFilterDnsSuffix.Name = "cbFilterDnsSuffix";
-            this.cbFilterDnsSuffix.Size = new System.Drawing.Size(100, 17);
+            this.cbFilterDnsSuffix.Size = new System.Drawing.Size(119, 17);
             this.cbFilterDnsSuffix.TabIndex = 12;
-            this.cbFilterDnsSuffix.Text = "Filter DNS Suffix";
+            this.cbFilterDnsSuffix.Text = "Filter DNS Suffix List";
             this.cbFilterDnsSuffix.UseVisualStyleBackColor = true;
             this.cbFilterDnsSuffix.CheckedChanged += new System.EventHandler(this.cbFilterDnsSuffix_CheckedChanged);
             // 

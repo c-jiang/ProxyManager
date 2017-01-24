@@ -99,8 +99,8 @@ namespace ProxyManager
             tbFilterDns.Text = m_dlgProxyGroup.m_applyRule.m_szDnsAddrFilter;
             tbFilterDns.Enabled = cbFilterDns.Checked;
             // filter dns suffix
-            cbFilterDnsSuffix.Checked = m_dlgProxyGroup.m_applyRule.m_bDnsSuffixFilter;
-            tbFilterDnsSuffix.Text = m_dlgProxyGroup.m_applyRule.m_szDnsSuffixFilter;
+            cbFilterDnsSuffix.Checked = m_dlgProxyGroup.m_applyRule.m_bDnsSuffixListFilter;
+            tbFilterDnsSuffix.Text = m_dlgProxyGroup.m_applyRule.m_szDnsSuffixListFilter;
             tbFilterDnsSuffix.Enabled = cbFilterDnsSuffix.Checked;
         }
 
@@ -241,8 +241,8 @@ namespace ProxyManager
             m_dlgProxyGroup.m_applyRule.m_bDnsAddrFilter = cbFilterDns.Checked;
             m_dlgProxyGroup.m_applyRule.m_szDnsAddrFilter = tbFilterDns.Text;
             // filter dns suffix
-            m_dlgProxyGroup.m_applyRule.m_bDnsSuffixFilter = cbFilterDnsSuffix.Checked;
-            m_dlgProxyGroup.m_applyRule.m_szDnsSuffixFilter = tbFilterDnsSuffix.Text;
+            m_dlgProxyGroup.m_applyRule.m_bDnsSuffixListFilter = cbFilterDnsSuffix.Checked;
+            m_dlgProxyGroup.m_applyRule.m_szDnsSuffixListFilter = tbFilterDnsSuffix.Text;
         }
 
         #endregion
